@@ -1,9 +1,19 @@
 <resources>
     <string name="app_name">TravelAssistant</string>
+    <string name="title_activity_main2">Main2Activity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">Travel Assistant</string>
+    <string name="nav_header_subtitle">Created by Nikolay Moskal © 2018–2019</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+    <string name="dep_city">Ваш город</string>
+    <string name="dep_city_hint">Название города</string>
+    <string name="dep_airport">Аэропорт вылета</string>
+    <string name="dep_airport_hint">Код аэропорта</string>
+    <string name="send_button">Отправить</string>
+    <string name="nav_things">Багаж</string>
+    <string name="nav_informer">Информер</string>
+    <string name="nav_about">О приложении</string>
+    <string name="nav_manage">Tools</string>
+    <string name="btn_choice">Выбрать…</string>
 </resources>
