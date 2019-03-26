@@ -1,15 +1,32 @@
 package by.neon.travelassistant;
 
+import android.app.Activity;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationProvider;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.List;
+import java.util.Locale;
+
+import by.neon.travelassistant.constants.LogTag;
 
 /**
  * Provides a custom implementation of {@link LocationListener}
  */
 public final class CustomLocationListener implements LocationListener {
     private Location location;
+    private Activity activity;
+
+    public CustomLocationListener(Activity activity) {
+        this.activity = activity;
+    }
+
     /**
      * Called when the location has changed.
      *
@@ -20,6 +37,7 @@ public final class CustomLocationListener implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         this.location = location;
+        getLocalityName(this.location);
     }
 
     /**
@@ -76,5 +94,18 @@ public final class CustomLocationListener implements LocationListener {
 
     public Location getLocation() {
         return location;
+    }
+
+    private void getLocalityName(Location location) {
+        try {
+            Geocoder geocoder = new Geocoder(activity.getApplicationContext(), Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            if (addresses.size() > 0) {
+                ((TextView)activity.findViewById(R.id.dep_city)).setText(addresses.get(0).getLocality());
+            }
+        } catch (Exception e) {
+            Log.e(LogTag.LOG_TAG_GPS, e.getMessage(), e);
+            Toast.makeText(activity, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 }

@@ -35,6 +35,7 @@ import by.neon.travelassistant.config.AirportInfo;
 import by.neon.travelassistant.config.Config;
 import by.neon.travelassistant.config.FlightStatsDemoConfig;
 import by.neon.travelassistant.constants.LogTag;
+import by.neon.travelassistant.constants.RuntimePermissions;
 
 /**
  * Represents the main window of the TravelAssistant application
@@ -69,10 +70,10 @@ public class MainActivity extends AppCompatActivity
         }
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new CustomLocationListener();
+        locationListener = new CustomLocationListener(this);
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RuntimePermissions.WRITE_EXTERNAL_STORAGE_PERMISSION);
             }
         } else {
             config = new FlightStatsDemoConfig(this);
@@ -180,14 +181,14 @@ public class MainActivity extends AppCompatActivity
         }
         try {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, RuntimePermissions.ACCESS_FINE_LOCATION_PERMISSION);
             } else {
                 Log.i(TAG, "onLocationClick: GPS permission is granted");
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
                 return;
             }
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, RuntimePermissions.ACCESS_COARSE_LOCATION_PERMISSION);
             } else {
                 Log.i(TAG, "onLocationClick: Network permission is granted");
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
@@ -228,17 +229,17 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case 0:
+            case RuntimePermissions.WRITE_EXTERNAL_STORAGE_PERMISSION:
                 config = new FlightStatsDemoConfig(this);
                 Log.i(TAG, "onRequestPermissionsResult: Use FlightStats demo database");
                 break;
-            case 1:
+            case RuntimePermissions.ACCESS_FINE_LOCATION_PERMISSION:
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
                 }
                 Log.i(TAG, "onRequestPermissionsResult: Listen location updates via GPS");
                 break;
-            case 2:
+            case RuntimePermissions.ACCESS_COARSE_LOCATION_PERMISSION:
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
                 }
