@@ -5,7 +5,10 @@ import android.location.LocationListener;
 import android.location.LocationProvider;
 import android.os.Bundle;
 
-public final class GpsLocationListener implements LocationListener {
+/**
+ * Provides a custom implementation of {@link LocationListener}
+ */
+public final class CustomLocationListener implements LocationListener {
     private Location location;
     /**
      * Called when the location has changed.

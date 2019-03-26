@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -33,11 +34,17 @@ import java.util.ArrayList;
 import by.neon.travelassistant.config.AirportInfo;
 import by.neon.travelassistant.config.Config;
 import by.neon.travelassistant.config.FlightStatsDemoConfig;
+import by.neon.travelassistant.constants.LogTag;
 
+/**
+ * Represents the main window of the TravelAssistant application
+ */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String TAG = "MainActivity";
     private LocationManager locationManager;
     private Config config;
+    private LocationListener locationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,20 +65,23 @@ public class MainActivity extends AppCompatActivity
         try {
             ProviderInstaller.installIfNeeded(getApplicationContext());
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
-            Log.e("SSL", e.getMessage());
+            Log.e(TAG, e.getMessage(), e);
         }
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new CustomLocationListener();
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
             }
-        }
-        else {
+        } else {
             config = new FlightStatsDemoConfig(this);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -82,6 +92,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @param item
+     * @return
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -104,11 +119,20 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Shows the dialog to select the airport from the list.
+     * @param view the sender view
+     */
     @SuppressWarnings("deprecation")
     public void onChoice(View view) {
         showDialog(0);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param id
+     * @return
+     */
     @SuppressWarnings("deprecation")
     @Override
     protected Dialog onCreateDialog(int id) {
@@ -126,6 +150,10 @@ public class MainActivity extends AppCompatActivity
         return builder.create();
     }
 
+    /**
+     * Shows the short info to input the airport codes.
+     * @param view the sender view
+     */
     public void onInfoClick(View view) {
         runOnUiThread(() -> Toast.makeText(
                 getApplicationContext(),
@@ -133,25 +161,49 @@ public class MainActivity extends AppCompatActivity
                 Toast.LENGTH_LONG).show());
     }
 
+    /**
+     * Sends the user data to next window to show recommended things.
+     * @param view the sender view
+     */
     public void onSendClick(View view) {
+        locationManager.removeUpdates(locationListener);
     }
 
+    /**
+     * Checks the need permissions to use the GPS or network connection and runs the location updates.
+     * @param view the sender view
+     */
     public void onLocationClick(View view) {
-        if (!checkLocationSettings())
+        if (!checkLocationProvider()) {
+            showLocationSettingsDialog();
             return;
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER, 5000, 0, new GpsLocationListener());
+        }
+        try {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            } else {
+                Log.i(TAG, "onLocationClick: GPS permission is granted");
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
+                return;
+            }
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
+            } else {
+                Log.i(TAG, "onLocationClick: Network permission is granted");
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
+            }
+        } catch (Exception e) {
+            Log.e(LogTag.LOG_TAG_GPS, e.getMessage(), e);
         }
     }
 
-    private boolean checkLocationSettings() {
-        boolean isLocationEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+    /**
+     * Checks the GPS and network providers.
+     * @return <b>true</b> if any provider is enabled and <b>false</b> if otherwise
+     */
+    private boolean checkLocationProvider() {
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        if (!isLocationEnabled)
-            showLocationSettingsDialog();
-        return isLocationEnabled;
     }
 
     private void showLocationSettingsDialog() {
@@ -167,11 +219,30 @@ public class MainActivity extends AppCompatActivity
         dialog.show();
     }
 
+    /**
+     * {@inheritDoc}
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case 0:
                 config = new FlightStatsDemoConfig(this);
+                Log.i(TAG, "onRequestPermissionsResult: Use FlightStats demo database");
+                break;
+            case 1:
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
+                }
+                Log.i(TAG, "onRequestPermissionsResult: Listen location updates via GPS");
+                break;
+            case 2:
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
+                }
+                Log.i(TAG, "onRequestPermissionsResult: Listen location updates via network");
                 break;
         }
     }
