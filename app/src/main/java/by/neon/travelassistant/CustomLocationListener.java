@@ -14,7 +14,7 @@ import android.widget.Toast;
 import java.util.List;
 import java.util.Locale;
 
-import by.neon.travelassistant.constants.LogTag;
+import by.neon.travelassistant.constants.LogTagConstants;
 
 /**
  * Provides a custom implementation of {@link LocationListener}
@@ -104,7 +104,7 @@ public final class CustomLocationListener implements LocationListener {
                 ((TextView)activity.findViewById(R.id.dep_city)).setText(addresses.get(0).getLocality());
             }
         } catch (Exception e) {
-            Log.e(LogTag.LOG_TAG_GPS, e.getMessage(), e);
+            Log.e(LogTagConstants.LOG_TAG_GPS, e.getMessage(), e);
             Toast.makeText(activity, e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }

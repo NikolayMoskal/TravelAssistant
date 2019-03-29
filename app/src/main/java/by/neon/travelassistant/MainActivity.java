@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -34,8 +35,9 @@ import java.util.ArrayList;
 import by.neon.travelassistant.config.AirportInfo;
 import by.neon.travelassistant.config.Config;
 import by.neon.travelassistant.config.FlightStatsDemoConfig;
-import by.neon.travelassistant.constants.LogTag;
-import by.neon.travelassistant.constants.RuntimePermissions;
+import by.neon.travelassistant.constants.CommonConstants;
+import by.neon.travelassistant.constants.GpsLocationConstants;
+import by.neon.travelassistant.constants.RuntimePermissionConstants;
 
 /**
  * Represents the main window of the TravelAssistant application
@@ -73,10 +75,14 @@ public class MainActivity extends AppCompatActivity
         locationListener = new CustomLocationListener(this);
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RuntimePermissions.WRITE_EXTERNAL_STORAGE_PERMISSION);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RuntimePermissionConstants.WRITE_EXTERNAL_STORAGE_PERMISSION);
             }
         } else {
-            config = new FlightStatsDemoConfig(this);
+            try {
+                config = new FlightStatsDemoConfig(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), CommonConstants.DEMO_DATABASE_NAME);
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
         }
     }
 
@@ -95,6 +101,7 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * {@inheritDoc}
+     *
      * @param item
      * @return
      */
@@ -122,6 +129,7 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * Shows the dialog to select the airport from the list.
+     *
      * @param view the sender view
      */
     @SuppressWarnings("deprecation")
@@ -131,6 +139,7 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * {@inheritDoc}
+     *
      * @param id
      * @return
      */
@@ -153,6 +162,7 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * Shows the short info to input the airport codes.
+     *
      * @param view the sender view
      */
     public void onInfoClick(View view) {
@@ -164,6 +174,7 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * Sends the user data to next window to show recommended things.
+     *
      * @param view the sender view
      */
     public void onSendClick(View view) {
@@ -172,6 +183,7 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * Checks the need permissions to use the GPS or network connection and runs the location updates.
+     *
      * @param view the sender view
      */
     public void onLocationClick(View view) {
@@ -179,27 +191,24 @@ public class MainActivity extends AppCompatActivity
             showLocationSettingsDialog();
             return;
         }
-        try {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, RuntimePermissions.ACCESS_FINE_LOCATION_PERMISSION);
-            } else {
-                Log.i(TAG, "onLocationClick: GPS permission is granted");
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
-                return;
-            }
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, RuntimePermissions.ACCESS_COARSE_LOCATION_PERMISSION);
-            } else {
-                Log.i(TAG, "onLocationClick: Network permission is granted");
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
-            }
-        } catch (Exception e) {
-            Log.e(LogTag.LOG_TAG_GPS, e.getMessage(), e);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, RuntimePermissionConstants.ACCESS_FINE_LOCATION_PERMISSION);
+        } else {
+            Log.i(TAG, "onLocationClick: GPS permission is granted");
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, GpsLocationConstants.MIN_TIME_UPDATE_MSEC, GpsLocationConstants.MIN_DISTANCE_MILES, locationListener);
+            return;
+        }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, RuntimePermissionConstants.ACCESS_COARSE_LOCATION_PERMISSION);
+        } else {
+            Log.i(TAG, "onLocationClick: Network permission is granted");
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, GpsLocationConstants.MIN_TIME_UPDATE_MSEC, GpsLocationConstants.MIN_DISTANCE_MILES, locationListener);
         }
     }
 
     /**
      * Checks the GPS and network providers.
+     *
      * @return <b>true</b> if any provider is enabled and <b>false</b> if otherwise
      */
     private boolean checkLocationProvider() {
@@ -222,6 +231,7 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * {@inheritDoc}
+     *
      * @param requestCode
      * @param permissions
      * @param grantResults
@@ -229,19 +239,24 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case RuntimePermissions.WRITE_EXTERNAL_STORAGE_PERMISSION:
-                config = new FlightStatsDemoConfig(this);
+            case RuntimePermissionConstants.WRITE_EXTERNAL_STORAGE_PERMISSION:
+                try {
+                    config = new FlightStatsDemoConfig(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), CommonConstants.DEMO_DATABASE_NAME);
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage(), e);
+                    break;
+                }
                 Log.i(TAG, "onRequestPermissionsResult: Use FlightStats demo database");
                 break;
-            case RuntimePermissions.ACCESS_FINE_LOCATION_PERMISSION:
+            case RuntimePermissionConstants.ACCESS_FINE_LOCATION_PERMISSION:
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, GpsLocationConstants.MIN_TIME_UPDATE_MSEC, GpsLocationConstants.MIN_DISTANCE_MILES, locationListener);
                 }
                 Log.i(TAG, "onRequestPermissionsResult: Listen location updates via GPS");
                 break;
-            case RuntimePermissions.ACCESS_COARSE_LOCATION_PERMISSION:
+            case RuntimePermissionConstants.ACCESS_COARSE_LOCATION_PERMISSION:
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, GpsLocationConstants.MIN_TIME_UPDATE_MSEC, GpsLocationConstants.MIN_DISTANCE_MILES, locationListener);
                 }
                 Log.i(TAG, "onRequestPermissionsResult: Listen location updates via network");
                 break;
