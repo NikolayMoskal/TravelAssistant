@@ -23,7 +23,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -31,13 +33,17 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.security.ProviderInstaller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import by.neon.travelassistant.config.AirportInfo;
 import by.neon.travelassistant.config.Config;
 import by.neon.travelassistant.config.FlightStatsDemoConfig;
-import by.neon.travelassistant.constants.CommonConstants;
-import by.neon.travelassistant.constants.GpsLocationConstants;
-import by.neon.travelassistant.constants.RuntimePermissionConstants;
+import by.neon.travelassistant.constant.CommonConstants;
+import by.neon.travelassistant.constant.DialogConstants;
+import by.neon.travelassistant.constant.GpsLocationConstants;
+import by.neon.travelassistant.constant.RuntimePermissionConstants;
+import by.neon.travelassistant.listener.AutoCompleteTextViewItemClickListener;
+import by.neon.travelassistant.listener.CustomLocationListener;
 
 /**
  * Represents the main window of the TravelAssistant application
@@ -54,16 +60,11 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        setTitle(R.string.travel_data_label);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        configureDrawerLayout(toolbar);
+        configureNavigationView();
 
         try {
             ProviderInstaller.installIfNeeded(getApplicationContext());
@@ -73,17 +74,28 @@ public class MainActivity extends AppCompatActivity
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new CustomLocationListener(this);
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RuntimePermissionConstants.WRITE_EXTERNAL_STORAGE_PERMISSION);
-            }
-        } else {
-            try {
-                config = new FlightStatsDemoConfig(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), CommonConstants.DEMO_DATABASE_NAME);
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage(), e);
-            }
-        }
+        requestStoragePermissions();
+
+        configureArrivalAirportView();
+    }
+
+    private void configureArrivalAirportView() {
+        AutoCompleteTextView textView = findViewById(R.id.arv_airport);
+        textView.setAdapter(configureAdapter());
+        textView.setOnItemClickListener(new AutoCompleteTextViewItemClickListener(this));
+    }
+
+    private void configureNavigationView() {
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void configureDrawerLayout(Toolbar toolbar) {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
     }
 
     /**
@@ -109,16 +121,16 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_things:
-
+                // TODO add link to PackActivity (name can be improved)
                 break;
             case R.id.nav_informer:
-
+                // TODO add link to InformerActivity
                 break;
             case R.id.nav_about:
-
+                // TODO show about
                 break;
             case R.id.nav_manage:
-
+                // TODO include some settings if necessary
                 break;
         }
 
@@ -134,7 +146,7 @@ public class MainActivity extends AppCompatActivity
      */
     @SuppressWarnings("deprecation")
     public void onChoice(View view) {
-        showDialog(0);
+        showDialog(DialogConstants.CHOICE_DEP_AIRPORT_DIALOG);
     }
 
     /**
@@ -146,16 +158,23 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("deprecation")
     @Override
     protected Dialog onCreateDialog(int id) {
+        // TODO remove this if will be used autocomplete view
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Выберите аэропорт"); // заголовок для диалога
-        ArrayList<String> strings = new ArrayList<>(0);
-        for (AirportInfo info : config.getAirportsInfo()) {
-            strings.add(info.getAirportName());
+        switch (id) {
+            case DialogConstants.CHOICE_DEP_AIRPORT_DIALOG:
+                builder.setTitle("Выберите аэропорт"); // заголовок для диалога
+                ArrayList<String> strings = new ArrayList<>(0);
+                ArrayList<AirportInfo> airports = config.getAirportsInfo();
+                for (AirportInfo info : airports) {
+                    strings.add(info.getAirportName());
+                }
+                builder.setItems(strings.toArray(new String[0]), (dialog, item) -> {
+                    EditText text = findViewById(R.id.dep_airport);
+                    text.setText(airports.get(item).getIataCode());
+                });
+            case DialogConstants.CHOICE_ARV_AIRPORT_DIALOG:
+                break;
         }
-        builder.setItems(strings.toArray(new String[0]), (dialog, item) -> {
-            EditText text = findViewById(R.id.dep_airport);
-            text.setText(config.getAirportsInfo().get(item).getIataCode());
-        });
         builder.setCancelable(true);
         return builder.create();
     }
@@ -261,5 +280,44 @@ public class MainActivity extends AppCompatActivity
                 Log.i(TAG, "onRequestPermissionsResult: Listen location updates via network");
                 break;
         }
+    }
+
+    private SimpleAdapter configureAdapter() {
+        String[] keys = new String[] {"AirportInfo", "AirportCode"};
+        ArrayList<HashMap<String, String>> maps = new ArrayList<>(0);
+        for (AirportInfo info : config.getAirportsInfo()) {
+            HashMap<String, String> map = new HashMap<>(0);
+            map.put(keys[0], String.format("%s, %s, %s (%s)", info.getCountryName(), info.getCityName(), info.getAirportName(), info.getIataCode()));
+            map.put(keys[1], info.getIataCode());
+            maps.add(map);
+        }
+        int[] ids = new int[] {R.id.airportInfo, R.id.airportCode};
+        return new SimpleAdapter(this, maps, R.layout.airport_list_item, keys, ids);
+    }
+
+    private void requestStoragePermissions() {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RuntimePermissionConstants.WRITE_EXTERNAL_STORAGE_PERMISSION);
+            }
+        } else {
+            try {
+                config = new FlightStatsDemoConfig(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), CommonConstants.DEMO_DATABASE_NAME);
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
+        }
+    }
+
+    /**
+     * Shows help for search the airport
+     *
+     * @param view the sender view
+     */
+    public void onAirportHelp(View view) {
+        runOnUiThread(() -> Toast.makeText(
+                getApplicationContext(),
+                "Введите первые буквы названия аэропорта, а затем выберите его из списка найденных",
+                Toast.LENGTH_LONG).show());
     }
 }

@@ -1,4 +1,4 @@
-package by.neon.travelassistant.constants;
+package by.neon.travelassistant.constant;
 
 public final class RuntimePermissionConstants {
     public static final int WRITE_EXTERNAL_STORAGE_PERMISSION = 0;

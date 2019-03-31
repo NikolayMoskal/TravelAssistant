@@ -1,4 +1,4 @@
-package by.neon.travelassistant;
+package by.neon.travelassistant.listener;
 
 import android.app.Activity;
 import android.location.Address;
@@ -14,7 +14,8 @@ import android.widget.Toast;
 import java.util.List;
 import java.util.Locale;
 
-import by.neon.travelassistant.constants.LogTagConstants;
+import by.neon.travelassistant.R;
+import by.neon.travelassistant.constant.LogTagConstants;
 
 /**
  * Provides a custom implementation of {@link LocationListener}
