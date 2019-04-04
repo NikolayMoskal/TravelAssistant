@@ -1,21 +1,21 @@
 <resources>
-    <string name="app_name">TravelAssistant</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Travel Assistant</string>
-    <string name="nav_header_subtitle">Created by Nikolay Moskal © 2018–2019</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="travel_data_label">Данные о путешествии</string>
-    <string name="dep_label">Откуда вы отправляетесь?</string>
-    <string name="dep_city_hint">Название города</string>
-    <string name="dep_airport">Аэропорт вылета</string>
-    <string name="dep_airport_hint">Код аэропорта</string>
-    <string name="arv_label">Куда вы направляетесь?</string>
-    <string name="arv_airport_hint">Название или код аэропорта</string>
-    <string name="send_button">Отправить</string>
-    <string name="nav_things">Багаж</string>
-    <string name="nav_informer">Информер</string>
-    <string name="nav_about">О приложении</string>
-    <string name="nav_manage">Tools</string>
-    <string name="btn_choice">Выбрать…</string>
+    <string name="app_name" translatable="false">TravelAssistant</string>
+    <string name="navigation_drawer_open" translatable="true">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="true">Close navigation drawer</string>
+    <string name="nav_header_title" translatable="false">Travel Assistant</string>
+    <string name="nav_header_subtitle" translatable="false">Created by Nikolay Moskal © 2018–2019</string>
+    <string name="nav_header_desc" translatable="true">Navigation header</string>
+    <string name="travel_data_label" translatable="true">Ввод данных</string>
+    <string name="dep_label" translatable="true">Откуда вы отправляетесь?</string>
+    <string name="dep_city_hint" translatable="true">Название города</string>
+    <string name="dep_airport" translatable="true">Аэропорт вылета</string>
+    <string name="dep_airport_hint" translatable="true">Код аэропорта</string>
+    <string name="arv_label" translatable="true">Куда вы направляетесь?</string>
+    <string name="arv_airport_hint" translatable="true">Название или код аэропорта</string>
+    <string name="send_button" translatable="true">Отправить</string>
+    <string name="nav_things" translatable="true">Багаж</string>
+    <string name="nav_informer" translatable="true">Информер</string>
+    <string name="nav_about" translatable="true">О приложении</string>
+    <string name="nav_manage" translatable="true">Настройки</string>
+    <string name="btn_choice" translatable="true">Выбрать…</string>
 </resources>

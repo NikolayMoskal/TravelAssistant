@@ -1,4 +1,4 @@
-package by.neon.travelassistant;
+package by.neon.travelassistant.activity;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -35,6 +35,7 @@ import com.google.android.gms.security.ProviderInstaller;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import by.neon.travelassistant.R;
 import by.neon.travelassistant.config.AirportInfo;
 import by.neon.travelassistant.config.Config;
 import by.neon.travelassistant.config.FlightStatsDemoConfig;
@@ -77,10 +78,17 @@ public class MainActivity extends AppCompatActivity
         requestStoragePermissions();
 
         configureArrivalAirportView();
+        configureDepartureAirportView();
     }
 
     private void configureArrivalAirportView() {
         AutoCompleteTextView textView = findViewById(R.id.arv_airport);
+        textView.setAdapter(configureAdapter());
+        textView.setOnItemClickListener(new AutoCompleteTextViewItemClickListener(this));
+    }
+
+    private void configureDepartureAirportView() {
+        AutoCompleteTextView textView = findViewById(R.id.dep_airport_improved);
         textView.setAdapter(configureAdapter());
         textView.setOnItemClickListener(new AutoCompleteTextViewItemClickListener(this));
     }

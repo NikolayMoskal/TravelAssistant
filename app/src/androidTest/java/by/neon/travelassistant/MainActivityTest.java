@@ -13,6 +13,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 
+import by.neon.travelassistant.activity.MainActivity;
+
 import static org.mockito.Mockito.mock;
 
 @RunWith(AndroidJUnit4.class)
