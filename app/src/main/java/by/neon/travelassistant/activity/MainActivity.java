@@ -81,23 +81,37 @@ public class MainActivity extends AppCompatActivity
         configureDepartureAirportView();
     }
 
+    /**
+     * Configures the view for arrival airport
+     */
     private void configureArrivalAirportView() {
         AutoCompleteTextView textView = findViewById(R.id.arv_airport);
         textView.setAdapter(configureAdapter());
         textView.setOnItemClickListener(new AutoCompleteTextViewItemClickListener(this));
     }
 
+    /**
+     * Configures the view for departure airport
+     */
     private void configureDepartureAirportView() {
         AutoCompleteTextView textView = findViewById(R.id.dep_airport_improved);
         textView.setAdapter(configureAdapter());
         textView.setOnItemClickListener(new AutoCompleteTextViewItemClickListener(this));
     }
 
+    /**
+     * Configures the navigation view
+     */
     private void configureNavigationView() {
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    /**
+     * Configures the drawer layout
+     *
+     * @param toolbar the application toolbar
+     */
     private void configureDrawerLayout(Toolbar toolbar) {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
