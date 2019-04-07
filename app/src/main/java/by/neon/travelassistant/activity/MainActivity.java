@@ -32,13 +32,18 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.security.ProviderInstaller;
 
+import org.junit.Assert;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import by.neon.travelassistant.R;
+import by.neon.travelassistant.Startup;
 import by.neon.travelassistant.config.AirportInfo;
 import by.neon.travelassistant.config.Config;
 import by.neon.travelassistant.config.FlightStatsDemoConfig;
+import by.neon.travelassistant.config.sqlite.TravelDbContext;
+import by.neon.travelassistant.config.sqlite.model.Country;
 import by.neon.travelassistant.constant.CommonConstants;
 import by.neon.travelassistant.constant.DialogConstants;
 import by.neon.travelassistant.constant.GpsLocationConstants;
@@ -79,6 +84,13 @@ public class MainActivity extends AppCompatActivity
 
         configureArrivalAirportView();
         configureDepartureAirportView();
+        TravelDbContext dbContext = Startup.getStartup().getDbContext();
+        Country country = new Country();
+        country.setCountryCode("BY");
+        country.setCountryName("Belarus");
+        country.setId(1);
+        long id = dbContext.countryDao().insert(country);
+        assert id == country.getId();
     }
 
     /**
