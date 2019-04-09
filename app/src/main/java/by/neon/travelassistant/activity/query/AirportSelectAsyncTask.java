@@ -41,12 +41,11 @@ public final class AirportSelectAsyncTask extends AsyncTask<Void, Void, List<Air
      */
     @Override
     protected List<Airport> doInBackground(Void... voids) {
-        String columns = querySet.getSelectQuery();
         String expressions = querySet.getWhereQuery();
         TravelDbContext dbContext = Startup.getStartup().getDbContext();
         List<Airport> result = expressions == null
-                ? dbContext.airportDao().get(columns)
-                : dbContext.airportDao().get(columns, expressions);
+                ? dbContext.airportDao().getAll()
+                : dbContext.airportDao().getByQuery(expressions);
         Log.i(TAG, "doInBackground: " + result.size() + " rows returned.");
         return result;
     }

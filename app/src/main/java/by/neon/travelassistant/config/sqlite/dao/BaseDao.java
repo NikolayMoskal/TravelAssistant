@@ -15,10 +15,13 @@ import by.neon.travelassistant.config.sqlite.model.Country;
 public interface BaseDao<T extends BaseEntity> {
     @Insert
     long insert(T entity);
+
     @Insert
     List<Long> insert(T[] entities);
+
     @Update
     int update(T entity);
+
     @Delete
     int delete(T entity);
 }
