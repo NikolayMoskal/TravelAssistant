@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -36,9 +37,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import by.neon.travelassistant.R;
+import by.neon.travelassistant.activity.query.AirportInsertAsyncTask;
+import by.neon.travelassistant.activity.query.CityInsertAsyncTask;
+import by.neon.travelassistant.activity.query.CountryInsertAsyncTask;
 import by.neon.travelassistant.config.AirportInfo;
 import by.neon.travelassistant.config.Config;
 import by.neon.travelassistant.config.FlightStatsDemoConfig;
+import by.neon.travelassistant.config.SqliteConfig;
+import by.neon.travelassistant.config.sqlite.model.Airport;
+import by.neon.travelassistant.config.sqlite.model.City;
+import by.neon.travelassistant.config.sqlite.model.Country;
 import by.neon.travelassistant.constant.CommonConstants;
 import by.neon.travelassistant.constant.DialogConstants;
 import by.neon.travelassistant.constant.GpsLocationConstants;
@@ -159,6 +167,43 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void finish() {
+        CountryInsertAsyncTask countryInsert = new CountryInsertAsyncTask();
+        CityInsertAsyncTask cityInsert = new CityInsertAsyncTask();
+        AirportInsertAsyncTask airportInsert = new AirportInsertAsyncTask();
+        ArrayList<AirportInfo> list = config.getAirportsInfo();
+
+        for (AirportInfo info : list) {
+            Country country = new Country();
+            country.setCountryName(info.getCountryName());
+            country.setCountryCode(info.getCountryCode());
+            countryInsert.execute(country);
+            long countryId = countryInsert.getInsertResult().get(0);
+
+            City city = new City();
+            city.setCityName(info.getCityName());
+            city.setCityCode(info.getCityCode());
+            city.setCountryId(countryId);
+            cityInsert.execute(city);
+            long cityId = cityInsert.getInsertResult().get(0);
+
+            Airport airport = new Airport();
+            airport.setName(info.getAirportName());
+            Location location = new Location(LocationManager.GPS_PROVIDER);
+            location.setLatitude(info.getLatitude());
+            location.setLongitude(info.getLongitude());
+            airport.setLocation(location);
+            airport.setIataCode(info.getIataCode());
+            airport.setIcaoCode(info.getIcaoCode());
+            airport.setCityId(cityId);
+            airportInsert.execute(airport);
+            long airportId = airportInsert.getInsertResult().get(0);
+
+            // TODO create country, city and airport from info and insert in DB
+        }
     }
 
     /**
