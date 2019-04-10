@@ -5,6 +5,7 @@ public final class AirportInfo {
     private String icaoCode;
     private String airportName;
     private String cityName;
+    private String cityCode;
     private String countryName;
     private String countryCode;
     private double latitude;
@@ -79,6 +80,15 @@ public final class AirportInfo {
 
     AirportInfo setCountryCode(String countryCode) {
         this.countryCode = countryCode;
+        return this;
+    }
+
+    public String getCityCode() {
+        return cityCode;
+    }
+
+    AirportInfo setCityCode(String cityCode) {
+        this.cityCode = cityCode;
         return this;
     }
 }

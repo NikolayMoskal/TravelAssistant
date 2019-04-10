@@ -29,6 +29,7 @@ public final class FlightStatsDemoConfig extends Config {
                     .setIataCode(object.getString("iata"))
                     .setIcaoCode(object.getString("icao"))
                     .setCityName(object.getString("city"))
+                    .setCityCode(object.getString("cityCode"))
                     .setAirportName(object.getString("name"))
                     .setCountryName(object.getString("countryName"))
                     .setCountryCode(object.getString("countryCode"))
