@@ -24,4 +24,12 @@ public interface CountryDao extends BaseDao<Country> {
 
     @Query("DELETE FROM " + DbConstants.TABLE_COUNTRIES + " WHERE :expressions")
     int deleteByQuery(String expressions);
+
+    @Query("DELETE FROM " + DbConstants.TABLE_COUNTRIES + " WHERE " + DbConstants.ID + " = :id")
+    int deleteById(long id);
+
+    @Query("UPDATE " + DbConstants.TABLE_COUNTRIES + " SET " +
+    DbConstants.COUNTRIES_COLUMN_COUNTRY_NAME + " = :countryName, " +
+    DbConstants.COUNTRIES_COLUMN_COUNTRY_CODE + " = :countryCode WHERE " + DbConstants.ID + " = :id")
+    int updateById(long id, String countryName, String countryCode);
 }

@@ -6,6 +6,7 @@ public final class AirportInfo {
     private String airportName;
     private String cityName;
     private String countryName;
+    private String countryCode;
     private double latitude;
     private double longitude;
 
@@ -69,6 +70,15 @@ public final class AirportInfo {
 
     AirportInfo setIataCode(String iataCode) {
         this.iataCode = iataCode;
+        return this;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    AirportInfo setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
         return this;
     }
 }

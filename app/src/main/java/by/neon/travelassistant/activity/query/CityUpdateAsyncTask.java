@@ -12,6 +12,7 @@ import by.neon.travelassistant.config.sqlite.model.City;
  */
 public final class CityUpdateAsyncTask extends AsyncTask<City, Void, Integer> {
     private static final String TAG = "CityUpdateAsyncTask";
+    private int updateResult;
 
     /**
      * Override this method to perform a computation on a background thread. The
@@ -28,14 +29,43 @@ public final class CityUpdateAsyncTask extends AsyncTask<City, Void, Integer> {
      * @see #publishProgress
      */
     @Override
-    protected Integer doInBackground(City... cities) throws IllegalArgumentException {
+    protected Integer doInBackground(City... cities) throws IllegalArgumentException, NullPointerException {
         if (cities.length == 0) {
             throw new IllegalArgumentException("No present city to update.");
         }
+        if (cities[0] == null) {
+            throw new NullPointerException("No city to update.");
+        }
 
         TravelDbContext dbContext = Startup.getStartup().getDbContext();
-        int result = dbContext.cityDao().update(cities[0]);
+        City replacement = cities[0];
+        int result = dbContext.cityDao().updateById(replacement.getId(), replacement.getCityCode(), replacement.getCityName());
         Log.i(TAG, "doInBackground: " + result + " rows updated.");
         return result;
+    }
+
+    /**
+     * <p>Runs on the UI thread after {@link #doInBackground}. The
+     * specified result is the value returned by {@link #doInBackground}.</p>
+     *
+     * <p>This method won't be invoked if the task was cancelled.</p>
+     *
+     * @param result The result of the operation computed by {@link #doInBackground}.
+     * @see #onPreExecute
+     * @see #doInBackground
+     * @see #onCancelled(Object)
+     */
+    @Override
+    protected void onPostExecute(Integer result) {
+        updateResult = result;
+    }
+
+    /**
+     * Gets the result of update entities
+     *
+     * @return the count of updated entities
+     */
+    public int getUpdateResult() {
+        return updateResult;
     }
 }

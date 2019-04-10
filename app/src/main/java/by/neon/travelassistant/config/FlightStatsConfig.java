@@ -49,6 +49,7 @@ public final class FlightStatsConfig extends Config {
                                     .setCityName(object.getString("city"))
                                     .setAirportName(object.getString("name"))
                                     .setCountryName(object.getString("countryName"))
+                                    .setCountryCode(object.getString("countryCode"))
                                     .setLatitude(object.getDouble("latitude"))
                                     .setLongitude(object.getDouble("longitude")));
                         }

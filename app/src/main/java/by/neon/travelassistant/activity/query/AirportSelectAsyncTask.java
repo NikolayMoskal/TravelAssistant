@@ -3,6 +3,7 @@ package by.neon.travelassistant.activity.query;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import by.neon.travelassistant.Startup;
@@ -15,6 +16,7 @@ import by.neon.travelassistant.config.sqlite.model.Airport;
 public final class AirportSelectAsyncTask extends AsyncTask<Void, Void, List<Airport>> {
     private static final String TAG = "AirportSelectAsyncTask";
     private final QuerySet querySet;
+    private List<Airport> airports;
 
     /**
      * Builds a new {@link AirportSelectAsyncTask} with query set
@@ -48,5 +50,25 @@ public final class AirportSelectAsyncTask extends AsyncTask<Void, Void, List<Air
                 : dbContext.airportDao().getByQuery(expressions);
         Log.i(TAG, "doInBackground: " + result.size() + " rows returned.");
         return result;
+    }
+
+    /**
+     * <p>Runs on the UI thread after {@link #doInBackground}. The
+     * specified result is the value returned by {@link #doInBackground}.</p>
+     *
+     * <p>This method won't be invoked if the task was cancelled.</p>
+     *
+     * @param airports The result of the operation computed by {@link #doInBackground}.
+     * @see #onPreExecute
+     * @see #doInBackground
+     * @see #onCancelled(Object)
+     */
+    @Override
+    protected void onPostExecute(List<Airport> airports) {
+        this.airports = airports;
+    }
+
+    public List<Airport> getAirports() {
+        return new ArrayList<>(airports);
     }
 }

@@ -15,6 +15,7 @@ public final class DbConstants {
     public static final String TABLE_COUNTRIES = "COUNTRIES";
     public static final String COUNTRIES_COLUMN_COUNTRY_NAME = "COUNTRY_NAME";
     public static final String COUNTRIES_COLUMN_COUNTRY_CODE = "COUNTRY_CODE";
+    public static final String COUNTRIES_INDEX_UNIQUE_NAME = "COUNTRIES_NAME_UNIQUE";
 
     public static final String TABLE_CITIES = "CITIES";
     public static final String CITIES_COLUMN_CITY_NAME = "CITY_NAME";

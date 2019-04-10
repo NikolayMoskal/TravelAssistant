@@ -12,6 +12,7 @@ import by.neon.travelassistant.config.sqlite.model.Country;
  */
 public final class CountryUpdateAsyncTask extends AsyncTask<Country, Void, Integer> {
     private static final String TAG = "CountryUpdateAsyncTask";
+    private int updateResult;
 
     /**
      * Override this method to perform a computation on a background thread. The
@@ -34,8 +35,34 @@ public final class CountryUpdateAsyncTask extends AsyncTask<Country, Void, Integ
         }
 
         TravelDbContext dbContext = Startup.getStartup().getDbContext();
-        int result = dbContext.countryDao().update(countries[0]);
+        Country replacement = countries[0];
+        int result = dbContext.countryDao().updateById(replacement.getId(), replacement.getCountryName(), replacement.getCountryCode());
         Log.i(TAG, "doInBackground: " + result + " rows updated.");
         return result;
+    }
+
+    /**
+     * <p>Runs on the UI thread after {@link #doInBackground}. The
+     * specified result is the value returned by {@link #doInBackground}.</p>
+     *
+     * <p>This method won't be invoked if the task was cancelled.</p>
+     *
+     * @param result The result of the operation computed by {@link #doInBackground}.
+     * @see #onPreExecute
+     * @see #doInBackground
+     * @see #onCancelled(Object)
+     */
+    @Override
+    protected void onPostExecute(Integer result) {
+        updateResult = result;
+    }
+
+    /**
+     * Gets the result of update entities
+     *
+     * @return the count of updated entities
+     */
+    public int getUpdateResult() {
+        return updateResult;
     }
 }

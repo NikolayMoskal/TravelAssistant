@@ -30,6 +30,7 @@ public final class SqliteConfig extends Config {
                     .setAirportName(airport.getName())
                     .setCityName(city.getCityName())
                     .setCountryName(country.getCountryName())
+                    .setCountryCode(country.getCountryCode())
                     .setIataCode(airport.getIataCode())
                     .setIcaoCode(airport.getIcaoCode()));
         }

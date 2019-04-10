@@ -3,6 +3,7 @@ package by.neon.travelassistant.activity.query;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import by.neon.travelassistant.Startup;
@@ -14,6 +15,7 @@ import by.neon.travelassistant.config.sqlite.model.Airport;
  */
 public final class AirportInsertAsyncTask extends AsyncTask<Airport, Void, List<Long>> {
     private static final String TAG = "AirportInsertAsyncTask";
+    private List<Long> insertResult;
 
     /**
      * Override this method to perform a computation on a background thread. The
@@ -39,5 +41,25 @@ public final class AirportInsertAsyncTask extends AsyncTask<Airport, Void, List<
         List<Long> result = dbContext.airportDao().insert(airports);
         Log.i(TAG, "doInBackground: " + result.size() + " rows inserted.");
         return result;
+    }
+
+    /**
+     * <p>Runs on the UI thread after {@link #doInBackground}. The
+     * specified result is the value returned by {@link #doInBackground}.</p>
+     *
+     * <p>This method won't be invoked if the task was cancelled.</p>
+     *
+     * @param result The result of the operation computed by {@link #doInBackground}.
+     * @see #onPreExecute
+     * @see #doInBackground
+     * @see #onCancelled(Object)
+     */
+    @Override
+    protected void onPostExecute(List<Long> result) {
+        insertResult = result;
+    }
+
+    public List<Long> getInsertResult() {
+        return new ArrayList<>(insertResult);
     }
 }

@@ -12,6 +12,7 @@ import by.neon.travelassistant.config.sqlite.model.Airport;
  */
 public final class AirportUpdateAsyncTask extends AsyncTask<Airport, Void, Integer> {
     private static final String TAG = "AirportUpdateAsyncTask";
+    private int updateResult;
 
     /**
      * Override this method to perform a computation on a background thread. The
@@ -28,14 +29,43 @@ public final class AirportUpdateAsyncTask extends AsyncTask<Airport, Void, Integ
      * @see #publishProgress
      */
     @Override
-    protected Integer doInBackground(Airport... airports) throws IllegalArgumentException {
+    protected Integer doInBackground(Airport... airports) throws IllegalArgumentException, NullPointerException {
         if (airports.length == 0) {
             throw new IllegalArgumentException("No present airport to update.");
         }
+        if (airports[0] == null) {
+            throw new NullPointerException("No airport to update.");
+        }
 
         TravelDbContext dbContext = Startup.getStartup().getDbContext();
-        int result = dbContext.airportDao().update(airports[0]);
+        Airport replacement = airports[0];
+        int result = dbContext.airportDao().updateById(replacement.getId(), replacement.getName(), replacement.getLocation(), replacement.getIataCode(), replacement.getIcaoCode());
         Log.i(TAG, "doInBackground: " + result + " rows updated.");
         return result;
+    }
+
+    /**
+     * <p>Runs on the UI thread after {@link #doInBackground}. The
+     * specified result is the value returned by {@link #doInBackground}.</p>
+     *
+     * <p>This method won't be invoked if the task was cancelled.</p>
+     *
+     * @param result The result of the operation computed by {@link #doInBackground}.
+     * @see #onPreExecute
+     * @see #doInBackground
+     * @see #onCancelled(Object)
+     */
+    @Override
+    protected void onPostExecute(Integer result) {
+        updateResult = result;
+    }
+
+    /**
+     * Gets the result of update entities
+     *
+     * @return the count of updated entities
+     */
+    public int getUpdateResult() {
+        return updateResult;
     }
 }
