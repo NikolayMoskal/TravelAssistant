@@ -10,6 +10,8 @@ public class QuerySet {
     }
 
     public String getWhereQuery() {
-        return expression.build();
+        return expression != null
+                ? expression.build()
+                : null;
     }
 }

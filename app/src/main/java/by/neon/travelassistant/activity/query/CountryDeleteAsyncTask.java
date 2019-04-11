@@ -14,7 +14,6 @@ public final class CountryDeleteAsyncTask extends AsyncTask<Country, Void, Integ
     private static final String TAG = "CountryDeleteAsyncTask";
     private boolean isDeleteAll;
     private final QuerySet querySet;
-    private int deleteResult;
 
     /**
      * Builds a new instance of {@link CountryDeleteAsyncTask}.
@@ -73,30 +72,5 @@ public final class CountryDeleteAsyncTask extends AsyncTask<Country, Void, Integ
                 : dbContext.countryDao().deleteByQuery(expressions);
         Log.i(TAG, "doInBackground: " + result + " rows deleted.");
         return result;
-    }
-
-    /**
-     * <p>Runs on the UI thread after {@link #doInBackground}. The
-     * specified result is the value returned by {@link #doInBackground}.</p>
-     *
-     * <p>This method won't be invoked if the task was cancelled.</p>
-     *
-     * @param result The result of the operation computed by {@link #doInBackground}.
-     * @see #onPreExecute
-     * @see #doInBackground
-     * @see #onCancelled(Object)
-     */
-    @Override
-    protected void onPostExecute(Integer result) {
-        deleteResult = result;
-    }
-
-    /**
-     * Gets the result of remove entities
-     *
-     * @return the count of removed entities
-     */
-    public int getDeleteResult() {
-        return deleteResult;
     }
 }

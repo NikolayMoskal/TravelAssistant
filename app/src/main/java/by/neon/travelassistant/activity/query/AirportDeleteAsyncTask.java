@@ -12,7 +12,6 @@ import by.neon.travelassistant.config.sqlite.model.Airport;
  */
 public final class AirportDeleteAsyncTask extends AsyncTask<Airport, Void, Integer> {
     private static final String TAG = "AirportDeleteAsyncTask";
-    private int deleteResult;
     private boolean isDeleteAll;
     private final QuerySet querySet;
 
@@ -73,30 +72,5 @@ public final class AirportDeleteAsyncTask extends AsyncTask<Airport, Void, Integ
                 : dbContext.airportDao().deleteByQuery(expressions);
         Log.i(TAG, "doInBackground: " + result + " rows deleted.");
         return result;
-    }
-
-    /**
-     * <p>Runs on the UI thread after {@link #doInBackground}. The
-     * specified result is the value returned by {@link #doInBackground}.</p>
-     *
-     * <p>This method won't be invoked if the task was cancelled.</p>
-     *
-     * @param result The result of the operation computed by {@link #doInBackground}.
-     * @see #onPreExecute
-     * @see #doInBackground
-     * @see #onCancelled(Object)
-     */
-    @Override
-    protected void onPostExecute(Integer result) {
-        deleteResult = result;
-    }
-
-    /**
-     * Gets the result of entity delete
-     *
-     * @return the count of removed entities
-     */
-    public int getDeleteResult() {
-        return deleteResult;
     }
 }

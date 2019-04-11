@@ -16,7 +16,6 @@ import by.neon.travelassistant.config.sqlite.model.Airport;
 public final class AirportSelectAsyncTask extends AsyncTask<Void, Void, List<Airport>> {
     private static final String TAG = "AirportSelectAsyncTask";
     private final QuerySet querySet;
-    private List<Airport> airports;
 
     /**
      * Builds a new {@link AirportSelectAsyncTask} with query set
@@ -48,27 +47,8 @@ public final class AirportSelectAsyncTask extends AsyncTask<Void, Void, List<Air
         List<Airport> result = expressions == null
                 ? dbContext.airportDao().getAll()
                 : dbContext.airportDao().getByQuery(expressions);
-        Log.i(TAG, "doInBackground: " + result.size() + " rows returned.");
-        return result;
-    }
-
-    /**
-     * <p>Runs on the UI thread after {@link #doInBackground}. The
-     * specified result is the value returned by {@link #doInBackground}.</p>
-     *
-     * <p>This method won't be invoked if the task was cancelled.</p>
-     *
-     * @param airports The result of the operation computed by {@link #doInBackground}.
-     * @see #onPreExecute
-     * @see #doInBackground
-     * @see #onCancelled(Object)
-     */
-    @Override
-    protected void onPostExecute(List<Airport> airports) {
-        this.airports = airports;
-    }
-
-    public List<Airport> getAirports() {
-        return new ArrayList<>(airports);
+        int resultSize = result == null ? 0 : result.size();
+        Log.i(TAG, "doInBackground: " + resultSize + " rows returned.");
+        return result == null ? new ArrayList<>(0) : result;
     }
 }

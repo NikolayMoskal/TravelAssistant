@@ -35,11 +35,15 @@ import com.google.android.gms.security.ProviderInstaller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import by.neon.travelassistant.R;
 import by.neon.travelassistant.activity.query.AirportInsertAsyncTask;
+import by.neon.travelassistant.activity.query.AirportSelectAsyncTask;
 import by.neon.travelassistant.activity.query.CityInsertAsyncTask;
 import by.neon.travelassistant.activity.query.CountryInsertAsyncTask;
+import by.neon.travelassistant.activity.query.QuerySet;
 import by.neon.travelassistant.config.AirportInfo;
 import by.neon.travelassistant.config.Config;
 import by.neon.travelassistant.config.FlightStatsDemoConfig;
@@ -63,6 +67,7 @@ public class MainActivity extends AppCompatActivity
     private LocationManager locationManager;
     private Config config;
     private LocationListener locationListener;
+    private List<Airport> airportsInDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +88,15 @@ public class MainActivity extends AppCompatActivity
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new CustomLocationListener(this);
+
+        // TODO add progress bar to all tasks
+        try {
+            AirportSelectAsyncTask select = new AirportSelectAsyncTask(new QuerySet(null));
+            airportsInDatabase = select.execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+            Log.e(TAG, "onCreate: " + e.getMessage(), e);
+        }
+
         requestStoragePermissions();
 
         configureArrivalAirportView();
@@ -171,38 +185,47 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void finish() {
+        if (config instanceof SqliteConfig) {
+            return;
+        }
+
         CountryInsertAsyncTask countryInsert = new CountryInsertAsyncTask();
         CityInsertAsyncTask cityInsert = new CityInsertAsyncTask();
         AirportInsertAsyncTask airportInsert = new AirportInsertAsyncTask();
         ArrayList<AirportInfo> list = config.getAirportsInfo();
 
-        for (AirportInfo info : list) {
-            Country country = new Country();
-            country.setCountryName(info.getCountryName());
-            country.setCountryCode(info.getCountryCode());
-            countryInsert.execute(country);
-            long countryId = countryInsert.getInsertResult().get(0);
+        try {
+            for (AirportInfo info : list) {
+                Country country = new Country();
+                country.setCountryName(info.getCountryName());
+                country.setCountryCode(info.getCountryCode());
+                List<Long> countryInsertResult = countryInsert.execute(country).get();
+                if (countryInsertResult.size() == 0) break;
+                long countryId = countryInsertResult.get(0);
 
-            City city = new City();
-            city.setCityName(info.getCityName());
-            city.setCityCode(info.getCityCode());
-            city.setCountryId(countryId);
-            cityInsert.execute(city);
-            long cityId = cityInsert.getInsertResult().get(0);
+                City city = new City();
+                city.setCityName(info.getCityName());
+                city.setCityCode(info.getCityCode());
+                city.setCountryId(countryId);
+                List<Long> cityInsertResult = cityInsert.execute(city).get();
+                if (cityInsertResult.size() == 0) break;
+                long cityId = cityInsertResult.get(0);
 
-            Airport airport = new Airport();
-            airport.setName(info.getAirportName());
-            Location location = new Location(LocationManager.GPS_PROVIDER);
-            location.setLatitude(info.getLatitude());
-            location.setLongitude(info.getLongitude());
-            airport.setLocation(location);
-            airport.setIataCode(info.getIataCode());
-            airport.setIcaoCode(info.getIcaoCode());
-            airport.setCityId(cityId);
-            airportInsert.execute(airport);
-            long airportId = airportInsert.getInsertResult().get(0);
+                Airport airport = new Airport();
+                airport.setName(info.getAirportName());
+                Location location = new Location(LocationManager.GPS_PROVIDER);
+                location.setLatitude(info.getLatitude());
+                location.setLongitude(info.getLongitude());
+                airport.setLocation(location);
+                airport.setIataCode(info.getIataCode());
+                airport.setIcaoCode(info.getIcaoCode());
+                airport.setCityId(cityId);
+                airportInsert.execute(airport).get();
 
-            // TODO create country, city and airport from info and insert in DB
+                // TODO create country, city and airport from info and insert in DB
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            Log.e(TAG, "finish: " + e.getMessage(), e);
         }
     }
 
@@ -327,7 +350,12 @@ public class MainActivity extends AppCompatActivity
         switch (requestCode) {
             case RuntimePermissionConstants.WRITE_EXTERNAL_STORAGE_PERMISSION:
                 try {
-                    config = new FlightStatsDemoConfig(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), CommonConstants.DEMO_DATABASE_NAME);
+                    if (airportsInDatabase.size() > 0) {
+                        config = new SqliteConfig();
+                    }
+                    else {
+                        config = new FlightStatsDemoConfig(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), CommonConstants.DEMO_DATABASE_NAME);
+                    }
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage(), e);
                     break;
@@ -350,7 +378,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private SimpleAdapter configureAdapter() {
-        String[] keys = new String[] {"AirportInfo", "AirportCode"};
+        String[] keys = new String[]{"AirportInfo", "AirportCode"};
         ArrayList<HashMap<String, String>> maps = new ArrayList<>(0);
         for (AirportInfo info : config.getAirportsInfo()) {
             HashMap<String, String> map = new HashMap<>(0);
@@ -358,7 +386,7 @@ public class MainActivity extends AppCompatActivity
             map.put(keys[1], info.getIataCode());
             maps.add(map);
         }
-        int[] ids = new int[] {R.id.airportInfo, R.id.airportCode};
+        int[] ids = new int[]{R.id.airportInfo, R.id.airportCode};
         return new SimpleAdapter(this, maps, R.layout.airport_list_item, keys, ids);
     }
 
@@ -369,7 +397,12 @@ public class MainActivity extends AppCompatActivity
             }
         } else {
             try {
-                config = new FlightStatsDemoConfig(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), CommonConstants.DEMO_DATABASE_NAME);
+                if (airportsInDatabase.size() > 0) {
+                    config = new SqliteConfig();
+                }
+                else {
+                    config = new FlightStatsDemoConfig(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), CommonConstants.DEMO_DATABASE_NAME);
+                }
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage(), e);
             }

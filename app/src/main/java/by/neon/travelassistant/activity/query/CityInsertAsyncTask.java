@@ -15,7 +15,6 @@ import by.neon.travelassistant.config.sqlite.model.City;
  */
 public final class CityInsertAsyncTask extends AsyncTask<City, Void, List<Long>> {
     private static final String TAG = "CityInsertAsyncTask";
-    private List<Long> insertResult;
 
     /**
      * Override this method to perform a computation on a background thread. The
@@ -39,32 +38,8 @@ public final class CityInsertAsyncTask extends AsyncTask<City, Void, List<Long>>
 
         TravelDbContext dbContext = Startup.getStartup().getDbContext();
         List<Long> result = dbContext.cityDao().insert(cities);
-        Log.i(TAG, "doInBackground: " + result.size() + " rows inserted.");
-        return result;
-    }
-
-    /**
-     * <p>Runs on the UI thread after {@link #doInBackground}. The
-     * specified result is the value returned by {@link #doInBackground}.</p>
-     *
-     * <p>This method won't be invoked if the task was cancelled.</p>
-     *
-     * @param result The result of the operation computed by {@link #doInBackground}.
-     * @see #onPreExecute
-     * @see #doInBackground
-     * @see #onCancelled(Object)
-     */
-    @Override
-    protected void onPostExecute(List<Long> result) {
-        insertResult = result;
-    }
-
-    /**
-     * Gets the result of insert entities
-     *
-     * @return the count of inserted entities
-     */
-    public List<Long> getInsertResult() {
-        return new ArrayList<>(insertResult);
+        int resultSize = result == null ? 0 : result.size();
+        Log.i(TAG, "doInBackground: " + resultSize + " rows inserted.");
+        return result == null ? new ArrayList<>(0) : result;
     }
 }
