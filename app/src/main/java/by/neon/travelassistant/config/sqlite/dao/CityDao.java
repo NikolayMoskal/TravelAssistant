@@ -28,7 +28,7 @@ public interface CityDao extends BaseDao<City> {
     @Query("DELETE FROM " + DbConstants.TABLE_CITIES + " WHERE " + DbConstants.ID + " = :id")
     int deleteById(long id);
 
-    @Query("UPDATE " + DbConstants.TABLE_CITIES + " SET " +
+    @Query("UPDATE OR IGNORE " + DbConstants.TABLE_CITIES + " SET " +
     DbConstants.CITIES_COLUMN_CITY_CODE + " = :cityCode, " +
     DbConstants.CITIES_COLUMN_CITY_NAME + " = :cityName WHERE " + DbConstants.ID + " = :id")
     int updateById(long id, String cityCode, String cityName);
