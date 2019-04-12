@@ -94,9 +94,13 @@ public class MainActivity extends AppCompatActivity
             Log.e(TAG, "onCreate: " + e.getMessage(), e);
         }
 
-        configureAirportsDatabase();
-        configureArrivalAirportView();
-        configureDepartureAirportView();
+        try {
+            configureAirportsDatabase();
+            configureArrivalAirportView();
+            configureDepartureAirportView();
+        } catch (Exception e) {
+            Log.e(TAG, "onCreate: " + e.getMessage(), e);
+        }
     }
 
     /**
@@ -185,13 +189,14 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-        CountryInsertAsyncTask countryInsert = new CountryInsertAsyncTask();
-        CityInsertAsyncTask cityInsert = new CityInsertAsyncTask();
-        AirportInsertAsyncTask airportInsert = new AirportInsertAsyncTask();
         ArrayList<AirportInfo> list = config.getAirportsInfo();
 
         try {
             for (AirportInfo info : list) {
+                CountryInsertAsyncTask countryInsert = new CountryInsertAsyncTask();
+                CityInsertAsyncTask cityInsert = new CityInsertAsyncTask();
+                AirportInsertAsyncTask airportInsert = new AirportInsertAsyncTask();
+
                 Country country = new Country();
                 country.setCountryName(info.getCountryName());
                 country.setCountryCode(info.getCountryCode());
@@ -372,17 +377,13 @@ public class MainActivity extends AppCompatActivity
         return new SimpleAdapter(this, maps, R.layout.airport_list_item, keys, ids);
     }
 
-    private void configureAirportsDatabase() {
-        try {
-            if (airportsInDatabase.size() > 0) {
-                config = new SqliteConfig();
-                Log.i(TAG, "configureAirportsDatabase: Use internal database.");
-            } else {
-                config = new FlightStatsDemoConfig();
-                Log.i(TAG, "configureAirportsDatabase: Use demo database.");
-            }
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+    private void configureAirportsDatabase() throws Exception {
+        if (airportsInDatabase.size() > 0) {
+            config = new SqliteConfig();
+            Log.i(TAG, "configureAirportsDatabase: Use internal database.");
+        } else {
+            config = new FlightStatsDemoConfig();
+            Log.i(TAG, "configureAirportsDatabase: Use demo database.");
         }
     }
 

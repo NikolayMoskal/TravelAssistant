@@ -67,26 +67,26 @@ public class WhereQuery {
          */
         private String operation;
         /**
-         * Left operand in expression
+         * The column that will be used in expression.
          */
-        private String leftValue;
+        private String columnName;
         /**
-         * Right operand in expression
+         * The value that will be used as filter of column values. Should be a same type with used column.
          */
-        private String rightValue;
+        private Object filterValue;
 
         /**
-         * Builds a new instance of {@link WhereQuery.Expression}
+         * Builds a new instance of {@link WhereQuery.Expression}.
          *
          * @param operation {@link #operation}
-         * @param leftValue {@link #leftValue}
-         * @param rightValue {@link #rightValue}
+         * @param columnName {@link #columnName}
+         * @param filterValue {@link #filterValue}
          * @param isFilterRange {@link #isFilterRange}
          */
-        public Expression(String operation, String leftValue, String rightValue, boolean isFilterRange) {
+        public Expression(String operation, String columnName, Object filterValue, boolean isFilterRange) {
             this.operation = operation;
-            this.leftValue = leftValue;
-            this.rightValue = rightValue;
+            this.columnName = columnName;
+            this.filterValue = filterValue;
             this.isFilterRange = isFilterRange;
         }
 
@@ -96,12 +96,12 @@ public class WhereQuery {
          * @return the string that contains a valid boolean SQL expression
          */
         public String getExpression() {
-            return (isFilterRange ? "AND " : "OR ") + leftValue + " " + operation + " " + rightValue;
+            return (isFilterRange ? "AND " : "OR ") + columnName + " " + operation + " " + filterValue;
         }
     }
 
     /**
-     * Contains a string constants with SQL compare operations
+     * Contains a string constants with SQL compare operations.
      */
     public static class Operation {
         public static final String GREATER = ">";
