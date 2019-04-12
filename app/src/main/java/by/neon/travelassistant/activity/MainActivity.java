@@ -9,12 +9,10 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -51,7 +49,6 @@ import by.neon.travelassistant.config.SqliteConfig;
 import by.neon.travelassistant.config.sqlite.model.Airport;
 import by.neon.travelassistant.config.sqlite.model.City;
 import by.neon.travelassistant.config.sqlite.model.Country;
-import by.neon.travelassistant.constant.CommonConstants;
 import by.neon.travelassistant.constant.DialogConstants;
 import by.neon.travelassistant.constant.GpsLocationConstants;
 import by.neon.travelassistant.constant.RuntimePermissionConstants;
@@ -97,8 +94,7 @@ public class MainActivity extends AppCompatActivity
             Log.e(TAG, "onCreate: " + e.getMessage(), e);
         }
 
-        requestStoragePermissions();
-
+        configureAirportsDatabase();
         configureArrivalAirportView();
         configureDepartureAirportView();
     }
@@ -348,20 +344,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case RuntimePermissionConstants.WRITE_EXTERNAL_STORAGE_PERMISSION:
-                try {
-                    if (airportsInDatabase.size() > 0) {
-                        config = new SqliteConfig();
-                    }
-                    else {
-                        config = new FlightStatsDemoConfig(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), CommonConstants.DEMO_DATABASE_NAME);
-                    }
-                } catch (Exception e) {
-                    Log.e(TAG, e.getMessage(), e);
-                    break;
-                }
-                Log.i(TAG, "onRequestPermissionsResult: Use FlightStats demo database");
-                break;
             case RuntimePermissionConstants.ACCESS_FINE_LOCATION_PERMISSION:
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, GpsLocationConstants.MIN_TIME_UPDATE_MSEC, GpsLocationConstants.MIN_DISTANCE_MILES, locationListener);
@@ -390,22 +372,17 @@ public class MainActivity extends AppCompatActivity
         return new SimpleAdapter(this, maps, R.layout.airport_list_item, keys, ids);
     }
 
-    private void requestStoragePermissions() {
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RuntimePermissionConstants.WRITE_EXTERNAL_STORAGE_PERMISSION);
+    private void configureAirportsDatabase() {
+        try {
+            if (airportsInDatabase.size() > 0) {
+                config = new SqliteConfig();
+                Log.i(TAG, "configureAirportsDatabase: Use internal database.");
+            } else {
+                config = new FlightStatsDemoConfig();
+                Log.i(TAG, "configureAirportsDatabase: Use demo database.");
             }
-        } else {
-            try {
-                if (airportsInDatabase.size() > 0) {
-                    config = new SqliteConfig();
-                }
-                else {
-                    config = new FlightStatsDemoConfig(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), CommonConstants.DEMO_DATABASE_NAME);
-                }
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage(), e);
-            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
         }
     }
 
