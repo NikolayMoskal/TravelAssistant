@@ -5,7 +5,7 @@ import android.arch.persistence.room.PrimaryKey;
 
 import by.neon.travelassistant.config.sqlite.DbConstants;
 
-public abstract class BaseEntity {
+public abstract class BaseDbEntity {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = DbConstants.ID)
     private long id;

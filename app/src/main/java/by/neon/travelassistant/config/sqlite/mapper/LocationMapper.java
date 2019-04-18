@@ -1,6 +1,5 @@
-package by.neon.travelassistant.config.sqlite.model.converter;
+package by.neon.travelassistant.config.sqlite.mapper;
 
-import android.arch.persistence.room.TypeConverter;
 import android.location.Location;
 import android.location.LocationManager;
 
@@ -13,22 +12,22 @@ import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
 import org.locationtech.jts.io.WKTWriter;
 
-public class LocationConverter {
-    @TypeConverter
-    public String toWktString(Location location) {
-        CoordinateArraySequence sequence = new CoordinateArraySequence(new Coordinate[] {new Coordinate(location.getLatitude(), location.getLongitude())});
+public class LocationMapper extends BaseMapper<Location, String> {
+    @Override
+    public String from(Location source) {
+        CoordinateArraySequence sequence = new CoordinateArraySequence(new Coordinate[] {new Coordinate(source.getLatitude(), source.getLongitude())});
         GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel());
         Point point = new Point(sequence, geometryFactory);
         WKTWriter writer = new WKTWriter();
         return writer.write(point);
     }
 
-    @TypeConverter
-    public Location fromWktString(String wkt) {
+    @Override
+    public Location to(String source) {
         WKTReader reader = new WKTReader();
         Point point = null;
         try {
-            point = (Point) reader.read(wkt);
+            point = (Point) reader.read(source);
         } catch (ParseException e) {
             e.printStackTrace();
         }
