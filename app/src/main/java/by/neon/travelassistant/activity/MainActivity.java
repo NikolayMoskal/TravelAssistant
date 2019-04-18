@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -41,19 +40,20 @@ import by.neon.travelassistant.activity.query.AirportInsertAsyncTask;
 import by.neon.travelassistant.activity.query.AirportSelectAsyncTask;
 import by.neon.travelassistant.activity.query.CityInsertAsyncTask;
 import by.neon.travelassistant.activity.query.CountryInsertAsyncTask;
-import by.neon.travelassistant.activity.query.QuerySet;
-import by.neon.travelassistant.config.AirportInfo;
+import by.neon.travelassistant.activity.query.CountrySelectAsyncTask;
 import by.neon.travelassistant.config.Config;
 import by.neon.travelassistant.config.FlightStatsDemoConfig;
 import by.neon.travelassistant.config.SqliteConfig;
-import by.neon.travelassistant.config.sqlite.model.Airport;
-import by.neon.travelassistant.config.sqlite.model.City;
-import by.neon.travelassistant.config.sqlite.model.Country;
+import by.neon.travelassistant.config.sqlite.mapper.AirportMapper;
+import by.neon.travelassistant.config.sqlite.model.AirportDb;
+import by.neon.travelassistant.config.sqlite.model.CityDb;
+import by.neon.travelassistant.config.sqlite.model.CountryDb;
 import by.neon.travelassistant.constant.DialogConstants;
 import by.neon.travelassistant.constant.GpsLocationConstants;
 import by.neon.travelassistant.constant.RuntimePermissionConstants;
 import by.neon.travelassistant.listener.AutoCompleteTextViewItemClickListener;
 import by.neon.travelassistant.listener.CustomLocationListener;
+import by.neon.travelassistant.model.Airport;
 
 /**
  * Represents the main window of the TravelAssistant application
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity
     private LocationManager locationManager;
     private Config config;
     private LocationListener locationListener;
-    private List<Airport> airportsInDatabase;
+    private int airportsInDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,12 +88,10 @@ public class MainActivity extends AppCompatActivity
 
         // TODO add progress bar to all tasks
         try {
-            AirportSelectAsyncTask select = new AirportSelectAsyncTask(new QuerySet(null));
-            airportsInDatabase = select.execute().get();
+            airportsInDatabase = new AirportSelectAsyncTask().execute().get().size();
         } catch (InterruptedException | ExecutionException e) {
             Log.e(TAG, "onCreate: " + e.getMessage(), e);
         }
-
         try {
             configureAirportsDatabase();
             configureArrivalAirportView();
@@ -189,45 +187,28 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-        ArrayList<AirportInfo> list = config.getAirportsInfo();
-
         try {
-            for (AirportInfo info : list) {
-                CountryInsertAsyncTask countryInsert = new CountryInsertAsyncTask();
-                CityInsertAsyncTask cityInsert = new CityInsertAsyncTask();
-                AirportInsertAsyncTask airportInsert = new AirportInsertAsyncTask();
+            AirportMapper mapper = new AirportMapper();
+            List<AirportDb> airportDbs = mapper.from(config.getAirportsInfo());
+            for (AirportDb airportDb : airportDbs) {
+                CountryDb countryDb = airportDb.getCityDb().getCountryDb();
+                CityDb cityDb = airportDb.getCityDb();
 
-                Country country = new Country();
-                country.setCountryName(info.getCountryName());
-                country.setCountryCode(info.getCountryCode());
-                List<Long> countryInsertResult = countryInsert.execute(country).get();
-                if (countryInsertResult.size() == 0) break;
-                long countryId = countryInsertResult.get(0);
-
-                City city = new City();
-                city.setCityName(info.getCityName());
-                city.setCityCode(info.getCityCode());
-                city.setCountryId(countryId);
-                List<Long> cityInsertResult = cityInsert.execute(city).get();
-                if (cityInsertResult.size() == 0) break;
-                long cityId = cityInsertResult.get(0);
-
-                Airport airport = new Airport();
-                airport.setName(info.getAirportName());
-                Location location = new Location(LocationManager.GPS_PROVIDER);
-                location.setLatitude(info.getLatitude());
-                location.setLongitude(info.getLongitude());
-                airport.setLocation(location);
-                airport.setIataCode(info.getIataCode());
-                airport.setIcaoCode(info.getIcaoCode());
-                airport.setCityId(cityId);
-                airportInsert.execute(airport).get();
-
-                // TODO create country, city and airport from info and insert in DB
+                cityDb.setCountryId(checkExistingCountry(countryDb));
+                long cityId = new CityInsertAsyncTask().execute(cityDb).get().get(0);
+                airportDb.setCityId(cityId);
+                new AirportInsertAsyncTask().execute(airportDb).get();
             }
         } catch (InterruptedException | ExecutionException e) {
             Log.e(TAG, "finish: " + e.getMessage(), e);
         }
+    }
+
+    private long checkExistingCountry(CountryDb countryDb) throws ExecutionException, InterruptedException {
+        List<CountryDb> foundCountries = new CountrySelectAsyncTask(countryDb.getCountryName()).execute().get();
+        return foundCountries.size() > 0
+                ? foundCountries.get(0).getId()
+                : new CountryInsertAsyncTask().execute(countryDb).get().get(0);
     }
 
     /**
@@ -255,8 +236,8 @@ public class MainActivity extends AppCompatActivity
             case DialogConstants.CHOICE_DEP_AIRPORT_DIALOG:
                 builder.setTitle("Выберите аэропорт"); // заголовок для диалога
                 ArrayList<String> strings = new ArrayList<>(0);
-                ArrayList<AirportInfo> airports = config.getAirportsInfo();
-                for (AirportInfo info : airports) {
+                ArrayList<Airport> airports = config.getAirportsInfo();
+                for (Airport info : airports) {
                     strings.add(info.getAirportName());
                 }
                 builder.setItems(strings.toArray(new String[0]), (dialog, item) -> {
@@ -367,9 +348,9 @@ public class MainActivity extends AppCompatActivity
     private SimpleAdapter configureAdapter() {
         String[] keys = new String[]{"AirportInfo", "AirportCode"};
         ArrayList<HashMap<String, String>> maps = new ArrayList<>(0);
-        for (AirportInfo info : config.getAirportsInfo()) {
+        for (Airport info : config.getAirportsInfo()) {
             HashMap<String, String> map = new HashMap<>(0);
-            map.put(keys[0], String.format("%s, %s, %s (%s)", info.getCountryName(), info.getCityName(), info.getAirportName(), info.getIataCode()));
+            map.put(keys[0], String.format("%s, %s, %s (%s)", info.getCity().getCountry().getCountryName(), info.getCity().getCityName(), info.getAirportName(), info.getIataCode()));
             map.put(keys[1], info.getIataCode());
             maps.add(map);
         }
@@ -378,7 +359,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void configureAirportsDatabase() throws Exception {
-        if (airportsInDatabase.size() > 0) {
+        if (airportsInDatabase > 0) {
             config = new SqliteConfig();
             Log.i(TAG, "configureAirportsDatabase: Use internal database.");
         } else {
