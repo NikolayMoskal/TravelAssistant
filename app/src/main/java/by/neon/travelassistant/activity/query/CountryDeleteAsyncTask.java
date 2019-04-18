@@ -5,15 +5,16 @@ import android.util.Log;
 
 import by.neon.travelassistant.Startup;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
-import by.neon.travelassistant.config.sqlite.model.Country;
+import by.neon.travelassistant.config.sqlite.model.CountryDb;
 
 /**
  * Removes cities from database. To run the request to database use the {@code execute()} method.
  */
-public final class CountryDeleteAsyncTask extends AsyncTask<Country, Void, Integer> {
+public final class CountryDeleteAsyncTask extends AsyncTask<CountryDb, Void, Integer> {
     private static final String TAG = "CountryDeleteAsyncTask";
     private boolean isDeleteAll;
-    private final QuerySet querySet;
+    private String requestedCountryName;
+    private long requestedCountryId;
 
     /**
      * Builds a new instance of {@link CountryDeleteAsyncTask}.
@@ -22,19 +23,16 @@ public final class CountryDeleteAsyncTask extends AsyncTask<Country, Void, Integ
      *
      * @param isDeleteAll the flag to remove all countries
      */
-    public CountryDeleteAsyncTask(boolean isDeleteAll) {
-        this.isDeleteAll = isDeleteAll;
-        this.querySet = new QuerySet(null);
+    public CountryDeleteAsyncTask() {
+        this.isDeleteAll = true;
     }
 
-    /**
-     * Builds a new instance of {@link CityDeleteAsyncTask} using the query set.
-     * Removes one or more countries from database. All countries to remove must be sent as params of {@code execute()} method.
-     *
-     * @param querySet the set of expressions to database
-     */
-    public CountryDeleteAsyncTask(QuerySet querySet) {
-        this.querySet = querySet;
+    public CountryDeleteAsyncTask(String requestedCountryName) {
+        this.requestedCountryName = requestedCountryName;
+    }
+
+    public CountryDeleteAsyncTask(long requestedCountryId) {
+        this.requestedCountryId = requestedCountryId;
     }
 
     /**
@@ -52,24 +50,22 @@ public final class CountryDeleteAsyncTask extends AsyncTask<Country, Void, Integ
      * @see #publishProgress
      */
     @Override
-    protected Integer doInBackground(Country... countries) throws IllegalArgumentException {
+    protected Integer doInBackground(CountryDb... countries) throws IllegalArgumentException {
         if (countries.length == 0) {
             throw new IllegalArgumentException("No present country to delete.");
         }
 
-        String expressions = querySet.getWhereQuery();
-
-        if (!isDeleteAll && expressions == null && countries[0] == null) {
-            throw new NullPointerException("No airport to remove");
-        }
-
         TravelDbContext dbContext = Startup.getStartup().getDbContext();
-        Country target = countries[0];
-        int result = expressions == null
-                ? dbContext.countryDao().deleteById(target.getId())
-                : isDeleteAll
-                ? dbContext.countryDao().deleteAll()
-                : dbContext.countryDao().deleteByQuery(expressions);
+        int result = 0;
+        if (isDeleteAll) {
+            result = dbContext.countryDao().deleteAll();
+        }
+        else if (requestedCountryName != null) {
+            result = dbContext.countryDao().deleteByName(requestedCountryName);
+        }
+        else if (requestedCountryId > 0) {
+            result = dbContext.countryDao().deleteById(requestedCountryId);
+        }
         Log.i(TAG, "doInBackground: " + result + " rows deleted.");
         return result;
     }

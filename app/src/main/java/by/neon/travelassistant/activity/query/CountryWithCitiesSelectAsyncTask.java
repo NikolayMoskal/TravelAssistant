@@ -10,21 +10,21 @@ import by.neon.travelassistant.Startup;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
 import by.neon.travelassistant.config.sqlite.model.CountryDb;
 
-public final class CountrySelectAsyncTask extends AsyncTask<Void, Void, List<CountryDb>> {
-    private static final String TAG = "CountrySelectAsyncTask";
+public final class CountryWithCitiesSelectAsyncTask extends AsyncTask<Void, Void, List<CountryDb>> {
+    private static final String TAG = "CountryWithCitiesSelect";
     private boolean isSelectAll;
     private String requestedCountryName;
     private long requestedCountryId;
 
-    public CountrySelectAsyncTask() {
-        this.isSelectAll = true;
-    }
-
-    public CountrySelectAsyncTask(String requestedCountryName) {
+    public CountryWithCitiesSelectAsyncTask(String requestedCountryName) {
         this.requestedCountryName = requestedCountryName;
     }
 
-    public CountrySelectAsyncTask(long requestedCountryId) {
+    public CountryWithCitiesSelectAsyncTask() {
+        this.isSelectAll = true;
+    }
+
+    public CountryWithCitiesSelectAsyncTask(long requestedCountryId) {
         this.requestedCountryId = requestedCountryId;
     }
 
@@ -47,15 +47,16 @@ public final class CountrySelectAsyncTask extends AsyncTask<Void, Void, List<Cou
         TravelDbContext dbContext = Startup.getStartup().getDbContext();
         List<CountryDb> result = new ArrayList<>(0);
         if (isSelectAll) {
-            result = dbContext.countryDao().getAll();
+            result = dbContext.countryDao().getAllCountriesWithCities();
         }
         else if (requestedCountryName != null) {
-            result = dbContext.countryDao().getByName(requestedCountryName);
+            result = dbContext.countryDao().getCountriesWithCitiesByName(requestedCountryName);
         }
         else if (requestedCountryId > 0) {
-            result.add(dbContext.countryDao().getById(requestedCountryId));
+            result.add(dbContext.countryDao().getCountryWithCitiesById(requestedCountryId));
         }
-        Log.i(TAG, "doInBackground: " + result.size() + " rows returned.");
-        return result;
+        int resultSize = result == null ? 0 : result.size();
+        Log.i(TAG, "doInBackground: " + resultSize + " rows returned.");
+        return result == null ? new ArrayList<>(0) : result;
     }
 }

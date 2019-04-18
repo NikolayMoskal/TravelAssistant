@@ -8,12 +8,12 @@ import java.util.List;
 
 import by.neon.travelassistant.Startup;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
-import by.neon.travelassistant.config.sqlite.model.Airport;
+import by.neon.travelassistant.config.sqlite.model.AirportDb;
 
 /**
  * Inserts one or more airports into database.
  */
-public final class AirportInsertAsyncTask extends AsyncTask<Airport, Void, List<Long>> {
+public final class AirportInsertAsyncTask extends AsyncTask<AirportDb, Void, List<Long>> {
     private static final String TAG = "AirportInsertAsyncTask";
 
     /**
@@ -24,20 +24,20 @@ public final class AirportInsertAsyncTask extends AsyncTask<Airport, Void, List<
      * This method can call {@link #publishProgress} to publish updates
      * on the UI thread.
      *
-     * @param airports The parameters of the task.
+     * @param airportDbs The parameters of the task.
      * @return A result, defined by the subclass of this task.
      * @see #onPreExecute()
      * @see #onPostExecute
      * @see #publishProgress
      */
     @Override
-    protected List<Long> doInBackground(Airport... airports) throws IllegalArgumentException {
-        if (airports.length == 0) {
-            throw new IllegalArgumentException("No present airports to insert. Must be at least 1 airport.");
+    protected List<Long> doInBackground(AirportDb... airportDbs) throws IllegalArgumentException {
+        if (airportDbs.length == 0) {
+            throw new IllegalArgumentException("No present airportDbs to insert. Must be at least 1 airport.");
         }
 
         TravelDbContext dbContext = Startup.getStartup().getDbContext();
-        List<Long> result = dbContext.airportDao().insert(airports);
+        List<Long> result = dbContext.airportDao().insert(airportDbs);
         int resultSize = result == null ? 0 : result.size();
         Log.i(TAG, "doInBackground: " + resultSize + " rows inserted.");
         return result == null ? new ArrayList<>(0) : result;

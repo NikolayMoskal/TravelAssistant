@@ -21,7 +21,7 @@ public final class FlightStatsConfig extends Config {
     private String appId;
 
 
-    public FlightStatsConfig(Activity activity, String appId, String appKey) {
+    /*public FlightStatsConfig(Activity activity, String appId, String appKey) {
         this.activity = activity;
         this.appId = appId;
         this.appKey = appKey;
@@ -62,5 +62,5 @@ public final class FlightStatsConfig extends Config {
                 }, null);
         queue.add(request);
         return list;
-    }
+    }*/
 }

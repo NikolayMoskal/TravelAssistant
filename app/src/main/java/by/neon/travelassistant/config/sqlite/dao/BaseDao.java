@@ -6,14 +6,14 @@ import android.arch.persistence.room.OnConflictStrategy;
 
 import java.util.List;
 
-import by.neon.travelassistant.config.sqlite.model.BaseEntity;
+import by.neon.travelassistant.config.sqlite.model.BaseDbEntity;
 
 // TODO Room doesn't supports correctly rewrite INSERT query with @Query annotation
 @Dao
-public interface BaseDao<T extends BaseEntity> {
+public abstract class BaseDao<T extends BaseDbEntity> {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    long insert(T entity);
+    public abstract long insert(T entity);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    List<Long> insert(T[] entities);
+    public abstract List<Long> insert(T[] entities);
 }

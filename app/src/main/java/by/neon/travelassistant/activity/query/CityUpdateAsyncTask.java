@@ -5,12 +5,12 @@ import android.util.Log;
 
 import by.neon.travelassistant.Startup;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
-import by.neon.travelassistant.config.sqlite.model.City;
+import by.neon.travelassistant.config.sqlite.model.CityDb;
 
 /**
  * Updates one city in database. The city replacement must be sent as param of {@code execute()} method. Other entities in {@code execute()} will be ignored.
  */
-public final class CityUpdateAsyncTask extends AsyncTask<City, Void, Integer> {
+public final class CityUpdateAsyncTask extends AsyncTask<CityDb, Void, Integer> {
     private static final String TAG = "CityUpdateAsyncTask";
 
     /**
@@ -28,7 +28,7 @@ public final class CityUpdateAsyncTask extends AsyncTask<City, Void, Integer> {
      * @see #publishProgress
      */
     @Override
-    protected Integer doInBackground(City... cities) throws IllegalArgumentException, NullPointerException {
+    protected Integer doInBackground(CityDb... cities) throws IllegalArgumentException, NullPointerException {
         if (cities.length == 0) {
             throw new IllegalArgumentException("No present city to update.");
         }
@@ -37,7 +37,7 @@ public final class CityUpdateAsyncTask extends AsyncTask<City, Void, Integer> {
         }
 
         TravelDbContext dbContext = Startup.getStartup().getDbContext();
-        City replacement = cities[0];
+        CityDb replacement = cities[0];
         int result = dbContext.cityDao().updateById(replacement.getId(), replacement.getCityCode(), replacement.getCityName());
         Log.i(TAG, "doInBackground: " + result + " rows updated.");
         return result;

@@ -2,39 +2,42 @@ package by.neon.travelassistant.config.sqlite.dao;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Query;
-import android.arch.persistence.room.TypeConverters;
-import android.location.Location;
 
 import java.util.List;
 
 import by.neon.travelassistant.config.sqlite.DbConstants;
-import by.neon.travelassistant.config.sqlite.model.Airport;
-import by.neon.travelassistant.config.sqlite.model.converter.LocationConverter;
+import by.neon.travelassistant.config.sqlite.model.AirportDb;
 
 @Dao
-public interface AirportDao extends BaseDao<Airport> {
+public abstract class AirportDao extends BaseDao<AirportDb> {
     @Query("SELECT * FROM " + DbConstants.TABLE_AIRPORTS)
-    List<Airport> getAll();
+    public abstract List<AirportDb> getAll();
 
-    @Query("SELECT * FROM " + DbConstants.TABLE_AIRPORTS + " WHERE :expressions")
-    List<Airport> getByQuery(String expressions);
+    @Query("SELECT * FROM " + DbConstants.TABLE_AIRPORTS + " WHERE " + DbConstants.AIRPORTS_COLUMN_AIRPORT_NAME + " = :name")
+    public abstract List<AirportDb> getByName(String name);
 
-    @Query("SELECT * FROM " + DbConstants.TABLE_AIRPORTS + " WHERE _id = :id")
-    Airport getById(long id);
+    @Query("SELECT * FROM " + DbConstants.TABLE_AIRPORTS + " WHERE " + DbConstants.ID + " = :id")
+    public abstract AirportDb getById(long id);
+
+    @Query("SELECT * FROM " + DbConstants.TABLE_AIRPORTS + " WHERE " + DbConstants.AIRPORTS_CITIES_FK_COLUMN + " = :cityId")
+    public abstract List<AirportDb> getByCity(long cityId);
 
     @Query("DELETE FROM " + DbConstants.TABLE_AIRPORTS)
-    int deleteAll();
+    public abstract int deleteAll();
 
-    @Query("DELETE FROM " + DbConstants.TABLE_AIRPORTS + " WHERE :expressions")
-    int deleteByQuery(String expressions);
+    @Query("DELETE FROM " + DbConstants.TABLE_AIRPORTS + " WHERE " + DbConstants.AIRPORTS_COLUMN_AIRPORT_NAME + " = :name")
+    public abstract int deleteByName(String name);
 
     @Query("DELETE FROM " + DbConstants.TABLE_AIRPORTS + " WHERE " + DbConstants.ID + " = :id")
-    int deleteById(long id);
+    public abstract int deleteById(long id);
+
+    @Query("DELETE FROM " + DbConstants.TABLE_AIRPORTS + " WHERE " + DbConstants.AIRPORTS_CITIES_FK_COLUMN + " = :cityId")
+    public abstract int deleteByCity(long cityId);
 
     @Query("UPDATE OR IGNORE " + DbConstants.TABLE_AIRPORTS + " SET " +
     DbConstants.AIRPORTS_COLUMN_AIRPORT_NAME + " = :name, " +
     DbConstants.AIRPORTS_COLUMN_LOCATION + " = :location, " +
     DbConstants.AIRPORTS_COLUMN_IATA_CODE + " = :iataCode, " +
     DbConstants.AIRPORTS_COLUMN_ICAO_CODE + " = :icaoCode WHERE " + DbConstants.ID + " = :id")
-    int updateById(long id, String name, @TypeConverters(LocationConverter.class) Location location, String iataCode, String icaoCode);
+    public abstract int updateById(long id, String name, String location, String iataCode, String icaoCode);
 }

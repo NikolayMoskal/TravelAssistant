@@ -10,26 +10,21 @@ import by.neon.travelassistant.Startup;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
 import by.neon.travelassistant.config.sqlite.model.CityDb;
 
-public final class CitySelectAsyncTask extends AsyncTask<Void, Void, List<CityDb>> {
-    private static final String TAG = "CitySelectAsyncTask";
+public final class CityWithAirportsSelectAsyncTask extends AsyncTask<Void, Void, List<CityDb>> {
+    private static final String TAG = "CityWithAirportsSelect";
     private boolean isSelectAll;
     private String requestedCityName;
     private long requestedCityId;
-    private Long requestedCountryId;
 
-    public CitySelectAsyncTask(String requestedCityName) {
+    public CityWithAirportsSelectAsyncTask(String requestedCityName) {
         this.requestedCityName = requestedCityName;
     }
 
-    public CitySelectAsyncTask(long requestedCityId) {
+    public CityWithAirportsSelectAsyncTask(long requestedCityId) {
         this.requestedCityId = requestedCityId;
     }
 
-    public CitySelectAsyncTask(Long requestedCountryId) {
-        this.requestedCountryId = requestedCountryId;
-    }
-
-    public CitySelectAsyncTask() {
+    public CityWithAirportsSelectAsyncTask() {
         this.isSelectAll = true;
     }
 
@@ -52,17 +47,14 @@ public final class CitySelectAsyncTask extends AsyncTask<Void, Void, List<CityDb
         TravelDbContext dbContext = Startup.getStartup().getDbContext();
         List<CityDb> result = new ArrayList<>(0);
         if (isSelectAll) {
-            result = dbContext.cityDao().getAll();
+            result = dbContext.cityDao().getAllCitiesWithAirports();
         }
         else if (requestedCityName != null) {
-            result = dbContext.cityDao().getByName(requestedCityName);
-        }
-        else if (requestedCountryId > 0) {
-            result = dbContext.cityDao().getByCountry(requestedCountryId);
+            result = dbContext.cityDao().getCitiesWithAirportsByName(requestedCityName);
         }
         else if (requestedCityId > 0) {
             result = new ArrayList<>(0);
-            result.add(dbContext.cityDao().getById(requestedCityId));
+            result.add(dbContext.cityDao().getCityWithAirportsById(requestedCityId));
         }
         Log.i(TAG, "doInBackground: " + result.size() + " rows returned.");
         return result;

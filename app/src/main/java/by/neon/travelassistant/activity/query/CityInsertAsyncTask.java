@@ -8,12 +8,12 @@ import java.util.List;
 
 import by.neon.travelassistant.Startup;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
-import by.neon.travelassistant.config.sqlite.model.City;
+import by.neon.travelassistant.config.sqlite.model.CityDb;
 
 /**
  * Inserts one or more cities into database.
  */
-public final class CityInsertAsyncTask extends AsyncTask<City, Void, List<Long>> {
+public final class CityInsertAsyncTask extends AsyncTask<CityDb, Void, List<Long>> {
     private static final String TAG = "CityInsertAsyncTask";
 
     /**
@@ -31,7 +31,7 @@ public final class CityInsertAsyncTask extends AsyncTask<City, Void, List<Long>>
      * @see #publishProgress
      */
     @Override
-    protected List<Long> doInBackground(City... cities) {
+    protected List<Long> doInBackground(CityDb... cities) {
         if (cities.length == 0) {
             throw new IllegalArgumentException("No present cities to insert. Must be at least 1 city.");
         }

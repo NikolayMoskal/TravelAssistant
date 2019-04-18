@@ -2,14 +2,16 @@ package by.neon.travelassistant.config;
 
 import java.util.ArrayList;
 
-public abstract class Config {
-    private ArrayList<AirportInfo> airportsInfo;
+import by.neon.travelassistant.model.Airport;
 
-    public ArrayList<AirportInfo> getAirportsInfo() {
+public abstract class Config {
+    private ArrayList<Airport> airportsInfo;
+
+    public ArrayList<Airport> getAirportsInfo() {
         return new ArrayList<>(airportsInfo);
     }
 
-    void setAirportsInfo(ArrayList<AirportInfo> airportsInfo) {
+    void setAirportsInfo(ArrayList<Airport> airportsInfo) {
         this.airportsInfo = airportsInfo;
     }
 }

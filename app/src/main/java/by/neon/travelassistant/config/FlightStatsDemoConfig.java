@@ -1,10 +1,17 @@
 package by.neon.travelassistant.config;
 
+import android.location.Location;
+import android.location.LocationManager;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import by.neon.travelassistant.model.Airport;
+import by.neon.travelassistant.model.City;
+import by.neon.travelassistant.model.Country;
 
 public final class FlightStatsDemoConfig extends Config {
     private JSONObject databaseDemo;
@@ -15,21 +22,31 @@ public final class FlightStatsDemoConfig extends Config {
         this.setAirportsInfo(getAirports());
     }
 
-    private ArrayList<AirportInfo> getAirports() throws JSONException {
-        ArrayList<AirportInfo> list = new ArrayList<>(0);
+    private ArrayList<Airport> getAirports() throws JSONException {
+        ArrayList<Airport> list = new ArrayList<>(0);
         JSONArray array = databaseDemo.getJSONArray("airports");
         for (int index = 0; index < array.length(); index++) {
             JSONObject object = array.getJSONObject(index);
-            list.add(new AirportInfo()
+            Country country = new Country()
+                    .setCountryCode(object.getString("countryCode"))
+                    .setCountryName(object.getString("countryName"));
+            City city = new City()
+                    .setCityCode(object.getString("cityCode"))
+                    .setCityName(object.getString("city"))
+                    .setCountryId(country.getId())
+                    .setCountry(country);
+            Location location = new Location(LocationManager.GPS_PROVIDER);
+            location.setLongitude(object.getDouble("longitude"));
+            location.setLatitude(object.getDouble("latitude"));
+            Airport airport = new Airport()
+                    .setLocation(location)
                     .setIataCode(object.getString("iata"))
                     .setIcaoCode(object.getString("icao"))
-                    .setCityName(object.getString("city"))
-                    .setCityCode(object.getString("cityCode"))
                     .setAirportName(object.getString("name"))
-                    .setCountryName(object.getString("countryName"))
-                    .setCountryCode(object.getString("countryCode"))
-                    .setLatitude(object.getDouble("latitude"))
-                    .setLongitude(object.getDouble("longitude")));
+                    .setCityId(city.getId())
+                    .setCity(city);
+
+            list.add(airport);
         }
         return list;
     }

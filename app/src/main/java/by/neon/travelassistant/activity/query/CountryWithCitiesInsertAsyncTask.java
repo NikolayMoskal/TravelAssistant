@@ -10,11 +10,8 @@ import by.neon.travelassistant.Startup;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
 import by.neon.travelassistant.config.sqlite.model.CountryDb;
 
-/**
- * Inserts one or more countries into database.
- */
-public final class CountryInsertAsyncTask extends AsyncTask<CountryDb, Void, List<Long>> {
-    private static final String TAG = "CountryInsertAsyncTask";
+public final class CountryWithCitiesInsertAsyncTask extends AsyncTask<CountryDb, Void, List<Long>> {
+    private static final String TAG = "CountryWithCitiesInsert";
 
     /**
      * Override this method to perform a computation on a background thread. The
@@ -31,15 +28,17 @@ public final class CountryInsertAsyncTask extends AsyncTask<CountryDb, Void, Lis
      * @see #publishProgress
      */
     @Override
-    protected List<Long> doInBackground(CountryDb... countries) throws IllegalArgumentException {
+    protected List<Long> doInBackground(CountryDb... countries) {
         if (countries.length == 0) {
-            throw new IllegalArgumentException("No present countries to insert. Must be at least 1 country.");
+            throw new IllegalArgumentException("No present countries with related cities to insert. Must be at least 1 record.");
         }
 
         TravelDbContext dbContext = Startup.getStartup().getDbContext();
-        List<Long> result = dbContext.countryDao().insert(countries);
-        int resultSize = result == null ? 0 : result.size();
-        Log.i(TAG, "doInBackground: " + resultSize + " rows inserted.");
-        return result == null ? new ArrayList<>(0) : result;
+        List<Long> result = new ArrayList<>(0);
+        for (CountryDb countryDb : countries) {
+            result.add(dbContext.countryDao().insertCountryWithCities(countryDb));
+        }
+        Log.i(TAG, "doInBackground: " + result.size() + " records inserted.");
+        return result;
     }
 }
