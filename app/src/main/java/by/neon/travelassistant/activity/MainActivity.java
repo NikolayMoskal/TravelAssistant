@@ -1,17 +1,10 @@
 package by.neon.travelassistant.activity;
 
-import android.Manifest;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.LocationListener;
-import android.location.LocationManager;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -22,7 +15,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
@@ -48,11 +40,9 @@ import by.neon.travelassistant.config.sqlite.mapper.AirportMapper;
 import by.neon.travelassistant.config.sqlite.model.AirportDb;
 import by.neon.travelassistant.config.sqlite.model.CityDb;
 import by.neon.travelassistant.config.sqlite.model.CountryDb;
+import by.neon.travelassistant.constant.CommonConstants;
 import by.neon.travelassistant.constant.DialogConstants;
-import by.neon.travelassistant.constant.GpsLocationConstants;
-import by.neon.travelassistant.constant.RuntimePermissionConstants;
 import by.neon.travelassistant.listener.AutoCompleteTextViewItemClickListener;
-import by.neon.travelassistant.listener.CustomLocationListener;
 import by.neon.travelassistant.model.Airport;
 
 /**
@@ -61,9 +51,7 @@ import by.neon.travelassistant.model.Airport;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
-    private LocationManager locationManager;
     private Config config;
-    private LocationListener locationListener;
     private int airportsInDatabase;
 
     @Override
@@ -83,9 +71,6 @@ public class MainActivity extends AppCompatActivity
             Log.e(TAG, e.getMessage(), e);
         }
 
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new CustomLocationListener(this);
-
         // TODO add progress bar to all tasks
         try {
             airportsInDatabase = new AirportSelectAsyncTask().execute().get().size();
@@ -98,6 +83,13 @@ public class MainActivity extends AppCompatActivity
             configureDepartureAirportView();
         } catch (Exception e) {
             Log.e(TAG, "onCreate: " + e.getMessage(), e);
+        }
+
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        if (preferences.contains(CommonConstants.PREF_DEP_AIRPORT_ID) &&
+                preferences.contains(CommonConstants.PREF_ARV_AIRPORT_ID)) {
+            //noinspection deprecation
+            showDialog(DialogConstants.RESTORE_AIRPORTS_DIALOG);
         }
     }
 
@@ -114,7 +106,7 @@ public class MainActivity extends AppCompatActivity
      * Configures the view for departure airport
      */
     private void configureDepartureAirportView() {
-        AutoCompleteTextView textView = findViewById(R.id.dep_airport_improved);
+        AutoCompleteTextView textView = findViewById(R.id.dep_airport);
         textView.setAdapter(configureAdapter());
         textView.setOnItemClickListener(new AutoCompleteTextViewItemClickListener(this));
     }
@@ -125,6 +117,42 @@ public class MainActivity extends AppCompatActivity
     private void configureNavigationView() {
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void saveLastUsedAirports(long departureAirportId, long arrivalAirportId) {
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong(CommonConstants.PREF_DEP_AIRPORT_ID, departureAirportId);
+        editor.putLong(CommonConstants.PREF_ARV_AIRPORT_ID, arrivalAirportId);
+        editor.apply();
+    }
+
+    private void readLastUsedAirports() {
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        List<Airport> airports = config.getAirportsInfo();
+
+        AutoCompleteTextView depAirportView = findViewById(R.id.dep_airport);
+        depAirportView.setText(single(airports, preferences.getLong(CommonConstants.PREF_DEP_AIRPORT_ID, 0)).getIataCode());
+        AutoCompleteTextView arvAirportView = findViewById(R.id.arv_airport);
+        arvAirportView.setText(single(airports, preferences.getLong(CommonConstants.PREF_ARV_AIRPORT_ID, 0)).getIataCode());
+    }
+
+    private Airport single(List<Airport> list, long id) {
+        for (Airport airport : list) {
+            if (airport.getId() == id) {
+                return airport;
+            }
+        }
+        return list.get(0);
+    }
+
+    private Airport single(List<Airport> list, String iataCode) {
+        for (Airport airport : list) {
+            if (airport.getIataCode().equals(iataCode)) {
+                return airport;
+            }
+        }
+        return list.get(0);
     }
 
     /**
@@ -187,6 +215,10 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
+        long depAirportId = single(config.getAirportsInfo(), ((AutoCompleteTextView) findViewById(R.id.dep_airport)).getText().toString()).getId();
+        long arvAirportId = single(config.getAirportsInfo(), ((AutoCompleteTextView) findViewById(R.id.arv_airport)).getText().toString()).getId();
+        saveLastUsedAirports(depAirportId, arvAirportId);
+
         try {
             AirportMapper mapper = new AirportMapper();
             List<AirportDb> airportDbs = mapper.from(config.getAirportsInfo());
@@ -212,16 +244,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Shows the dialog to select the airport from the list.
-     *
-     * @param view the sender view
-     */
-    @SuppressWarnings("deprecation")
-    public void onChoice(View view) {
-        showDialog(DialogConstants.CHOICE_DEP_AIRPORT_DIALOG);
-    }
-
-    /**
      * {@inheritDoc}
      *
      * @param id
@@ -230,21 +252,13 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("deprecation")
     @Override
     protected Dialog onCreateDialog(int id) {
-        // TODO remove this if will be used autocomplete view
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         switch (id) {
-            case DialogConstants.CHOICE_DEP_AIRPORT_DIALOG:
-                builder.setTitle("Выберите аэропорт"); // заголовок для диалога
-                ArrayList<String> strings = new ArrayList<>(0);
-                ArrayList<Airport> airports = config.getAirportsInfo();
-                for (Airport info : airports) {
-                    strings.add(info.getAirportName());
-                }
-                builder.setItems(strings.toArray(new String[0]), (dialog, item) -> {
-                    EditText text = findViewById(R.id.dep_airport);
-                    text.setText(airports.get(item).getIataCode());
-                });
-            case DialogConstants.CHOICE_ARV_AIRPORT_DIALOG:
+            case DialogConstants.RESTORE_AIRPORTS_DIALOG:
+                builder.setMessage(R.string.last_used_airports_dialog_msg); // заголовок для диалога
+                builder.setPositiveButton(R.string.ok_button, (dialog, which) -> readLastUsedAirports());
+                break;
+            default:
                 break;
         }
         builder.setCancelable(true);
@@ -259,7 +273,7 @@ public class MainActivity extends AppCompatActivity
     public void onInfoClick(View view) {
         runOnUiThread(() -> Toast.makeText(
                 getApplicationContext(),
-                "Коды аэропортов указываются в международном коде IATA. Пример: MSQ - Национальный аэропорт Минск",
+                R.string.info_toast_title,
                 Toast.LENGTH_LONG).show());
     }
 
@@ -269,80 +283,6 @@ public class MainActivity extends AppCompatActivity
      * @param view the sender view
      */
     public void onSendClick(View view) {
-        locationManager.removeUpdates(locationListener);
-    }
-
-    /**
-     * Checks the need permissions to use the GPS or network connection and runs the location updates.
-     *
-     * @param view the sender view
-     */
-    public void onLocationClick(View view) {
-        if (!checkLocationProvider()) {
-            showLocationSettingsDialog();
-            return;
-        }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, RuntimePermissionConstants.ACCESS_FINE_LOCATION_PERMISSION);
-        } else {
-            Log.i(TAG, "onLocationClick: GPS permission is granted");
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, GpsLocationConstants.MIN_TIME_UPDATE_MSEC, GpsLocationConstants.MIN_DISTANCE_MILES, locationListener);
-            return;
-        }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, RuntimePermissionConstants.ACCESS_COARSE_LOCATION_PERMISSION);
-        } else {
-            Log.i(TAG, "onLocationClick: Network permission is granted");
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, GpsLocationConstants.MIN_TIME_UPDATE_MSEC, GpsLocationConstants.MIN_DISTANCE_MILES, locationListener);
-        }
-    }
-
-    /**
-     * Checks the GPS and network providers.
-     *
-     * @return <b>true</b> if any provider is enabled and <b>false</b> if otherwise
-     */
-    private boolean checkLocationProvider() {
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-    }
-
-    private void showLocationSettingsDialog() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("Enable Location")
-                .setMessage("Your Locations Settings is set to 'Off'.\nPlease allow to receive your location to work this app properly.")
-                .setPositiveButton("Location Settings", (paramDialogInterface, paramInt) -> {
-                    Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(myIntent);
-                })
-                .setNegativeButton("Cancel", (paramDialogInterface, paramInt) -> {
-                });
-        dialog.show();
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case RuntimePermissionConstants.ACCESS_FINE_LOCATION_PERMISSION:
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, GpsLocationConstants.MIN_TIME_UPDATE_MSEC, GpsLocationConstants.MIN_DISTANCE_MILES, locationListener);
-                }
-                Log.i(TAG, "onRequestPermissionsResult: Listen location updates via GPS");
-                break;
-            case RuntimePermissionConstants.ACCESS_COARSE_LOCATION_PERMISSION:
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, GpsLocationConstants.MIN_TIME_UPDATE_MSEC, GpsLocationConstants.MIN_DISTANCE_MILES, locationListener);
-                }
-                Log.i(TAG, "onRequestPermissionsResult: Listen location updates via network");
-                break;
-        }
     }
 
     private SimpleAdapter configureAdapter() {
@@ -376,7 +316,7 @@ public class MainActivity extends AppCompatActivity
     public void onAirportHelp(View view) {
         runOnUiThread(() -> Toast.makeText(
                 getApplicationContext(),
-                "Введите первые буквы названия аэропорта, а затем выберите его из списка найденных",
+                R.string.airport_help_toast_title,
                 Toast.LENGTH_LONG).show());
     }
 }

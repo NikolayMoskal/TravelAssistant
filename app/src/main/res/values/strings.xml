@@ -1,10 +1,13 @@
 <resources>
+    <!-- Common values -->
     <string name="app_name" translatable="false">TravelAssistant</string>
     <string name="navigation_drawer_open" translatable="true">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="true">Close navigation drawer</string>
     <string name="nav_header_title" translatable="false">Travel Assistant</string>
     <string name="nav_header_subtitle" translatable="false">Created by Nikolay Moskal © 2018–2019</string>
     <string name="nav_header_desc" translatable="true">Navigation header</string>
+
+    <!-- Main activity -->
     <string name="travel_data_label" translatable="true">Ввод данных</string>
     <string name="dep_label" translatable="true">Откуда вы отправляетесь?</string>
     <string name="dep_city_hint" translatable="true">Название города</string>
@@ -13,9 +16,18 @@
     <string name="arv_label" translatable="true">Куда вы направляетесь?</string>
     <string name="arv_airport_hint" translatable="true">Название или код аэропорта</string>
     <string name="send_button" translatable="true">Отправить</string>
+
+    <string name="last_used_airports_dialog_msg" translatable="true">Использовать последние выбранные аэропорты?</string>
+    <string name="ok_button" translatable="true">Да</string>
+    <string name="no_button" translatable="true">Нет</string>
+
+    <string name="info_toast_title" translatable="true">Коды аэропортов указываются в международном коде IATA. Пример: MSQ - Национальный аэропорт Минск</string>
+    <string name="airport_help_toast_title" translatable="true">Введите первые буквы названия аэропорта, а затем выберите его из списка найденных</string>
+
+    <!-- Navigation drawer menu -->
+    <string name="nav_main" translatable="true">Главная</string>
     <string name="nav_things" translatable="true">Багаж</string>
     <string name="nav_informer" translatable="true">Информер</string>
     <string name="nav_about" translatable="true">О приложении</string>
     <string name="nav_manage" translatable="true">Настройки</string>
-    <string name="btn_choice" translatable="true">Выбрать…</string>
 </resources>

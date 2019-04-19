@@ -38,68 +38,13 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/dep_city"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="12sp"
-            android:gravity="center"
-            android:hint="@string/dep_city_hint"
-            android:minWidth="100sp"
-            android:textSize="@dimen/main_activity_text_size"
-            android:textColorHint="@color/colorHint" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/current_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onLocationClick"
-            android:src="@android:drawable/ic_menu_mylocation"
-            app:fabSize="mini" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginBottom="10sp">
 
         <AutoCompleteTextView
-            android:id="@+id/dep_airport_improved"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="@string/arv_airport_hint"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10sp"
-        android:layout_marginBottom="10sp"
-        android:visibility="gone">
-
-        <EditText
             android:id="@+id/dep_airport"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginEnd="10sp"
-            android:hint="@string/dep_airport_hint"
-            android:inputType="text"
-            android:minWidth="100sp"
-            android:textColorHint="@color/colorHint" />
-
-        <Button
-            android:id="@+id/choice_dep_airport"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onChoice"
-            android:text="@string/btn_choice" />
+            android:hint="@string/arv_airport_hint"/>
     </LinearLayout>
 
     <LinearLayout
