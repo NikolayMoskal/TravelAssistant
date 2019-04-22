@@ -1,6 +1,7 @@
 package by.neon.travelassistant.activity;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -190,6 +191,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.nav_main:
+                break;
             case R.id.nav_things:
                 // TODO add link to PackActivity (name can be improved)
                 break;
@@ -200,7 +203,8 @@ public class MainActivity extends AppCompatActivity
                 // TODO show about
                 break;
             case R.id.nav_manage:
-                // TODO include some settings if necessary
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
                 break;
         }
 

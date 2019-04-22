@@ -30,4 +30,10 @@
     <string name="nav_informer" translatable="true">Информер</string>
     <string name="nav_about" translatable="true">О приложении</string>
     <string name="nav_manage" translatable="true">Настройки</string>
+
+    <!-- Settings activity -->
+    <string name="title_activity_settings" translatable="true">Настройки</string>
+    <string name="type_female" translatable="true">Женская</string>
+    <string name="type_male" translatable="true">Мужская</string>
+    <string name="type_child" translatable="true">Детская</string>
 </resources>

@@ -14,6 +14,7 @@ import by.neon.travelassistant.model.Airport;
 public final class SqliteConfig extends Config {
     public SqliteConfig() throws ExecutionException, InterruptedException {
         setAirportsInfo(getAirports());
+        setThings(getThingsInfo());
     }
 
     private ArrayList<Airport> getAirports() throws ExecutionException, InterruptedException {
@@ -32,5 +33,12 @@ public final class SqliteConfig extends Config {
             }
         }
         return list;
+    }
+
+    private ArrayList<ThingModel> getThingsInfo() {
+        ArrayList<ThingModel> things = new ArrayList<>(0);
+        things.add(new ThingModel().setThingName("ABC").setType("Type A"));
+        things.add(new ThingModel().setThingName("DEF").setType("Type B"));
+        return things;
     }
 }
