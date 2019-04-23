@@ -12,7 +12,7 @@ import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
 import org.locationtech.jts.io.WKTWriter;
 
-public class LocationMapper extends BaseMapper<Location, String> {
+public final class LocationMapper extends BaseMapper<Location, String> {
     @Override
     public String from(Location source) {
         CoordinateArraySequence sequence = new CoordinateArraySequence(new Coordinate[] {new Coordinate(source.getLatitude(), source.getLongitude())});

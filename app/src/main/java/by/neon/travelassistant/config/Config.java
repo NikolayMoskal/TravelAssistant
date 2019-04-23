@@ -3,10 +3,11 @@ package by.neon.travelassistant.config;
 import java.util.ArrayList;
 
 import by.neon.travelassistant.model.Airport;
+import by.neon.travelassistant.model.Thing;
 
 public abstract class Config {
     private ArrayList<Airport> airportsInfo;
-    private ArrayList<ThingModel> things;
+    private ArrayList<Thing> things;
 
     public ArrayList<Airport> getAirportsInfo() {
         return new ArrayList<>(airportsInfo);
@@ -16,11 +17,11 @@ public abstract class Config {
         this.airportsInfo = airportsInfo;
     }
 
-    public ArrayList<ThingModel> getThings() {
+    public ArrayList<Thing> getThings() {
         return new ArrayList<>(things);
     }
 
-    void setThings(ArrayList<ThingModel> things) {
+    void setThings(ArrayList<Thing> things) {
         this.things = things;
     }
 }

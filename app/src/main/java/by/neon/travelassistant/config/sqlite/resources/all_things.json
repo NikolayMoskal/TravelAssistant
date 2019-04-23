@@ -1,0 +1,79 @@
+[
+  {
+    "thingName_en-US": "passport",
+    "thingName_ru-RU": "паспорт",
+    "type": "documents",
+    "category": "need",
+    "weight": 0.02
+  },
+  {
+    "thingName_en-US": "payment card",
+    "thingName_ru-RU": "банковская карта",
+    "type": "documents",
+    "category": "need",
+    "weight": 0.01
+  },
+  {
+    "thingName_en-US": "kids documents",
+    "thingName_ru-RU": "документы для ребенка",
+    "type": "documents",
+    "category": "need",
+    "weight": 0.02
+  },
+  {
+    "thingName_en-US": "cash",
+    "thingName_ru-RU": "наличные деньги",
+    "type": "documents",
+    "category": "need",
+    "weight": 0.01
+  },
+  {
+    "thingName_en-US": "transport ticket",
+    "thingName_ru-RU": "билет на транспорт",
+    "type": "documents",
+    "category": "travel",
+    "weight": 0.01
+  },
+  {
+    "thingName_en-US": "hotel reservation",
+    "thingName_ru-RU": "бронь отеля",
+    "type": "documents",
+    "category": "business",
+    "weight": 0.01
+  },
+  {
+    "thingName_en-US": "driver license",
+    "thingName_ru-RU": "водительские права",
+    "type": "documents",
+    "category": "travel",
+    "weight": 0.02
+  },
+  {
+    "thingName_en-US": "passport copy",
+    "thingName_ru-RU": "копия паспорта",
+    "type": "documents",
+    "category": "business",
+    "weight": 0.01
+  },
+  {
+    "thingName_en-US": "medical insurance",
+    "thingName_ru-RU": "медицинская страховка",
+    "type": "documents",
+    "category": "travel",
+    "weight": 0.02
+  },
+  {
+    "thingName_en-US": "smartphone",
+    "thingName_ru-RU": "смартфон",
+    "type": "equipment",
+    "category": "need",
+    "weight": 0.1
+  },
+  {
+    "thingName_en-US": "charger",
+    "thingName_ru-RU": "зарядное устройство",
+    "type": "equipment",
+    "category": "need",
+    "weight": 0.05
+  }
+]

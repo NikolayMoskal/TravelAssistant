@@ -5,7 +5,7 @@ import android.arch.persistence.room.Room;
 import android.content.ContentProvider;
 import android.os.Build;
 
-import by.neon.travelassistant.config.sqlite.DbConstants;
+import by.neon.travelassistant.constant.DbConstants;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
 
 /**

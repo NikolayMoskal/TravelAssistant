@@ -8,7 +8,7 @@ import android.arch.persistence.room.Transaction;
 
 import java.util.List;
 
-import by.neon.travelassistant.config.sqlite.DbConstants;
+import by.neon.travelassistant.constant.DbConstants;
 import by.neon.travelassistant.config.sqlite.model.AirportDb;
 import by.neon.travelassistant.config.sqlite.model.CityDb;
 import by.neon.travelassistant.config.sqlite.model.CountryDb;

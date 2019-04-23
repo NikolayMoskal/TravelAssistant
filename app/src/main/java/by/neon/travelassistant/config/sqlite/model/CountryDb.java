@@ -8,7 +8,7 @@ import android.arch.persistence.room.Index;
 import java.util.ArrayList;
 import java.util.List;
 
-import by.neon.travelassistant.config.sqlite.DbConstants;
+import by.neon.travelassistant.constant.DbConstants;
 
 @Entity(tableName = DbConstants.TABLE_COUNTRIES,
         indices = @Index(value = DbConstants.COUNTRIES_COLUMN_COUNTRY_NAME, name = DbConstants.COUNTRIES_INDEX_UNIQUE_NAME, unique = true))

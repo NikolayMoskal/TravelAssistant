@@ -1,4 +1,4 @@
-package by.neon.travelassistant.config.sqlite;
+package by.neon.travelassistant.constant;
 
 public final class DbConstants {
     public static final String DATABASE = "TravelDb";
@@ -22,4 +22,11 @@ public final class DbConstants {
     public static final String CITIES_COLUMN_CITY_CODE = "CITY_CODE";
     public static final String CITIES_COUNTRIES_FK_COLUMN = "COUNTRY_ID";
     public static final String CITIES_COUNTRIES_FK_NAME = "CITIES_COUNTRIES_FK";
+
+    public static final String TABLE_THINGS = "THINGS";
+    public static final String THINGS_COLUMN_THING_NAME_EN_US = "THING_NAME_EN_US";
+    public static final String THINGS_COLUMN_THING_NAME_RU_RU = "THING_NAME_RU_RU";
+    public static final String THINGS_COLUMN_WEIGHT = "WEIGHT";
+    public static final String THINGS_COLUMN_TYPE = "TYPE";
+    public static final String THINGS_COLUMN_CATEGORY = "CATEGORY";
 }

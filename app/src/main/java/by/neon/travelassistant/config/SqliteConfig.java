@@ -5,11 +5,15 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import by.neon.travelassistant.activity.query.CountryWithCitiesSelectAsyncTask;
+import by.neon.travelassistant.activity.query.ThingSelectAsyncTask;
 import by.neon.travelassistant.config.sqlite.mapper.AirportMapper;
+import by.neon.travelassistant.config.sqlite.mapper.ThingMapper;
 import by.neon.travelassistant.config.sqlite.model.AirportDb;
 import by.neon.travelassistant.config.sqlite.model.CityDb;
 import by.neon.travelassistant.config.sqlite.model.CountryDb;
+import by.neon.travelassistant.config.sqlite.model.ThingDb;
 import by.neon.travelassistant.model.Airport;
+import by.neon.travelassistant.model.Thing;
 
 public final class SqliteConfig extends Config {
     public SqliteConfig() throws ExecutionException, InterruptedException {
@@ -35,10 +39,15 @@ public final class SqliteConfig extends Config {
         return list;
     }
 
-    private ArrayList<ThingModel> getThingsInfo() {
-        ArrayList<ThingModel> things = new ArrayList<>(0);
-        things.add(new ThingModel().setThingName("ABC").setType("Type A"));
-        things.add(new ThingModel().setThingName("DEF").setType("Type B"));
+    private ArrayList<Thing> getThingsInfo() throws ExecutionException, InterruptedException {
+        ThingSelectAsyncTask task = new ThingSelectAsyncTask();
+        List<ThingDb> thingDbs = task.execute().get();
+        ArrayList<Thing> things = new ArrayList<>(0);
+
+        ThingMapper mapper = new ThingMapper();
+        for (ThingDb thingDb : thingDbs) {
+            things.add(mapper.to(thingDb));
+        }
         return things;
     }
 }

@@ -6,7 +6,7 @@ import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 
-import by.neon.travelassistant.config.sqlite.DbConstants;
+import by.neon.travelassistant.constant.DbConstants;
 
 @Entity(tableName = DbConstants.TABLE_AIRPORTS,
         indices = @Index(name = DbConstants.AIRPORTS_CITIES_FK_NAME, value = DbConstants.AIRPORTS_CITIES_FK_COLUMN),

@@ -3,7 +3,7 @@ package by.neon.travelassistant.config.sqlite.mapper;
 import by.neon.travelassistant.config.sqlite.model.CityDb;
 import by.neon.travelassistant.model.City;
 
-public class CityMapper extends BaseMapper<City, CityDb> {
+public final class CityMapper extends BaseMapper<City, CityDb> {
     @Override
     public CityDb from(City source) {
         CountryMapper mapper = new CountryMapper();

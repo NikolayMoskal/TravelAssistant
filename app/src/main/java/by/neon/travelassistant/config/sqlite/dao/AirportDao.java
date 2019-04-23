@@ -5,7 +5,7 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
-import by.neon.travelassistant.config.sqlite.DbConstants;
+import by.neon.travelassistant.constant.DbConstants;
 import by.neon.travelassistant.config.sqlite.model.AirportDb;
 
 @Dao
