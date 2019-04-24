@@ -19,10 +19,19 @@ import android.widget.AutoCompleteTextView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.security.ProviderInstaller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,17 +43,22 @@ import by.neon.travelassistant.activity.query.AirportSelectAsyncTask;
 import by.neon.travelassistant.activity.query.CityInsertAsyncTask;
 import by.neon.travelassistant.activity.query.CountryInsertAsyncTask;
 import by.neon.travelassistant.activity.query.CountrySelectAsyncTask;
+import by.neon.travelassistant.activity.query.ThingInsertAsyncTask;
+import by.neon.travelassistant.activity.query.ThingSelectAsyncTask;
 import by.neon.travelassistant.config.Config;
 import by.neon.travelassistant.config.FlightStatsDemoConfig;
 import by.neon.travelassistant.config.SqliteConfig;
 import by.neon.travelassistant.config.sqlite.mapper.AirportMapper;
+import by.neon.travelassistant.config.sqlite.mapper.ThingMapper;
 import by.neon.travelassistant.config.sqlite.model.AirportDb;
 import by.neon.travelassistant.config.sqlite.model.CityDb;
 import by.neon.travelassistant.config.sqlite.model.CountryDb;
+import by.neon.travelassistant.config.sqlite.model.ThingDb;
 import by.neon.travelassistant.constant.CommonConstants;
 import by.neon.travelassistant.constant.DialogConstants;
 import by.neon.travelassistant.listener.AutoCompleteTextViewItemClickListener;
 import by.neon.travelassistant.model.Airport;
+import by.neon.travelassistant.model.Thing;
 
 /**
  * Represents the main window of the TravelAssistant application
@@ -75,10 +89,9 @@ public class MainActivity extends AppCompatActivity
         // TODO add progress bar to all tasks
         try {
             airportsInDatabase = new AirportSelectAsyncTask().execute().get().size();
-        } catch (InterruptedException | ExecutionException e) {
-            Log.e(TAG, "onCreate: " + e.getMessage(), e);
-        }
-        try {
+            if (!existsThingsInDatabase()) {
+                saveThingsToDatabase();
+            }
             configureAirportsDatabase();
             configureArrivalAirportView();
             configureDepartureAirportView();
@@ -118,6 +131,32 @@ public class MainActivity extends AppCompatActivity
     private void configureNavigationView() {
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private boolean existsThingsInDatabase() throws ExecutionException, InterruptedException {
+        return new ThingSelectAsyncTask().execute().get().size() > 0;
+    }
+
+    private void saveThingsToDatabase() throws IOException, ExecutionException, InterruptedException {
+        String array = readJsonFromFile();
+        ObjectMapper mapper = new ObjectMapper();
+        List<Thing> things = mapper.readValue(array, new TypeReference<List<Thing>>(){});
+        ThingInsertAsyncTask task = new ThingInsertAsyncTask();
+        ThingMapper thingMapper = new ThingMapper();
+        task.execute(thingMapper.from(things).toArray(new ThingDb[things.size()])).get();
+    }
+
+    public String readJsonFromFile() throws IOException {
+        Writer writer = new StringWriter();
+        try (InputStream stream = getResources().openRawResource(R.raw.all_things);
+             BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                writer.write(line);
+            }
+        }
+
+        return writer.toString();
     }
 
     private void saveLastUsedAirports(long departureAirportId, long arrivalAirportId) {
@@ -238,6 +277,7 @@ public class MainActivity extends AppCompatActivity
         } catch (InterruptedException | ExecutionException e) {
             Log.e(TAG, "finish: " + e.getMessage(), e);
         }
+        super.finish();
     }
 
     private long checkExistingCountry(CountryDb countryDb) throws ExecutionException, InterruptedException {

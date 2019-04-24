@@ -8,13 +8,10 @@ import java.util.List;
 
 import by.neon.travelassistant.Startup;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
-import by.neon.travelassistant.config.sqlite.model.AirportDb;
+import by.neon.travelassistant.config.sqlite.model.ThingDb;
 
-/**
- * Inserts one or more airports into database.
- */
-public final class AirportInsertAsyncTask extends AsyncTask<AirportDb, Void, List<Long>> {
-    private static final String TAG = "AirportInsertAsyncTask";
+public final class ThingInsertAsyncTask extends AsyncTask<ThingDb, Void, List<Long>> {
+    private static final String TAG = "ThingInsertAsyncTask";
 
     /**
      * Override this method to perform a computation on a background thread. The
@@ -24,20 +21,20 @@ public final class AirportInsertAsyncTask extends AsyncTask<AirportDb, Void, Lis
      * This method can call {@link #publishProgress} to publish updates
      * on the UI thread.
      *
-     * @param airportDbs The parameters of the task.
+     * @param thingDbs The parameters of the task.
      * @return A result, defined by the subclass of this task.
      * @see #onPreExecute()
      * @see #onPostExecute
      * @see #publishProgress
      */
     @Override
-    protected List<Long> doInBackground(AirportDb... airportDbs) throws IllegalArgumentException {
-        if (airportDbs.length == 0) {
-            throw new IllegalArgumentException("No present airports to insert. Must be at least 1 airport.");
+    protected List<Long> doInBackground(ThingDb... thingDbs) {
+        if (thingDbs.length == 0) {
+            throw new IllegalArgumentException("No present things to insert. Must be at least 1 thing.");
         }
 
         TravelDbContext dbContext = Startup.getStartup().getDbContext();
-        List<Long> result = dbContext.airportDao().insert(airportDbs);
+        List<Long> result = dbContext.thingDao().insert(thingDbs);
         int resultSize = result == null ? 0 : result.size();
         Log.i(TAG, "doInBackground: " + resultSize + " rows inserted.");
         return result == null ? new ArrayList<>(0) : result;

@@ -43,4 +43,7 @@ public abstract class ThingDao extends BaseDao<ThingDb> {
 
     @Query("DELETE FROM " + DbConstants.TABLE_THINGS + " WHERE " + DbConstants.THINGS_COLUMN_CATEGORY + " = :category")
     public abstract int deleteByCategory(String category);
+
+    @Query("DELETE FROM " + DbConstants.TABLE_THINGS)
+    public abstract int deleteAll();
 }

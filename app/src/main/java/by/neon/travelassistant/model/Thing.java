@@ -1,7 +1,12 @@
 package by.neon.travelassistant.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Thing extends Entity {
+    @JsonProperty("thingName_en-US")
     private String thingNameEn;
+    @JsonProperty("thingName_ru-RU")
     private String thingNameRu;
     private double weight;
     private String type;

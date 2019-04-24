@@ -97,6 +97,12 @@ public class SettingsActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public void finish() {
+        saveSettingsInPreferences();
+        super.finish();
+    }
+
     private void createSwitchForEachThing() {
         LinearLayout layout = findViewById(R.id.layout_switch);
         Locale locale = Locale.getDefault();
