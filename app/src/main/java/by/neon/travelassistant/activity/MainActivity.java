@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity
     private void configureArrivalAirportView() {
         AutoCompleteTextView textView = findViewById(R.id.arv_airport);
         textView.setAdapter(configureAdapter());
-        textView.setOnItemClickListener(new AutoCompleteTextViewItemClickListener(this));
+        textView.setOnItemClickListener(new AutoCompleteTextViewItemClickListener(textView));
     }
 
     /**
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity
     private void configureDepartureAirportView() {
         AutoCompleteTextView textView = findViewById(R.id.dep_airport);
         textView.setAdapter(configureAdapter());
-        textView.setOnItemClickListener(new AutoCompleteTextViewItemClickListener(this));
+        textView.setOnItemClickListener(new AutoCompleteTextViewItemClickListener(textView));
     }
 
     /**

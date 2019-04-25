@@ -1,19 +1,16 @@
 package by.neon.travelassistant.listener;
 
-import android.app.Activity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import by.neon.travelassistant.R;
-
 public class AutoCompleteTextViewItemClickListener implements AdapterView.OnItemClickListener {
-    private final Activity activity;
+    private final AutoCompleteTextView view;
 
-    public AutoCompleteTextViewItemClickListener(final Activity activity) {
-        this.activity = activity;
+    public AutoCompleteTextViewItemClickListener(final AutoCompleteTextView view) {
+        this.view = view;
     }
 
     /**
@@ -35,7 +32,6 @@ public class AutoCompleteTextViewItemClickListener implements AdapterView.OnItem
             throw new IllegalArgumentException("Missing LinearLayout item in AutoCompleteTextView");
         }
         TextView airportCode = (TextView) ((LinearLayout) view).getChildAt(1);
-        AutoCompleteTextView target = activity.findViewById(R.id.arv_airport);
-        target.setText(airportCode.getText());
+        this.view.setText(airportCode.getText());
     }
 }
