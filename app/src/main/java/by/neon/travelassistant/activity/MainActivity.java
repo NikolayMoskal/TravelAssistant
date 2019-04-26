@@ -100,8 +100,8 @@ public class MainActivity extends AppCompatActivity
         }
 
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-        if (preferences.contains(CommonConstants.PREF_DEP_AIRPORT_ID) &&
-                preferences.contains(CommonConstants.PREF_ARV_AIRPORT_ID)) {
+        if (preferences.getLong(CommonConstants.PREF_DEP_AIRPORT_ID, -1) > -1 &&
+                preferences.getLong(CommonConstants.PREF_ARV_AIRPORT_ID, -1) > -1) {
             //noinspection deprecation
             showDialog(DialogConstants.RESTORE_AIRPORTS_DIALOG);
         }
@@ -172,27 +172,29 @@ public class MainActivity extends AppCompatActivity
         List<Airport> airports = config.getAirportsInfo();
 
         AutoCompleteTextView depAirportView = findViewById(R.id.dep_airport);
-        depAirportView.setText(single(airports, preferences.getLong(CommonConstants.PREF_DEP_AIRPORT_ID, 0)).getIataCode());
+        Airport depAirport = getAirportById(airports, preferences.getLong(CommonConstants.PREF_DEP_AIRPORT_ID, 0));
+        depAirportView.setText(depAirport == null ? "" : depAirport.getIataCode());
         AutoCompleteTextView arvAirportView = findViewById(R.id.arv_airport);
-        arvAirportView.setText(single(airports, preferences.getLong(CommonConstants.PREF_ARV_AIRPORT_ID, 0)).getIataCode());
+        Airport arvAirport = getAirportById(airports, preferences.getLong(CommonConstants.PREF_ARV_AIRPORT_ID, 0));
+        arvAirportView.setText(arvAirport == null ? "" : arvAirport.getIataCode());
     }
 
-    private Airport single(List<Airport> list, long id) {
+    private Airport getAirportById(List<Airport> list, long id) {
         for (Airport airport : list) {
             if (airport.getId() == id) {
                 return airport;
             }
         }
-        return list.get(0);
+        return null;
     }
 
-    private Airport single(List<Airport> list, String iataCode) {
+    private long getAirportIdByCode(List<Airport> list, String iataCode) {
         for (Airport airport : list) {
             if (airport.getIataCode().equals(iataCode)) {
-                return airport;
+                return airport.getId();
             }
         }
-        return list.get(0);
+        return -1;
     }
 
     /**
@@ -254,28 +256,26 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void finish() {
-        if (config instanceof SqliteConfig) {
-            return;
-        }
+        if (!(config instanceof SqliteConfig)) {
+            long depAirportId = getAirportIdByCode(config.getAirportsInfo(), ((AutoCompleteTextView) findViewById(R.id.dep_airport)).getText().toString());
+            long arvAirportId = getAirportIdByCode(config.getAirportsInfo(), ((AutoCompleteTextView) findViewById(R.id.arv_airport)).getText().toString());
+            saveLastUsedAirports(depAirportId, arvAirportId);
 
-        long depAirportId = single(config.getAirportsInfo(), ((AutoCompleteTextView) findViewById(R.id.dep_airport)).getText().toString()).getId();
-        long arvAirportId = single(config.getAirportsInfo(), ((AutoCompleteTextView) findViewById(R.id.arv_airport)).getText().toString()).getId();
-        saveLastUsedAirports(depAirportId, arvAirportId);
+            try {
+                AirportMapper mapper = new AirportMapper();
+                List<AirportDb> airportDbs = mapper.from(config.getAirportsInfo());
+                for (AirportDb airportDb : airportDbs) {
+                    CountryDb countryDb = airportDb.getCityDb().getCountryDb();
+                    CityDb cityDb = airportDb.getCityDb();
 
-        try {
-            AirportMapper mapper = new AirportMapper();
-            List<AirportDb> airportDbs = mapper.from(config.getAirportsInfo());
-            for (AirportDb airportDb : airportDbs) {
-                CountryDb countryDb = airportDb.getCityDb().getCountryDb();
-                CityDb cityDb = airportDb.getCityDb();
-
-                cityDb.setCountryId(checkExistingCountry(countryDb));
-                long cityId = new CityInsertAsyncTask().execute(cityDb).get().get(0);
-                airportDb.setCityId(cityId);
-                new AirportInsertAsyncTask().execute(airportDb).get();
+                    cityDb.setCountryId(checkExistingCountry(countryDb));
+                    long cityId = new CityInsertAsyncTask().execute(cityDb).get().get(0);
+                    airportDb.setCityId(cityId);
+                    new AirportInsertAsyncTask().execute(airportDb).get();
+                }
+            } catch (InterruptedException | ExecutionException e) {
+                Log.e(TAG, "finish: " + e.getMessage(), e);
             }
-        } catch (InterruptedException | ExecutionException e) {
-            Log.e(TAG, "finish: " + e.getMessage(), e);
         }
         super.finish();
     }
@@ -301,6 +301,7 @@ public class MainActivity extends AppCompatActivity
             case DialogConstants.RESTORE_AIRPORTS_DIALOG:
                 builder.setMessage(R.string.last_used_airports_dialog_msg); // заголовок для диалога
                 builder.setPositiveButton(R.string.ok_button, (dialog, which) -> readLastUsedAirports());
+                builder.setNegativeButton(R.string.no_button, null);
                 break;
             default:
                 break;
