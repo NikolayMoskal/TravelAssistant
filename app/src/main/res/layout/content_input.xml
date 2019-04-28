@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activity.InputActivity"
+    tools:showIn="@layout/app_bar_input">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/dep_city_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dep_label"
+            android:layout_margin="12sp"
+            android:textSize="@dimen/main_activity_text_size"
+            android:textColor="@color/colorPrimary"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/dep_city_help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_help"
+            app:fabSize="mini"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10sp">
+
+        <AutoCompleteTextView
+            android:id="@+id/dep_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/arv_airport_hint"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/arv_city_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/arv_label"
+            android:layout_margin="12sp"
+            android:textSize="@dimen/main_activity_text_size"
+            android:textColor="@color/colorPrimary"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/arv_city_help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_help"
+            app:fabSize="mini"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10sp">
+
+        <AutoCompleteTextView
+            android:id="@+id/arv_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/arv_airport_hint"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/publishProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/send_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="@string/send_button"
+        android:textColor="@color/colorText" />
+</LinearLayout>

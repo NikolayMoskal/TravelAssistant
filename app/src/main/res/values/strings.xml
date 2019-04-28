@@ -36,4 +36,8 @@
     <string name="type_female" translatable="true">Женская</string>
     <string name="type_male" translatable="true">Мужская</string>
     <string name="type_child" translatable="true">Детская</string>
+    <string name="title_activity_pack">PackActivity</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="title_activity_input">InputActivity</string>
 </resources>

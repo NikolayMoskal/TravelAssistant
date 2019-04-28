@@ -234,9 +234,6 @@ public class MainActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.nav_main:
                 break;
-            case R.id.nav_things:
-                // TODO add link to PackActivity (name can be improved)
-                break;
             case R.id.nav_informer:
                 // TODO add link to InformerActivity
                 break;

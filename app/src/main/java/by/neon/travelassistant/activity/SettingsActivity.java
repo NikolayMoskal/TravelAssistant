@@ -82,8 +82,6 @@ public class SettingsActivity extends AppCompatActivity
                 Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.nav_things:
-                break;
             case R.id.nav_informer:
                 break;
             case R.id.nav_about:
