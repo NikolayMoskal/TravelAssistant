@@ -14,7 +14,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/dep_city_label"
@@ -36,7 +37,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10sp">
+        android:layout_marginBottom="10sp"
+        android:visibility="gone">
 
         <AutoCompleteTextView
             android:id="@+id/dep_city"
@@ -49,7 +51,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/arv_city_label"
@@ -71,7 +74,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10sp">
+        android:layout_marginBottom="10sp"
+        android:visibility="gone">
 
         <AutoCompleteTextView
             android:id="@+id/arv_city"
@@ -80,10 +84,42 @@
             android:hint="@string/arv_airport_hint"/>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/publishProgress"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/view1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="12sp"
+            android:textSize="@dimen/main_activity_text_size"
+            android:textColor="@color/colorPrimary"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <EditText
+            android:id="@+id/city1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20sp"
+            android:hint="Название города"
+            android:inputType="text"
+            tools:ignore="Autofill" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_help"
+            app:fabSize="mini"
+            android:onClick="onFindCity"/>
+    </LinearLayout>
 
     <Button
         android:id="@+id/send_button"

@@ -1,5 +1,7 @@
 package by.neon.travelassistant.model;
 
+import android.location.Location;
+
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +13,9 @@ public class Weather {
     private double rainVolume;
     private double snowVolume;
     private Date calculationDate;
+    private String cityName;
+    private String countryCode;
+    private Location location;
 
     public List<State> getStates() {
         return states;
@@ -66,6 +71,30 @@ public class Weather {
 
     public void setCalculationDate(Date calculationDate) {
         this.calculationDate = calculationDate;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public static class State {
