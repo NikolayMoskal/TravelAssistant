@@ -53,7 +53,6 @@ public class InputActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle(R.string.travel_data_label);
         setContentView(R.layout.activity_input);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -227,7 +226,26 @@ public class InputActivity extends AppCompatActivity
     }
 
     public void onSendClick(View view) {
-        Intent intent = new Intent(InputActivity.this, PackActivity.class);
+        Intent intent = new Intent(InputActivity.this, PreviewActivity.class);
+        intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, Long.parseLong(((EditText) findViewById(R.id.arv_city)).getText().toString()));
+        intent.putExtra(CommonConstants.TYPE_MALE, ((ToggleButton) findViewById(R.id.sex_male)).isChecked());
+        intent.putExtra(CommonConstants.TYPE_FEMALE, ((ToggleButton) findViewById(R.id.sex_female)).isChecked());
+        intent.putExtra(CommonConstants.TRANSPORT_TYPE_AIRPLANE, ((ToggleButton) findViewById(R.id.type_airplane)).isChecked());
+        intent.putExtra(CommonConstants.TRANSPORT_TYPE_AUTO, ((ToggleButton) findViewById(R.id.type_auto)).isChecked());
+        intent.putExtra(CommonConstants.TRANSPORT_TYPE_TRAIN, ((ToggleButton) findViewById(R.id.type_train)).isChecked());
+        intent.putExtra(CommonConstants.TRANSPORT_TYPE_BUS, ((ToggleButton) findViewById(R.id.type_bus)).isChecked());
+        intent.putExtra(CommonConstants.TRANSPORT_TYPE_CYCLE, ((ToggleButton) findViewById(R.id.type_cycle)).isChecked());
+        intent.putExtra(CommonConstants.TRANSPORT_TYPE_SHIP, ((ToggleButton) findViewById(R.id.type_ship)).isChecked());
+
+        LinearLayout layout = findViewById(R.id.layout_targets);
+        int count = 0;
+        for (int layoutIndex = 0; layoutIndex < layout.getChildCount(); layoutIndex++) {
+            LinearLayout inner = (LinearLayout) layout.getChildAt(layoutIndex);
+            for (int viewIndex = 0; viewIndex < inner.getChildCount(); viewIndex++, count++) {
+                intent.putExtra("type" + count, ((ToggleButton) inner.getChildAt(viewIndex)).isChecked());
+            }
+        }
+        intent.putExtra(CommonConstants.COUNT_TARGETS, count);
         startActivity(intent);
     }
 }
