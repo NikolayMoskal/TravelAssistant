@@ -27,4 +27,9 @@
         <item name="cardBackgroundColor">#33823DA7</item>
     </style>
 
+    <style name="Widget.Button.Toggle" parent="android:Widget">
+        <item name="android:background">@drawable/travel_toggle_button_background</item>
+        <item name="android:disabledAlpha">?android:attr/disabledAlpha</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
 </resources>

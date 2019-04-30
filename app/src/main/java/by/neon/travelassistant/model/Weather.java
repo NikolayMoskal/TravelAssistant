@@ -16,6 +16,7 @@ public class Weather {
     private String cityName;
     private String countryCode;
     private Location location;
+    private long cityId;
 
     public List<State> getStates() {
         return states;
@@ -95,6 +96,14 @@ public class Weather {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public long getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(long cityId) {
+        this.cityId = cityId;
     }
 
     public static class State {

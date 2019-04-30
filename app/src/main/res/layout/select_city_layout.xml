@@ -9,7 +9,8 @@
         android:id="@+id/citySelectWeatherIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10sp" />
+        android:layout_margin="10sp"
+        android:contentDescription="@string/list_item_icon_description" />
 
     <LinearLayout
         android:layout_width="wrap_content"

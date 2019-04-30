@@ -44,7 +44,7 @@
             android:id="@+id/dep_airport"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="@string/arv_airport_hint"/>
+            android:hint="@string/arv_city_hint"/>
     </LinearLayout>
 
     <LinearLayout
@@ -80,7 +80,7 @@
             android:id="@+id/arv_airport"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="@string/arv_airport_hint"/>
+            android:hint="@string/arv_city_hint"/>
     </LinearLayout>
 
     <Button

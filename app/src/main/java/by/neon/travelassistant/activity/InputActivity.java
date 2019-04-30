@@ -12,13 +12,15 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
+import android.widget.ToggleButton;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -35,15 +37,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.ExecutionException;
 
 import by.neon.travelassistant.R;
+import by.neon.travelassistant.adapters.SelectCityAdapter;
 import by.neon.travelassistant.config.Config;
 import by.neon.travelassistant.config.OwmConfig;
 import by.neon.travelassistant.constant.CommonConstants;
-import by.neon.travelassistant.listener.AutoCompleteTextViewItemClickListener;
-import by.neon.travelassistant.adapters.SelectCityAdapter;
-import by.neon.travelassistant.model.OwmCity;
 import by.neon.travelassistant.model.Weather;
 
 public class InputActivity extends AppCompatActivity
@@ -68,27 +67,7 @@ public class InputActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         config = new OwmConfig(this);
-
-        configureArrivalAirportView();
-        configureDepartureAirportView();
-    }
-
-    /**
-     * Configures the view for arrival airport
-     */
-    private void configureArrivalAirportView() {
-        AutoCompleteTextView textView = findViewById(R.id.arv_city);
-        //textView.setAdapter(configureAdapter());
-        textView.setOnItemClickListener(new AutoCompleteTextViewItemClickListener(textView));
-    }
-
-    /**
-     * Configures the view for departure airport
-     */
-    private void configureDepartureAirportView() {
-        AutoCompleteTextView textView = findViewById(R.id.dep_city);
-        //3textView.setAdapter(configureAdapter());
-        textView.setOnItemClickListener(new AutoCompleteTextViewItemClickListener(textView));
+        setTravelTargets();
     }
 
     @Override
@@ -123,19 +102,6 @@ public class InputActivity extends AppCompatActivity
         return true;
     }
 
-    private SimpleAdapter configureAdapter() {
-        String[] keys = new String[]{"CityName", "CityId"};
-        ArrayList<HashMap<String, String>> maps = new ArrayList<>(0);
-        for (OwmCity info : config.getCities()) {
-            HashMap<String, String> map = new HashMap<>(0);
-            map.put(keys[0], String.format("%s, %s", info.getName(), info.getCountryCode()));
-            map.put(keys[1], String.valueOf(info.getOwmId()));
-            maps.add(map);
-        }
-        int[] ids = new int[]{R.id.cityInfo, R.id.cityId};
-        return new SimpleAdapter(this, maps, R.layout.list_item, keys, ids);
-    }
-
     private SimpleAdapter configureCitySelectAdapter(List<Weather> weatherList) {
         String[] keys = new String[]{"Icon", "City", "Location", "Temp", "Selected"};
         ArrayList<HashMap<String, String>> maps = new ArrayList<>(0);
@@ -161,8 +127,8 @@ public class InputActivity extends AppCompatActivity
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
                     try {
-                        List<Weather> weatherList = parseJson(response);
-                        showCitySelectDialog(configureCitySelectAdapter(weatherList));
+                        List<Weather> weatherList = parseJsonResponse(response);
+                        showCitySelectDialog(weatherList, configureCitySelectAdapter(weatherList));
                     } catch (JSONException e) {
                         VolleyLog.e(e, "%s", e.getMessage());
                     }
@@ -170,7 +136,7 @@ public class InputActivity extends AppCompatActivity
         queue.add(request);
     }
 
-    private List<Weather> parseJson(JSONObject response) throws JSONException {
+    private List<Weather> parseJsonResponse(JSONObject response) throws JSONException {
         JSONArray responses = response.getJSONArray("list");
         List<Weather> weatherList = new ArrayList<>();
         for (int cityIndex = 0; cityIndex < responses.length(); cityIndex++) {
@@ -181,6 +147,7 @@ public class InputActivity extends AppCompatActivity
             JSONObject coordinates = info.getJSONObject("coord");
             JSONObject systemInfo = info.getJSONObject("sys");
 
+            weather.setCityId(info.getLong("id"));
             weather.setCityName(info.getString("name"));
             weather.setCountryCode(systemInfo.getString("country"));
             Location location = new Location(LocationManager.GPS_PROVIDER);
@@ -212,24 +179,55 @@ public class InputActivity extends AppCompatActivity
         return weatherList;
     }
 
-    private void showCitySelectDialog(ListAdapter adapter) {
+    private void showCitySelectDialog(List<Weather> weatherList, ListAdapter adapter) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder
                 .setTitle("Выберите город")
                 .setCancelable(true)
                 .setAdapter(adapter, (dialog, which) -> {
-                    // TODO get city ID
-                })
-                .setPositiveButton("OK", (dialog, which) -> {
-                    // TODO 
+                    EditText text = findViewById(R.id.arv_city);
+                    text.setText(String.valueOf(weatherList.get(which).getCityId()));
                 })
                 .setNegativeButton("Cancel", null);
         builder.create().show();
     }
 
+    private void setTravelTargets() {
+        LinearLayout parent = findViewById(R.id.layout_targets);
+        String[] targets = getResources().getStringArray(R.array.targets);
+
+        int index = 0;
+        while (index < targets.length) {
+            LinearLayout innerLayout = new LinearLayout(this);
+            innerLayout.setOrientation(LinearLayout.HORIZONTAL);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.gravity = Gravity.CENTER_VERTICAL;
+            layoutParams.setMargins(0, 10, 0 ,0);
+            innerLayout.setLayoutParams(layoutParams);
+            for (int item = 0; item < 3 && index < targets.length; item++, index++) {
+                ToggleButton button = (ToggleButton) getLayoutInflater().inflate(R.layout.toggle_button_style_layout, null);
+                button.setId(View.generateViewId());
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMarginEnd((int) (getResources().getDimension(R.dimen.toggle_button_margin_end) / getResources().getDisplayMetrics().density));
+                button.setPadding(5, 5, 5, 5);
+                button.setLayoutParams(params);
+                button.setText(targets[index]);
+                button.setTextOn(targets[index]);
+                button.setTextOff(targets[index]);
+                innerLayout.addView(button);
+            }
+            parent.addView(innerLayout);
+        }
+    }
+
     public void onFindCity(View view) {
-        EditText text = findViewById(R.id.city1);
+        EditText text = findViewById(R.id.arv_city);
         String cityName = text.getText().toString();
         createCitySelectDialog(cityName);
+    }
+
+    public void onSendClick(View view) {
+        Intent intent = new Intent(InputActivity.this, PackActivity.class);
+        startActivity(intent);
     }
 }

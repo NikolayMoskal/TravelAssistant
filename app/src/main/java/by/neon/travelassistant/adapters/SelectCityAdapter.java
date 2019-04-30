@@ -1,5 +1,6 @@
 package by.neon.travelassistant.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +21,6 @@ import by.neon.travelassistant.activity.query.DownloadWeatherIconAsyncTask;
 
 public final class SelectCityAdapter extends SimpleAdapter {
     private static final String TAG = "SelectCityAdapter";
-    private Context context;
     private LayoutInflater inflater;
 
     /**
@@ -39,16 +39,16 @@ public final class SelectCityAdapter extends SimpleAdapter {
      */
     public SelectCityAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to) {
         super(context, data, resource, from, to);
-        this.context = context;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     /**
-     * @param position
-     * @param convertView
-     * @param parent
+     * @param position current position in parent view
+     * @param convertView a target view
+     * @param parent a parent view
      * @see Adapter#getView(int, View, ViewGroup)
      */
+    @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
@@ -56,6 +56,7 @@ public final class SelectCityAdapter extends SimpleAdapter {
             view = inflater.inflate(R.layout.select_city_layout, null);
         }
 
+        //noinspection unchecked
         HashMap<String, String> map = (HashMap<String, String>) getItem(position);
 
         try {
