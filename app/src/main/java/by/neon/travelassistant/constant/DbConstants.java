@@ -29,4 +29,6 @@ public final class DbConstants {
     public static final String THINGS_COLUMN_WEIGHT = "WEIGHT";
     public static final String THINGS_COLUMN_TYPE = "TYPE";
     public static final String THINGS_COLUMN_CATEGORY = "CATEGORY";
+    public static final String THINGS_COLUMN_GENDER = "GENDER";
+    public static final String THINGS_COLUMN_WEATHER_TYPE = "WEATHER_TYPE";
 }

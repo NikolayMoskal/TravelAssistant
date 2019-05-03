@@ -35,7 +35,7 @@ public final class ThingUpdateAsyncTask extends AsyncTask<ThingDb, Void, Integer
 
         TravelDbContext dbContext = Startup.getStartup().getDbContext();
         ThingDb replacement = thingDbs[0];
-        int result = dbContext.thingDao().updateById(replacement.getId(), replacement.getThingNameEn(), replacement.getThingNameRu(), replacement.getType(), replacement.getCategory());
+        int result = dbContext.thingDao().updateById(replacement.getId(), replacement.getThingNameEn(), replacement.getType(), replacement.getCategory(), replacement.getGender(), replacement.getWeatherType());
         Log.i(TAG, "doInBackground: " + result + " rows updated.");
         return result;
     }

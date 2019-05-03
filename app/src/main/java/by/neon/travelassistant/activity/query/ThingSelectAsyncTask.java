@@ -15,6 +15,8 @@ public final class ThingSelectAsyncTask extends AsyncTask<Void, Void, List<Thing
     private boolean isSelectAll;
     private String requestedName;
     private long requestedId;
+    private String requestedType;
+    private List<String> requestedCategories;
 
     public ThingSelectAsyncTask() {
         this.isSelectAll = true;
@@ -26,6 +28,15 @@ public final class ThingSelectAsyncTask extends AsyncTask<Void, Void, List<Thing
 
     public ThingSelectAsyncTask(long requestedId) {
         this.requestedId = requestedId;
+    }
+
+    public ThingSelectAsyncTask(String requestedType, List<String> requestedCategories) {
+        this.requestedType = requestedType;
+        this.requestedCategories = requestedCategories;
+    }
+
+    public ThingSelectAsyncTask(List<String> requestedCategories) {
+        this.requestedCategories = requestedCategories;
     }
 
     /**
@@ -54,6 +65,14 @@ public final class ThingSelectAsyncTask extends AsyncTask<Void, Void, List<Thing
         }
         else if (requestedName != null) {
             result = dbContext.thingDao().getByName(requestedName);
+        }
+        else if (requestedType != null) {
+            result = requestedCategories != null
+                    ? dbContext.thingDao().getByCategoriesAndType(requestedCategories, requestedType)
+                    : dbContext.thingDao().getByType(requestedType);
+        }
+        else if (requestedCategories != null) {
+            result = dbContext.thingDao().getByCategories(requestedCategories);
         }
         Log.i(TAG, "doInBackground: " + result.size() + " rows returned.");
         return result;

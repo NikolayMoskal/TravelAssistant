@@ -2,7 +2,7 @@
   {
     "thingName_en-US": "passport",
     "thingName_ru-RU": "паспорт",
-	"sex": "neutral",
+	"gender": "neutral",
     "type": "documents",
     "category": "need",
     "weight": 0.02,
@@ -11,7 +11,7 @@
   {
     "thingName_en-US": "payment card",
     "thingName_ru-RU": "банковская карта",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "documents",
     "category": "need",
     "weight": 0.01,
@@ -20,7 +20,7 @@
   {
     "thingName_en-US": "kids documents",
     "thingName_ru-RU": "документы для ребенка",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "documents",
     "category": "need",
     "weight": 0.02,
@@ -29,7 +29,7 @@
   {
     "thingName_en-US": "cash",
     "thingName_ru-RU": "наличные деньги",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "documents",
     "category": "need",
     "weight": 0.01,
@@ -38,7 +38,7 @@
   {
     "thingName_en-US": "transport ticket",
     "thingName_ru-RU": "билет на транспорт",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "documents",
     "category": "need",
     "weight": 0.01,
@@ -47,7 +47,7 @@
   {
     "thingName_en-US": "hotel reservation",
     "thingName_ru-RU": "бронь отеля",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "documents",
     "category": "business,tourism,travel",
     "weight": 0.01,
@@ -56,7 +56,7 @@
   {
     "thingName_en-US": "driver license",
     "thingName_ru-RU": "водительские права",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "documents",
     "category": "travel",
     "weight": 0.02,
@@ -65,7 +65,7 @@
   {
     "thingName_en-US": "passport copy",
     "thingName_ru-RU": "копия паспорта",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "documents",
     "category": "business,tourism,travel",
     "weight": 0.01,
@@ -74,7 +74,7 @@
   {
     "thingName_en-US": "medical insurance",
     "thingName_ru-RU": "медицинская страховка",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "documents",
     "category": "travel,tourism",
     "weight": 0.02,
@@ -83,7 +83,7 @@
   {
     "thingName_en-US": "smartphone",
     "thingName_ru-RU": "смартфон",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "equipment",
     "category": "need",
     "weight": 0.1,
@@ -92,7 +92,7 @@
   {
     "thingName_en-US": "charger",
     "thingName_ru-RU": "зарядное устройство",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "equipment",
     "category": "need",
     "weight": 0.05,
@@ -101,7 +101,7 @@
   {
     "thingName_en-US": "headphones",
     "thingName_ru-RU": "наушники",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "equipment",
     "category": "travel,tourism,business",
     "weight": 0.05,
@@ -110,7 +110,7 @@
   {
     "thingName_en-US": "laptop",
     "thingName_ru-RU": "ноутбук",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "equipment",
     "category": "business",
     "weight": 2.5,
@@ -119,7 +119,7 @@
   {
     "thingName_en-US": "adapter for sockets",
     "thingName_ru-RU": "переходник для розеток",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "equipment",
     "category": "need",
     "weight": 0.05,
@@ -128,7 +128,7 @@
   {
     "thingName_en-US": "network filter",
     "thingName_ru-RU": "сетевой фильтр",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "equipment",
     "category": "business",
     "weight": 0.3,
@@ -137,7 +137,7 @@
   {
     "thingName_en-US": "camera",
     "thingName_ru-RU": "фотоаппарат",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "equipment",
     "category": "photo,travel,tourism",
     "weight": 0.5,
@@ -146,7 +146,7 @@
   {
     "thingName_en-US": "laptop charger",
     "thingName_ru-RU": "зарядное для ноутбука",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "equipment",
     "category": "business",
     "weight": 0.5,
@@ -155,7 +155,7 @@
   {
     "thingName_en-US": "camera charger",
     "thingName_ru-RU": "зарядное для фотоаппарата",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "equipment",
     "category": "tourism,photo,travel",
     "weight": 0.1,
@@ -164,7 +164,7 @@
   {
     "thingName_en-US": "memory card",
     "thingName_ru-RU": "карта памяти",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "equipment",
     "category": "tourism",
     "weight": 0.01,
@@ -173,7 +173,7 @@
   {
     "thingName_en-US": "monopod",
     "thingName_ru-RU": "монопод",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "equipment",
     "category": "travel,tourism,photo",
     "weight": 0.3,
@@ -182,7 +182,7 @@
   {
     "thingName_en-US": "bag for the camera",
     "thingName_ru-RU": "сумка для фотоаппарата",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "equipment",
     "category": "tourism,photo,travel",
     "weight": 0.3,
@@ -191,7 +191,7 @@
   {
     "thingName_en-US": "backpack",
     "thingName_ru-RU": "рюкзак",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "comfort",
     "category": "tourism,cycle,photo,fishing,hike,kids,travel",
     "weight": 0.35,
@@ -200,7 +200,7 @@
   {
     "thingName_en-US": "disposable tableware",
     "thingName_ru-RU": "одноразовая посуда",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "comfort",
     "category": "tourism,cycle,fishing,hike,travel",
     "weight": 0.2,
@@ -209,7 +209,7 @@
   {
     "thingName_en-US": "raincoat",
     "thingName_ru-RU": "дождевик",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "comfort",
     "category": "tourism,cycle,fishing,hike,kids,travel",
     "weight": 0.5,
@@ -218,7 +218,7 @@
   {
     "thingName_en-US": "pocket mirror",
     "thingName_ru-RU": "карманное зеркало",
-    "sex": "woman",
+    "gender": "woman",
 	"type": "comfort",
     "category": "tourism,cycle,beach,hike,travel",
     "weight": 0.05,
@@ -227,7 +227,7 @@
   {
     "thingName_en-US": "inflatable pillow",
     "thingName_ru-RU": "надувная подушка",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "comfort",
     "category": "tourism,business,hike,travel",
     "weight": 0.1,
@@ -236,7 +236,7 @@
   {
     "thingName_en-US": "packages",
     "thingName_ru-RU": "пакеты",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "comfort",
     "category": "tourism,hike,travel",
     "weight": 0.1,
@@ -245,7 +245,7 @@
   {
     "thingName_en-US": "sunglasses",
     "thingName_ru-RU": "солнечные очки",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "comfort",
     "category": "tourism,cycle,beach,business,fishing,hike,kids,travel",
     "weight": 0.05,
@@ -254,7 +254,7 @@
   {
     "thingName_en-US": "toilet paper",
     "thingName_ru-RU": "туалетная бумага",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "cosmetics",
     "category": "tourism,cycle,beach,fishing,hike,wc,kids,travel",
     "weight": 0.15,
@@ -263,7 +263,7 @@
   {
     "thingName_en-US": "jackknife",
     "thingName_ru-RU": "складной нож",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "comfort",
     "category": "tourism,cycle,business,fishing,hike,travel",
     "weight": 0.1,
@@ -272,7 +272,7 @@
   {
     "thingName_en-US": "razor",
     "thingName_ru-RU": "бритва",
-    "sex": "man",
+    "gender": "man",
 	"type": "cosmetics",
     "category": "need",
     "weight": 0.05,
@@ -281,7 +281,7 @@
   {
     "thingName_en-US": "deodorant",
     "thingName_ru-RU": "дезодорант",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "cosmetics",
     "category": "need",
     "weight": 0.3,
@@ -290,7 +290,7 @@
   {
     "thingName_en-US": "hairbrush",
     "thingName_ru-RU": "расческа",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "cosmetics",
     "category": "tourism,beach,business,hike,kids,restaurant,travel",
     "weight": 0.05,
@@ -299,7 +299,7 @@
   {
     "thingName_en-US": "wet wipes",
     "thingName_ru-RU": "влажные салфетки",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "cosmetics",
     "category": "tourism,cycle,beach,business,hike,wc,kids,travel",
     "weight": 0.03,
@@ -308,7 +308,7 @@
   {
     "thingName_en-US": "tampons",
     "thingName_ru-RU": "тампоны",
-    "sex": "woman",
+    "gender": "woman",
 	"type": "cosmetics",
     "category": "tourism,cycle,beach,hike,travel",
     "weight": 0.02,
@@ -317,7 +317,7 @@
   {
     "thingName_en-US": "sunblock",
     "thingName_ru-RU": "крем от загара",
-    "sex": "woman",
+    "gender": "woman",
 	"type": "cosmetics",
     "category": "tourism,cycle,winter,beach,hike,kids,travel",
     "weight": 0.2,
@@ -326,7 +326,7 @@
   {
     "thingName_en-US": "glasses",
     "thingName_ru-RU": "очки",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "comfort",
     "category": "need",
     "weight": 0.05,
@@ -335,7 +335,7 @@
   {
     "thingName_en-US": "contact lenses",
     "thingName_ru-RU": "контактные линзы",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "comfort",
     "category": "need",
     "weight": 0.01,
@@ -344,7 +344,7 @@
   {
     "thingName_en-US": "perfume",
     "thingName_ru-RU": "парфюм",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "cosmetics",
     "category": "business,restaurant",
     "weight": 0.05,
@@ -353,7 +353,7 @@
   {
     "thingName_en-US": "decorative cosmetics",
     "thingName_ru-RU": "декоративная косметика",
-    "sex": "woman",
+    "gender": "woman",
 	"type": "cosmetics",
     "category": "business,wc,restaurant,travel",
     "weight": 0.3,
@@ -362,7 +362,7 @@
   {
     "thingName_en-US": "condoms",
     "thingName_ru-RU": "презервативы",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "comfort",
     "category": "tourism,business,hike,travel",
     "weight": 0.01,
@@ -371,7 +371,7 @@
   {
     "thingName_en-US": "mosquito repellents",
     "thingName_ru-RU": "средства от комаров",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "cosmetics",
     "category": "tourism,cycle,beach,fishing,hike,travel",
     "weight": 0.2,
@@ -380,7 +380,7 @@
   {
     "thingName_en-US": "shampoo",
     "thingName_ru-RU": "шампунь",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "cosmetics",
     "category": "need",
     "weight": 0.1,
@@ -389,7 +389,7 @@
   {
     "thingName_en-US": "soap",
     "thingName_ru-RU": "мыло",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "cosmetics",
     "category": "need",
     "weight": 0.1,
@@ -398,7 +398,7 @@
   {
     "thingName_en-US": "washcloth",
     "thingName_ru-RU": "мочалка",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "cosmetics",
     "category": "need",
     "weight": 0.5,
@@ -407,7 +407,7 @@
   {
     "thingName_en-US": "shirt",
     "thingName_ru-RU": "рубашка",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "dresscode",
     "category": "business,restaurant,travel,kids",
     "weight": 0.1,
@@ -416,7 +416,7 @@
   {
     "thingName_en-US": "blouse",
     "thingName_ru-RU": "блуза",
-    "sex": "woman",
+    "gender": "woman",
 	"type": "dresscode",
     "category": "business,restaurant,travel",
     "weight": 0.1,
@@ -425,7 +425,7 @@
   {
     "thingName_en-US": "trousers",
     "thingName_ru-RU": "брюки",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "dresscode",
     "category": "business,restaurant",
     "weight": 0.5,
@@ -434,7 +434,7 @@
   {
     "thingName_en-US": "sweater",
     "thingName_ru-RU": "свитер",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "casual",
     "category": "tourism,winter,business,fishing,hike,kids,travel",
     "weight": 0.8,
@@ -443,7 +443,7 @@
   {
     "thingName_en-US": "underwear",
     "thingName_ru-RU": "нижнее белье",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "underwear",
     "category": "need",
     "weight": 0.05,
@@ -452,7 +452,7 @@
   {
     "thingName_en-US": "socks",
     "thingName_ru-RU": "носки",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "underwear",
     "category": "need",
     "weight": 0.1,
@@ -461,7 +461,7 @@
   {
     "thingName_en-US": "tights",
     "thingName_ru-RU": "колготки",
-    "sex": "woman",
+    "gender": "woman",
 	"type": "underwear",
     "category": "need",
     "weight": 0.05,
@@ -470,7 +470,7 @@
   {
     "thingName_en-US": "t-shirt",
     "thingName_ru-RU": "футболка",
-    "sex": "neutral",
+    "gender": "neutral",
 	"type": "casual",
     "category": "tourism,cycle,photo,fishing,hike,travel",
     "weight": 0.1,
@@ -479,7 +479,7 @@
   {
     "thingName_en-US": "clutch bag",
     "thingName_ru-RU": "клатч",
-    "sex": "woman",
+    "gender": "woman",
     "type": "accessoires",
     "category": "restaurant,travel",
     "weight": 0.2,
@@ -488,7 +488,7 @@
   {
     "thingName_en-US": "handbag",
     "thingName_ru-RU": "сумка",
-    "sex": "woman",
+    "gender": "woman",
     "type": "accessoires",
     "category": "need",
     "weight": 0.8,
@@ -497,7 +497,7 @@
   {
     "thingName_en-US": "gloves",
     "thingName_ru-RU": "перчатки",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "accessoires",
     "category": "tourism,cycle,hike,restaurant,travel",
     "weight": 0.05,
@@ -506,7 +506,7 @@
   {
     "thingName_en-US": "belt",
     "thingName_ru-RU": "ремень",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "accessoires",
     "category": "need",
     "weight": 0.1,
@@ -515,7 +515,7 @@
   {
     "thingName_en-US": "shawl",
     "thingName_ru-RU": "платок",
-    "sex": "woman",
+    "gender": "woman",
     "type": "accessoires",
     "category": "tourism,business,hike,restaurant,travel",
     "weight": 0.02,
@@ -524,7 +524,7 @@
   {
     "thingName_en-US": "scarf",
     "thingName_ru-RU": "шарф",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "accessoires",
     "category": "winter",
     "weight": 0.2,
@@ -533,7 +533,7 @@
   {
     "thingName_en-US": "bracelet",
     "thingName_ru-RU": "браслет",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "decorations",
     "category": "business,restaurant",
     "weight": 0.02,
@@ -542,7 +542,7 @@
   {
     "thingName_en-US": "ring",
     "thingName_ru-RU": "кольцо",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "decorations",
     "category": "need",
     "weight": 0.005,
@@ -551,7 +551,7 @@
   {
     "thingName_en-US": "denim",
     "thingName_ru-RU": "denim",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "casual",
     "category": "tourism,winter,hike,travel",
     "weight": 1.0,
@@ -560,7 +560,7 @@
   {
     "thingName_en-US": "dress",
     "thingName_ru-RU": "платье",
-    "sex": "woman",
+    "gender": "woman",
     "type": "dresscode",
     "category": "business,restaurant,travel",
     "weight": 0.5,
@@ -569,7 +569,7 @@
   {
     "thingName_en-US": "sundress",
     "thingName_ru-RU": "сарафан",
-    "sex": "woman",
+    "gender": "woman",
     "type": "casual",
     "category": "beach,tourism,travel",
     "weight": 0.5,
@@ -578,7 +578,7 @@
   {
     "thingName_en-US": "swimming suit",
     "thingName_ru-RU": "купальник",
-    "sex": "woman",
+    "gender": "woman",
     "type": "underwear",
     "category": "tourism,beach,swim,photo,hike,travel",
     "weight": 0.1,
@@ -587,7 +587,7 @@
   {
     "thingName_en-US": "swimming trunks",
     "thingName_ru-RU": "плавки",
-    "sex": "man",
+    "gender": "man",
     "type": "underwear",
     "category": "tourism,beach,swim,photo,hike,travel",
     "weight": 0.1,
@@ -596,7 +596,7 @@
   {
     "thingName_en-US": "shorts",
     "thingName_ru-RU": "шорты",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "casual",
     "category": "tourism,cycle,beach,photo,fishing,hike,travel",
     "weight": 0.4,
@@ -605,7 +605,7 @@
   {
     "thingName_en-US": "skirt",
     "thingName_ru-RU": "юбка",
-    "sex": "woman",
+    "gender": "woman",
     "type": "casual",
     "category": "business,travel,restaurant",
     "weight": 0.3,
@@ -614,7 +614,7 @@
   {
     "thingName_en-US": "wind breaker",
     "thingName_ru-RU": "ветровка",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "outerwear",
     "category": "tourism,cycle,business,fishing,photo,hike,travel",
     "weight": 0.5,
@@ -623,7 +623,7 @@
   {
     "thingName_en-US": "jacket",
     "thingName_ru-RU": "куртка",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "outerwear",
     "category": "tourism,cycle,business,photo,fishing,hike,travel,winter",
     "weight": 1.0,
@@ -632,7 +632,7 @@
   {
     "thingName_en-US": "sheepskin coat",
     "thingName_ru-RU": "дубленка",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "outerwear",
     "category": "winter,restaurant,travel",
     "weight": 3.0,
@@ -641,7 +641,7 @@
   {
     "thingName_en-US": "coat",
     "thingName_ru-RU": "пальто",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "outerwear",
     "category": "winter,business,restaurant,travel",
     "weight": 1.5,
@@ -650,7 +650,7 @@
   {
     "thingName_en-US": "pea-jacket",
     "thingName_ru-RU": "пиджак",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "outerwear",
     "category": "business,restaurant",
     "weight": 0.5,
@@ -659,7 +659,7 @@
   {
     "thingName_en-US": "ballet shoes",
     "thingName_ru-RU": "балетки",
-    "sex": "woman",
+    "gender": "woman",
     "type": "shoes",
     "category": "beach,travel",
     "weight": 0.3,
@@ -668,7 +668,7 @@
   {
     "thingName_en-US": "sneakers",
     "thingName_ru-RU": "кроссовки",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "shoes",
     "category": "need",
     "weight": 0.5,
@@ -677,7 +677,7 @@
   {
     "thingName_en-US": "sandals",
     "thingName_ru-RU": "босоножки,сандалии",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "shoes",
     "category": "tourism,cycle,beach,travel,kids",
     "weight": 0.3,
@@ -686,7 +686,7 @@
   {
     "thingName_en-US": "boots",
     "thingName_ru-RU": "ботинки",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "shoes",
     "category": "winter,business,photo,hike,restaurant,travel,kids",
     "weight": 0.7,
@@ -695,7 +695,7 @@
   {
     "thingName_en-US": "high boots",
     "thingName_ru-RU": "сапоги",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "shoes",
     "category": "winter,fishing,hike,kids",
     "weight": 1.0,
@@ -704,7 +704,7 @@
   {
     "thingName_en-US": "low shoes",
     "thingName_ru-RU": "туфли",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "shoes",
     "category": "tourism,business,restaurant,travel,kids",
     "weight": 0.5,
@@ -713,7 +713,7 @@
   {
     "thingName_en-US": "hat",
     "thingName_ru-RU": "шапка",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "headgear",
     "category": "need",
     "weight": 0.2,
@@ -722,7 +722,7 @@
   {
     "thingName_en-US": "cap",
     "thingName_ru-RU": "кепка",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "headgear",
     "category": "tourism,cycle,fishing,hike,photo,travel,kids",
     "weight": 0.15,
@@ -731,7 +731,7 @@
   {
     "thingName_en-US": "baby pants",
     "thingName_ru-RU": "детские брюки",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "kids",
     "category": "tourism,cycle,kids,travel",
     "weight": 0.3,
@@ -740,7 +740,7 @@
   {
     "thingName_en-US": "diapers",
     "thingName_ru-RU": "подгузники",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "kids",
     "category": "need",
     "weight": 0.8,
@@ -749,7 +749,7 @@
   {
     "thingName_en-US": "children's potty",
     "thingName_ru-RU": "детский горшок",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "kids",
     "category": "need",
     "weight": 0.3,
@@ -758,7 +758,7 @@
   {
     "thingName_en-US": "baby carriage",
     "thingName_ru-RU": "детская коляска",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "kids",
     "category": "kids",
     "weight": 10.0,
@@ -767,7 +767,7 @@
   {
     "thingName_en-US": "plaything",
     "thingName_ru-RU": "игрушки",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "kids",
     "category": "kids",
     "weight": 0.15,
@@ -776,7 +776,7 @@
   {
     "thingName_en-US": "paracetamolum",
     "thingName_ru-RU": "парацетамол",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "medicine",
     "category": "need",
     "weight": 0.01,
@@ -785,7 +785,7 @@
   {
     "thingName_en-US": "drotaverine",
     "thingName_ru-RU": "дротаверин",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "medicine",
     "category": "need",
     "weight": 0.01,
@@ -794,7 +794,7 @@
   {
     "thingName_en-US": "carbo activatus",
     "thingName_ru-RU": "активированный уголь",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "medicine",
     "category": "need",
     "weight": 0.01,
@@ -803,7 +803,7 @@
   {
     "thingName_en-US": "pancreatin",
     "thingName_ru-RU": "панкреатин",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "medicine",
     "category": "need",
     "weight": 0.01,
@@ -812,7 +812,7 @@
   {
     "thingName_en-US": "loperamide",
     "thingName_ru-RU": "лоперамид",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "medicine",
     "category": "need",
     "weight": 0.01,
@@ -821,7 +821,7 @@
   {
     "thingName_en-US": "hydrogenum peroxide",
     "thingName_ru-RU": "перекись водорода",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "medicine",
     "category": "need",
     "weight": 0.1,
@@ -830,7 +830,7 @@
   {
     "thingName_en-US": "septolete",
     "thingName_ru-RU": "септолете",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "medicine",
     "category": "need",
     "weight": 0.01,
@@ -839,7 +839,7 @@
   {
     "thingName_en-US": "dexpanthenol",
     "thingName_ru-RU": "декспантенол",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "medicine",
     "category": "need",
     "weight": 0.1,
@@ -848,7 +848,7 @@
   {
     "thingName_en-US": "bandage",
     "thingName_ru-RU": "бинт",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "medicine",
     "category": "need",
     "weight": 0.02,
@@ -857,7 +857,7 @@
   {
     "thingName_en-US": "recipe",
     "thingName_ru-RU": "рецепт",
-    "sex": "neutral",
+    "gender": "neutral",
     "type": "medicine",
     "category": "need",
     "weight": 0.002,

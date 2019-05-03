@@ -12,6 +12,8 @@ public final class ThingMapper extends BaseMapper<Thing, ThingDb> {
         thingDb.setType(source.getType());
         thingDb.setCategory(source.getCategory());
         thingDb.setWeight(source.getWeight());
+        thingDb.setGender(source.getGender());
+        thingDb.setWeatherType(source.getWeatherType());
         return thingDb;
     }
 
@@ -23,6 +25,8 @@ public final class ThingMapper extends BaseMapper<Thing, ThingDb> {
         thing.setType(source.getType());
         thing.setCategory(source.getCategory());
         thing.setWeight(source.getWeight());
+        thing.setGender(source.getGender());
+        thing.setWeatherType(source.getWeatherType());
         return thing;
     }
 }

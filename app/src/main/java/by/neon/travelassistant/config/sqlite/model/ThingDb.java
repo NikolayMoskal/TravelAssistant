@@ -11,28 +11,16 @@ public class ThingDb extends BaseDbEntity {
     private String thingNameEn;
     @ColumnInfo(name = DbConstants.THINGS_COLUMN_THING_NAME_RU_RU)
     private String thingNameRu;
+    @ColumnInfo(name = DbConstants.THINGS_COLUMN_WEIGHT)
+    private double weight;
     @ColumnInfo(name = DbConstants.THINGS_COLUMN_TYPE)
     private String type;
     @ColumnInfo(name = DbConstants.THINGS_COLUMN_CATEGORY)
     private String category;
-    @ColumnInfo(name = DbConstants.THINGS_COLUMN_WEIGHT)
-    private double weight;
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
+    @ColumnInfo(name = DbConstants.THINGS_COLUMN_GENDER)
+    private String gender;
+    @ColumnInfo(name = DbConstants.THINGS_COLUMN_WEATHER_TYPE)
+    private String weatherType;
 
     public double getWeight() {
         return weight;
@@ -56,5 +44,37 @@ public class ThingDb extends BaseDbEntity {
 
     public void setThingNameRu(String thingNameRu) {
         this.thingNameRu = thingNameRu;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getWeatherType() {
+        return weatherType;
+    }
+
+    public void setWeatherType(String weatherType) {
+        this.weatherType = weatherType;
     }
 }

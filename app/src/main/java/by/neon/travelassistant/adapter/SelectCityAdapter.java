@@ -1,4 +1,4 @@
-package by.neon.travelassistant.adapters;
+package by.neon.travelassistant.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

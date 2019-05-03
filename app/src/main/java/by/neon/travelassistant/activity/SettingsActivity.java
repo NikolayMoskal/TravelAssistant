@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import java.io.IOException;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
@@ -43,11 +44,11 @@ public class SettingsActivity extends AppCompatActivity
         configureNavigationView();
 
         try {
-            config = new SqliteConfig();
+            config = new SqliteConfig(getApplicationContext());
             createSwitchForEachThing();
             loadSettingsFromPreferences();
         }
-        catch (InterruptedException | ExecutionException e) {
+        catch (InterruptedException | ExecutionException | IOException e) {
             Log.e(TAG, "onCreate: " + e.getMessage(), e);
         }
     }
@@ -79,7 +80,7 @@ public class SettingsActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_main:
-                Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+                Intent intent = new Intent(SettingsActivity.this, PackActivity.class);
                 startActivity(intent);
                 break;
             case R.id.nav_informer:

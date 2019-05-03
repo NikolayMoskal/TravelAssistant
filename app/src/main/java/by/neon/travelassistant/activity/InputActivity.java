@@ -39,16 +39,12 @@ import java.util.List;
 import java.util.Locale;
 
 import by.neon.travelassistant.R;
-import by.neon.travelassistant.adapters.SelectCityAdapter;
-import by.neon.travelassistant.config.Config;
-import by.neon.travelassistant.config.OwmConfig;
+import by.neon.travelassistant.adapter.SelectCityAdapter;
 import by.neon.travelassistant.constant.CommonConstants;
 import by.neon.travelassistant.model.Weather;
 
 public class InputActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private static final String TAG = "InputActivity";
-    private Config config;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +61,6 @@ public class InputActivity extends AppCompatActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
-        config = new OwmConfig(this);
         setTravelTargets();
     }
 
@@ -213,10 +208,16 @@ public class InputActivity extends AppCompatActivity
                 button.setText(targets[index]);
                 button.setTextOn(targets[index]);
                 button.setTextOff(targets[index]);
+                button.setHint(getDefaultTargetName(index));
                 innerLayout.addView(button);
             }
             parent.addView(innerLayout);
         }
+    }
+
+    private String getDefaultTargetName(int targetIndex) {
+        String[] defaultTargetNames = getResources().getStringArray(R.array.targetsDefault);
+        return defaultTargetNames[targetIndex];
     }
 
     public void onFindCity(View view) {
@@ -241,8 +242,11 @@ public class InputActivity extends AppCompatActivity
         int count = 0;
         for (int layoutIndex = 0; layoutIndex < layout.getChildCount(); layoutIndex++) {
             LinearLayout inner = (LinearLayout) layout.getChildAt(layoutIndex);
-            for (int viewIndex = 0; viewIndex < inner.getChildCount(); viewIndex++, count++) {
-                intent.putExtra("type" + count, ((ToggleButton) inner.getChildAt(viewIndex)).isChecked());
+            for (int viewIndex = 0; viewIndex < inner.getChildCount(); viewIndex++) {
+                ToggleButton button = (ToggleButton) inner.getChildAt(viewIndex);
+                if (button.isChecked()) {
+                    intent.putExtra("type" + count++, button.getHint().toString());
+                }
             }
         }
         intent.putExtra(CommonConstants.COUNT_TARGETS, count);
