@@ -80,10 +80,8 @@ public class InputActivity extends AppCompatActivity
             case R.id.nav_main:
                 break;
             case R.id.nav_informer:
-                // TODO add link to InformerActivity
                 break;
             case R.id.nav_about:
-                // TODO show about
                 break;
             case R.id.nav_manage:
                 Intent intent = new Intent(InputActivity.this, SettingsActivity.class);

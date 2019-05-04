@@ -22,13 +22,26 @@
 
     <include layout="@layout/content_pack" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:maxImageSize="40sp"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        android:orientation="vertical">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/add_pack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            app:maxImageSize="40sp"
+            app:srcCompat="@android:drawable/ic_input_add"
+            android:onClick="onAddPackClick"/>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            app:srcCompat="@android:drawable/ic_dialog_email" />
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

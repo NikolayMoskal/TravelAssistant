@@ -1,5 +1,6 @@
 package by.neon.travelassistant.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import by.neon.travelassistant.R;
 
@@ -65,17 +67,22 @@ public class PackActivity extends AppCompatActivity
             case R.id.nav_main:
                 break;
             case R.id.nav_informer:
-                // TODO add link to InformerActivity
                 break;
             case R.id.nav_about:
-                // TODO show about
                 break;
             case R.id.nav_manage:
+                Intent intent = new Intent(PackActivity.this, SettingsActivity.class);
+                startActivity(intent);
                 break;
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void onAddPackClick(View view) {
+        Intent intent = new Intent(PackActivity.this, InputActivity.class);
+        startActivity(intent);
     }
 }

@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.concurrent.ExecutionException;
 
 import by.neon.travelassistant.R;
 import by.neon.travelassistant.activity.query.ThingSelectAsyncTask;
+import by.neon.travelassistant.config.SqliteConfig;
 import by.neon.travelassistant.config.sqlite.mapper.ThingMapper;
 import by.neon.travelassistant.constant.CommonConstants;
 import by.neon.travelassistant.model.Thing;
@@ -35,8 +37,9 @@ public class PreviewActivity extends AppCompatActivity {
 
         input = parseExtras(getIntent().getExtras());
         try {
+            new SqliteConfig(this);
             fillPreview();
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (ExecutionException | InterruptedException | IOException e) {
             Log.e(TAG, "onCreate: " + e.getMessage(), e);
         }
     }
@@ -67,10 +70,21 @@ public class PreviewActivity extends AppCompatActivity {
         List<String> targets = new ArrayList<>();
         for (Map.Entry<String, Object> item : input.entrySet()) {
             if (item.getKey().startsWith("type")) {
-                targets.add((String) item.getValue());
+                targets.add(getLocalizedTarget((String) item.getValue()));
             }
         }
         return targets;
+    }
+
+    private String getLocalizedTarget(String defaultTarget) {
+        String[] localizedTargets = getResources().getStringArray(R.array.targets);
+        String[] defaultTargets = getResources().getStringArray(R.array.targetsDefault);
+        for (int index = 0; index < defaultTargets.length; index++) {
+            if (defaultTargets[index].equals(defaultTarget)) {
+                return localizedTargets[index];
+            }
+        }
+        return null;
     }
 
     private void fillPreview() throws ExecutionException, InterruptedException {
@@ -89,7 +103,7 @@ public class PreviewActivity extends AppCompatActivity {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.topMargin = 10;
         targetTitleView.setLayoutParams(params);
-        targetTitleView.setText(title);
+        targetTitleView.setText(capitalize(title));
         targetTitleView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
         return targetTitleView;
     }
@@ -107,7 +121,11 @@ public class PreviewActivity extends AppCompatActivity {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.topMargin = 10;
         checkBox.setLayoutParams(params);
-        checkBox.setText(thingName);
+        checkBox.setText(capitalize(thingName));
         return checkBox;
+    }
+
+    private String capitalize(String title) {
+        return title.substring(0,1).toUpperCase() + title.substring(1);
     }
 }
