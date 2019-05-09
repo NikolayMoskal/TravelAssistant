@@ -9,15 +9,12 @@ import java.util.List;
 import by.neon.travelassistant.Startup;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
 import by.neon.travelassistant.config.sqlite.model.CategoryDb;
-import by.neon.travelassistant.config.sqlite.model.ThingDb;
 
-public final class ThingSelectAsyncTask extends AsyncTask<Void, Void, List<ThingDb>> {
-    private static final String TAG = "ThingSelectAsyncTask";
+public final class CategorySelectAsyncTask extends AsyncTask<Void, Void, List<CategoryDb>> {
+    private static final String TAG = "CategorySelectAsyncTask";
     private boolean isSelectAll;
-    private String name;
+    private List<String> names;
     private long id;
-    private String type;
-    private String category;
 
     /**
      * Override this method to perform a computation on a background thread. The
@@ -34,20 +31,20 @@ public final class ThingSelectAsyncTask extends AsyncTask<Void, Void, List<Thing
      * @see #publishProgress
      */
     @Override
-    protected List<ThingDb> doInBackground(Void... voids) {
+    protected List<CategoryDb> doInBackground(Void... voids) {
         TravelDbContext dbContext = Startup.getStartup().getDbContext();
-        List<ThingDb> result = new ArrayList<>(0);
+        List<CategoryDb> result = new ArrayList<>(0);
         if (isSelectAll) {
-            result = dbContext.getThingDao().getAll();
+            result.addAll(dbContext.getCategoryDao().getAll());
         } else if (id > 0) {
-            result.add(dbContext.getThingDao().getById(id));
-        } else if (name != null) {
-            result = dbContext.getThingDao().getByName(name);
-        } else if (type != null) {
-            result = dbContext.getThingDao().getByType(type);
-        } else if (category != null) {
-            CategoryDb categoryDb = dbContext.getCategoryDao().getByName(category);
-            result.addAll(dbContext.getThingCategoryDao().getThingsByCategory(categoryDb.getId()));
+            result.add(dbContext.getCategoryDao().getById(id));
+        } else if (names != null && names.size() > 0) {
+            if (names.size() > 1) {
+                result.addAll(dbContext.getCategoryDao().getByNames(names));
+            }
+            else {
+                result.add(dbContext.getCategoryDao().getByName(names.get(0)));
+            }
         }
         Log.i(TAG, "doInBackground: " + result.size() + " rows returned.");
         return result;
@@ -57,19 +54,11 @@ public final class ThingSelectAsyncTask extends AsyncTask<Void, Void, List<Thing
         isSelectAll = selectAll;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNames(List<String> names) {
+        this.names = names;
     }
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 }

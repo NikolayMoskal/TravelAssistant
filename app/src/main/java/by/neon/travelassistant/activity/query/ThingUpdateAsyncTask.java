@@ -26,16 +26,12 @@ public final class ThingUpdateAsyncTask extends AsyncTask<ThingDb, Void, Integer
      */
     @Override
     protected Integer doInBackground(ThingDb... thingDbs) {
-        if (thingDbs.length == 0) {
-            throw new IllegalArgumentException("No present thing to update.");
-        }
-        if (thingDbs[0] == null) {
-            throw new NullPointerException("No thing to update.");
+        if (thingDbs == null || thingDbs.length == 0 || thingDbs[0] == null) {
+            throw new IllegalArgumentException("No thing to update.");
         }
 
         TravelDbContext dbContext = Startup.getStartup().getDbContext();
-        ThingDb replacement = thingDbs[0];
-        int result = dbContext.thingDao().updateById(replacement.getId(), replacement.getThingNameEn(), replacement.getType(), replacement.getCategory(), replacement.getGender(), replacement.getWeatherType());
+        int result = dbContext.getThingDao().update(thingDbs[0]);
         Log.i(TAG, "doInBackground: " + result + " rows updated.");
         return result;
     }

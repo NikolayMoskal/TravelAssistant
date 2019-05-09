@@ -8,6 +8,8 @@ import java.util.List;
 
 import by.neon.travelassistant.Startup;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
+import by.neon.travelassistant.config.sqlite.model.CategoryDb;
+import by.neon.travelassistant.config.sqlite.model.ThingCategoryDb;
 import by.neon.travelassistant.config.sqlite.model.ThingDb;
 
 public final class ThingInsertAsyncTask extends AsyncTask<ThingDb, Void, List<Long>> {
@@ -29,14 +31,37 @@ public final class ThingInsertAsyncTask extends AsyncTask<ThingDb, Void, List<Lo
      */
     @Override
     protected List<Long> doInBackground(ThingDb... thingDbs) {
-        if (thingDbs.length == 0) {
+        if (thingDbs == null || thingDbs.length == 0) {
             throw new IllegalArgumentException("No present things to insert. Must be at least 1 thing.");
         }
 
         TravelDbContext dbContext = Startup.getStartup().getDbContext();
-        List<Long> result = dbContext.thingDao().insert(thingDbs);
+        List<Long> result = dbContext.getThingDao().insert(thingDbs);
         int resultSize = result == null ? 0 : result.size();
         Log.i(TAG, "doInBackground: " + resultSize + " rows inserted.");
-        return result == null ? new ArrayList<>(0) : result;
+        if (result == null) {
+            return new ArrayList<>(0);
+        }
+        for (int index = 0; index < resultSize; index++) {
+            List<CategoryDb> categoryDbs = dbContext.getCategoryDao()
+                    .getByNames(getNames(thingDbs[index].getCategoryDbs()));
+            List<ThingCategoryDb> list = new ArrayList<>(0);
+            for (CategoryDb categoryDb : categoryDbs) {
+                ThingCategoryDb entity = new ThingCategoryDb();
+                entity.setCategoryId(categoryDb.getId());
+                entity.setThingId(result.get(index));
+                list.add(entity);
+            }
+            dbContext.getThingCategoryDao().insert(list.toArray(new ThingCategoryDb[0]));
+        }
+        return result;
+    }
+
+    private List<String> getNames(List<CategoryDb> categoryDbs) {
+        List<String> names = new ArrayList<>(0);
+        for (CategoryDb categoryDb : categoryDbs) {
+            names.add(categoryDb.getCategoryName());
+        }
+        return names;
     }
 }

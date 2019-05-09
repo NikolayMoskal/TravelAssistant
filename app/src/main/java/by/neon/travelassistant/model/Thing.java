@@ -1,7 +1,9 @@
 package by.neon.travelassistant.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
 import java.util.Locale;
 
 public class Thing extends Entity {
@@ -11,9 +13,13 @@ public class Thing extends Entity {
     private String thingNameRu;
     private double weight;
     private String type;
-    private String category;
+    private List<String> category;
     private String gender;
-    private String weatherType;
+    private List<String> weatherType;
+    @JsonIgnore
+    private long typeId;
+    @JsonIgnore
+    private long genderId;
 
     public String getThingNameEn() {
         return thingNameEn;
@@ -31,11 +37,11 @@ public class Thing extends Entity {
         this.type = type;
     }
 
-    public String getCategory() {
+    public List<String> getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(List<String> category) {
         this.category = category;
     }
 
@@ -71,11 +77,27 @@ public class Thing extends Entity {
         this.gender = gender;
     }
 
-    public String getWeatherType() {
+    public List<String> getWeatherType() {
         return weatherType;
     }
 
-    public void setWeatherType(String weatherType) {
+    public void setWeatherType(List<String> weatherType) {
         this.weatherType = weatherType;
+    }
+
+    public long getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(long typeId) {
+        this.typeId = typeId;
+    }
+
+    public long getGenderId() {
+        return genderId;
+    }
+
+    public void setGenderId(long genderId) {
+        this.genderId = genderId;
     }
 }

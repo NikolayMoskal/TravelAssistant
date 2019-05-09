@@ -18,15 +18,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import java.io.IOException;
 import java.util.Locale;
-import java.util.concurrent.ExecutionException;
 
 import by.neon.travelassistant.R;
 import by.neon.travelassistant.config.Config;
 import by.neon.travelassistant.config.SqliteConfig;
-import by.neon.travelassistant.model.Thing;
 import by.neon.travelassistant.listener.SwitchCheckedListener;
+import by.neon.travelassistant.model.Thing;
 
 public class SettingsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -48,7 +46,7 @@ public class SettingsActivity extends AppCompatActivity
             createSwitchForEachThing();
             loadSettingsFromPreferences();
         }
-        catch (InterruptedException | ExecutionException | IOException e) {
+        catch (Exception e) {
             Log.e(TAG, "onCreate: " + e.getMessage(), e);
         }
     }
@@ -102,7 +100,7 @@ public class SettingsActivity extends AppCompatActivity
         super.finish();
     }
 
-    private void createSwitchForEachThing() {
+    private void createSwitchForEachThing() throws Exception {
         LinearLayout layout = findViewById(R.id.layout_switch);
         Locale locale = Locale.getDefault();
 

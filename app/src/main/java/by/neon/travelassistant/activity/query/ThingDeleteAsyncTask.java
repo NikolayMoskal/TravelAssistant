@@ -10,20 +10,8 @@ import by.neon.travelassistant.config.sqlite.model.ThingDb;
 public final class ThingDeleteAsyncTask extends AsyncTask<ThingDb, Void, Integer> {
     private static final String TAG = "ThingDeleteAsyncTask";
     private boolean isDeleteAll;
-    private String requestedName;
-    private long requestedId;
-
-    public ThingDeleteAsyncTask() {
-        this.isDeleteAll = true;
-    }
-
-    public ThingDeleteAsyncTask(String requestedName) {
-        this.requestedName = requestedName;
-    }
-
-    public ThingDeleteAsyncTask(long requestedId) {
-        this.requestedId = requestedId;
-    }
+    private String name;
+    private long id;
 
     /**
      * Override this method to perform a computation on a background thread. The
@@ -48,15 +36,27 @@ public final class ThingDeleteAsyncTask extends AsyncTask<ThingDb, Void, Integer
         TravelDbContext dbContext = Startup.getStartup().getDbContext();
         int result = 0;
         if (isDeleteAll) {
-            result = dbContext.thingDao().deleteAll();
+            result = dbContext.getThingDao().deleteAll();
         }
-        else if (requestedId > 0) {
-            result = dbContext.thingDao().deleteById(requestedId);
+        else if (id > 0) {
+            result = dbContext.getThingDao().deleteById(id);
         }
-        else if (requestedName != null) {
-            result = dbContext.thingDao().deleteByName(requestedName);
+        else if (name != null) {
+            result = dbContext.getThingDao().deleteByName(name);
         }
         Log.i(TAG, "doInBackground: " + result + " rows deleted.");
         return result;
+    }
+
+    public void setDeleteAll(boolean deleteAll) {
+        isDeleteAll = deleteAll;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

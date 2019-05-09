@@ -10,11 +10,10 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import by.neon.travelassistant.R;
@@ -26,7 +25,7 @@ import by.neon.travelassistant.model.Thing;
 
 public class PreviewActivity extends AppCompatActivity {
     private static final String TAG = "PreviewActivity";
-    private HashMap<String, Object> input;
+    private Map<String, Object> input;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +35,16 @@ public class PreviewActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         input = parseExtras(getIntent().getExtras());
+        new SqliteConfig(this);
         try {
-            new SqliteConfig(this);
             fillPreview();
-        } catch (ExecutionException | InterruptedException | IOException e) {
+        } catch (ExecutionException | InterruptedException e) {
             Log.e(TAG, "onCreate: " + e.getMessage(), e);
         }
     }
 
-    private HashMap<String, Object> parseExtras(Bundle extras) {
-        HashMap<String, Object> map = new HashMap<>();
+    private Map<String, Object> parseExtras(Bundle extras) {
+        Map<String, Object> map = new HashMap<>();
         if (extras == null) {
             return map;
         }
@@ -66,11 +65,12 @@ public class PreviewActivity extends AppCompatActivity {
         return map;
     }
 
-    private List<String> extractTargets() {
-        List<String> targets = new ArrayList<>();
+    private Map<String, String> extractTargets() {
+        Map<String, String> targets = new HashMap<>(0);
         for (Map.Entry<String, Object> item : input.entrySet()) {
             if (item.getKey().startsWith("type")) {
-                targets.add(getLocalizedTarget((String) item.getValue()));
+                String target = (String)item.getValue();
+                targets.put(target, Objects.requireNonNull(getLocalizedTarget(target)));
             }
         }
         return targets;
@@ -92,9 +92,9 @@ public class PreviewActivity extends AppCompatActivity {
         parent.addView(createViewByTitle(getResources().getString(R.string.need)));
         addThingsToParent(parent, "need");
 
-        for (String target : extractTargets()) {
-            parent.addView(createViewByTitle(target));
-            addThingsToParent(parent, target);
+        for (Map.Entry<String, String> entry : extractTargets().entrySet()) {
+            parent.addView(createViewByTitle(entry.getValue()));
+            addThingsToParent(parent, entry.getKey());
         }
     }
 
@@ -109,9 +109,11 @@ public class PreviewActivity extends AppCompatActivity {
     }
 
     private void addThingsToParent(LinearLayout parent, String target) throws ExecutionException, InterruptedException {
-        ThingSelectAsyncTask task = new ThingSelectAsyncTask(new ArrayList<String>(){{add(target);}});
+        ThingSelectAsyncTask task = new ThingSelectAsyncTask();
+        task.setCategory(target);
         ThingMapper mapper = new ThingMapper();
-        for (Thing thing : mapper.to(task.execute().get())) {
+        List<Thing> things = mapper.to(task.execute().get());
+        for (Thing thing : things) {
             parent.addView(createThingView(thing.getThingName()));
         }
     }

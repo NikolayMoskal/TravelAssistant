@@ -3,18 +3,14 @@ package by.neon.travelassistant.activity.query;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import by.neon.travelassistant.Startup;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
-import by.neon.travelassistant.config.sqlite.model.CountryDb;
+import by.neon.travelassistant.config.sqlite.model.GenderDb;
 
-/**
- * Inserts one or more countries into database.
- */
-public final class CountryInsertAsyncTask extends AsyncTask<CountryDb, Void, List<Long>> {
-    private static final String TAG = "CountryInsertAsyncTask";
+public final class GenderInsertAsyncTask extends AsyncTask<GenderDb, Void, List<Long>> {
+    private static final String TAG = "GenderInsertAsyncTask";
 
     /**
      * Override this method to perform a computation on a background thread. The
@@ -24,22 +20,22 @@ public final class CountryInsertAsyncTask extends AsyncTask<CountryDb, Void, Lis
      * This method can call {@link #publishProgress} to publish updates
      * on the UI thread.
      *
-     * @param countries The parameters of the task.
+     * @param genderDbs The parameters of the task.
      * @return A result, defined by the subclass of this task.
      * @see #onPreExecute()
      * @see #onPostExecute
      * @see #publishProgress
      */
     @Override
-    protected List<Long> doInBackground(CountryDb... countries) throws IllegalArgumentException {
-        if (countries.length == 0) {
-            throw new IllegalArgumentException("No present countries to insert. Must be at least 1 country.");
+    protected List<Long> doInBackground(GenderDb... genderDbs) {
+        if (genderDbs == null || genderDbs.length == 0) {
+            throw new IllegalArgumentException("No entities to insert");
         }
 
         TravelDbContext dbContext = Startup.getStartup().getDbContext();
-        List<Long> result = dbContext.countryDao().insert(countries);
+        List<Long> result = dbContext.getGenderDao().insert(genderDbs);
         int resultSize = result == null ? 0 : result.size();
         Log.i(TAG, "doInBackground: " + resultSize + " rows inserted.");
-        return result == null ? new ArrayList<>(0) : result;
+        return result;
     }
 }

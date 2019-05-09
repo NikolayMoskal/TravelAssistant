@@ -40,7 +40,6 @@ ext {
     roomVersion = '1.1.1'
     jacksonVersion = '2.9.8'
     junitVersion = '4.12'
-    jtsTopologySuiteVersion = '1.16.1'
 }
 
 dependencies {
@@ -61,6 +60,5 @@ dependencies {
     androidTestImplementation "org.mockito:mockito-android:${mockitoVersion}"
     implementation "android.arch.persistence.room:runtime:${roomVersion}"
     annotationProcessor "android.arch.persistence.room:compiler:${roomVersion}"
-    implementation "org.locationtech.jts:jts-core:${jtsTopologySuiteVersion}"
     implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
 }
