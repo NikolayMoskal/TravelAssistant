@@ -1,17 +1,21 @@
 package by.neon.travelassistant.activity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,18 +37,28 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 import by.neon.travelassistant.R;
+import by.neon.travelassistant.activity.query.CategorySelectAsyncTask;
+import by.neon.travelassistant.activity.query.TransportSelectAsyncTask;
 import by.neon.travelassistant.adapter.SelectCityAdapter;
+import by.neon.travelassistant.config.sqlite.mapper.CategoryMapper;
+import by.neon.travelassistant.config.sqlite.mapper.TransportMapper;
 import by.neon.travelassistant.constant.CommonConstants;
+import by.neon.travelassistant.listener.DateSetListener;
+import by.neon.travelassistant.model.Category;
+import by.neon.travelassistant.model.Transport;
 import by.neon.travelassistant.model.Weather;
 
 public class InputActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String TAG = "InputActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +75,7 @@ public class InputActivity extends AppCompatActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
+        setTransport();
         setTravelTargets();
     }
 
@@ -92,6 +107,62 @@ public class InputActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void onSelectStartDate(View view) {
+        EditText text = findViewById(R.id.start_date);
+        Calendar calendar = Calendar.getInstance(Locale.getDefault());
+        new DatePickerDialog(this, new DateSetListener(text),
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    public void onSelectEndDate(View view) {
+        EditText text = findViewById(R.id.end_date);
+        Calendar calendar = Calendar.getInstance(Locale.getDefault());
+        new DatePickerDialog(this, new DateSetListener(text),
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    public void onFindCity(View view) {
+        EditText text = findViewById(R.id.arv_city);
+        String cityName = text.getText().toString();
+        createCitySelectDialog(cityName);
+    }
+
+    public void onSendClick(View view) {
+        Intent intent = new Intent(InputActivity.this, PreviewActivity.class);
+        intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, (long) findViewById(R.id.arv_city).getTag());
+        intent.putExtra(CommonConstants.TYPE_MALE, ((ToggleButton) findViewById(R.id.sex_male)).isChecked());
+        intent.putExtra(CommonConstants.TYPE_FEMALE, ((ToggleButton) findViewById(R.id.sex_female)).isChecked());
+        LinearLayout transports = findViewById(R.id.layout_transports);
+        int countTransports = 0;
+        for (int index = 0; index < transports.getChildCount(); index++) {
+            LinearLayout layout = (LinearLayout) transports.getChildAt(index);
+            for (int viewIndex = 0; viewIndex < layout.getChildCount(); viewIndex++) {
+                ToggleButton button = (ToggleButton) layout.getChildAt(viewIndex);
+                if (button.isChecked()) {
+                    intent.putExtra("transport" + countTransports++, button.getText().toString());
+                }
+            }
+        }
+        intent.putExtra(CommonConstants.COUNT_TRANSPORT_TYPES, countTransports);
+        LinearLayout layout = findViewById(R.id.layout_targets);
+        int countTargets = 0;
+        for (int layoutIndex = 0; layoutIndex < layout.getChildCount(); layoutIndex++) {
+            LinearLayout inner = (LinearLayout) layout.getChildAt(layoutIndex);
+            for (int viewIndex = 0; viewIndex < inner.getChildCount(); viewIndex++) {
+                ToggleButton button = (ToggleButton) inner.getChildAt(viewIndex);
+                if (button.isChecked()) {
+                    intent.putExtra("type" + countTargets++, button.getHint().toString());
+                }
+            }
+        }
+        intent.putExtra(CommonConstants.COUNT_TARGETS, countTargets);
+        startActivity(intent);
     }
 
     private SimpleAdapter configureCitySelectAdapter(List<Weather> weatherList) {
@@ -178,76 +249,108 @@ public class InputActivity extends AppCompatActivity
                 .setCancelable(true)
                 .setAdapter(adapter, (dialog, which) -> {
                     EditText text = findViewById(R.id.arv_city);
-                    text.setText(String.valueOf(weatherList.get(which).getCityId()));
+                    Weather weather = weatherList.get(which);
+                    text.setText(String.format(Locale.getDefault(),"%s, %s (%d)",
+                            weather.getCityName(),
+                            weather.getCountryCode(),
+                            weather.getCityId()));
+                    text.setTag(weather.getCityId());
                 })
                 .setNegativeButton("Cancel", null);
         builder.create().show();
     }
 
     private void setTravelTargets() {
-        LinearLayout parent = findViewById(R.id.layout_targets);
-        String[] targets = getResources().getStringArray(R.array.targets);
+        CategorySelectAsyncTask categorySelect = new CategorySelectAsyncTask();
+        categorySelect.setSelectAll(true);
+        CategoryMapper categoryMapper = new CategoryMapper();
+        List<Category> targets = new ArrayList<>(0);
+        try {
+            targets = categoryMapper.to(categorySelect.execute().get());
+        } catch (ExecutionException | InterruptedException e) {
+            Log.e(TAG, "setTravelTargets: " + e.getMessage(), e);
+        }
 
         int index = 0;
-        while (index < targets.length) {
+        LinearLayout parent = findViewById(R.id.layout_targets);
+        while (index < targets.size()) {
             LinearLayout innerLayout = new LinearLayout(this);
             innerLayout.setOrientation(LinearLayout.HORIZONTAL);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.gravity = Gravity.CENTER_VERTICAL;
             layoutParams.setMargins(0, 10, 0 ,0);
             innerLayout.setLayoutParams(layoutParams);
-            for (int item = 0; item < 3 && index < targets.length; item++, index++) {
+            for (int item = 0; item < 2 && index < targets.size(); item++, index++) {
+                if (targets.get(index).getCategoryNameEn().equals("need")) {
+                    continue;
+                }
+
                 ToggleButton button = (ToggleButton) getLayoutInflater().inflate(R.layout.toggle_button_style_layout, null);
-                button.setId(View.generateViewId());
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.setMarginEnd((int) (getResources().getDimension(R.dimen.toggle_button_margin_end) / getResources().getDisplayMetrics().density));
                 button.setPadding(5, 5, 5, 5);
                 button.setLayoutParams(params);
-                button.setText(targets[index]);
-                button.setTextOn(targets[index]);
-                button.setTextOff(targets[index]);
-                button.setHint(getDefaultTargetName(index));
+                String localizedName = capitalize(targets.get(index).getCategoryName());
+                button.setText(localizedName);
+                button.setTextOn(localizedName);
+                button.setTextOff(localizedName);
+                button.setHint(targets.get(index).getCategoryNameEn());
                 innerLayout.addView(button);
             }
             parent.addView(innerLayout);
         }
     }
 
-    private String getDefaultTargetName(int targetIndex) {
-        String[] defaultTargetNames = getResources().getStringArray(R.array.targetsDefault);
-        return defaultTargetNames[targetIndex];
-    }
-
-    public void onFindCity(View view) {
-        EditText text = findViewById(R.id.arv_city);
-        String cityName = text.getText().toString();
-        createCitySelectDialog(cityName);
-    }
-
-    public void onSendClick(View view) {
-        Intent intent = new Intent(InputActivity.this, PreviewActivity.class);
-        intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, Long.parseLong(((EditText) findViewById(R.id.arv_city)).getText().toString()));
-        intent.putExtra(CommonConstants.TYPE_MALE, ((ToggleButton) findViewById(R.id.sex_male)).isChecked());
-        intent.putExtra(CommonConstants.TYPE_FEMALE, ((ToggleButton) findViewById(R.id.sex_female)).isChecked());
-        intent.putExtra(CommonConstants.TRANSPORT_TYPE_AIRPLANE, ((ToggleButton) findViewById(R.id.type_airplane)).isChecked());
-        intent.putExtra(CommonConstants.TRANSPORT_TYPE_AUTO, ((ToggleButton) findViewById(R.id.type_auto)).isChecked());
-        intent.putExtra(CommonConstants.TRANSPORT_TYPE_TRAIN, ((ToggleButton) findViewById(R.id.type_train)).isChecked());
-        intent.putExtra(CommonConstants.TRANSPORT_TYPE_BUS, ((ToggleButton) findViewById(R.id.type_bus)).isChecked());
-        intent.putExtra(CommonConstants.TRANSPORT_TYPE_CYCLE, ((ToggleButton) findViewById(R.id.type_cycle)).isChecked());
-        intent.putExtra(CommonConstants.TRANSPORT_TYPE_SHIP, ((ToggleButton) findViewById(R.id.type_ship)).isChecked());
-
-        LinearLayout layout = findViewById(R.id.layout_targets);
-        int count = 0;
-        for (int layoutIndex = 0; layoutIndex < layout.getChildCount(); layoutIndex++) {
-            LinearLayout inner = (LinearLayout) layout.getChildAt(layoutIndex);
-            for (int viewIndex = 0; viewIndex < inner.getChildCount(); viewIndex++) {
-                ToggleButton button = (ToggleButton) inner.getChildAt(viewIndex);
-                if (button.isChecked()) {
-                    intent.putExtra("type" + count++, button.getHint().toString());
-                }
-            }
+    private void setTransport() {
+        TransportSelectAsyncTask task = new TransportSelectAsyncTask();
+        task.setSelectAll(true);
+        TransportMapper mapper = new TransportMapper();
+        List<Transport> transports = new ArrayList<>(0);
+        try {
+            transports = mapper.to(task.execute().get());
+        } catch (ExecutionException | InterruptedException e) {
+            Log.e(TAG, "setTransport: " + e.getMessage(), e);
         }
-        intent.putExtra(CommonConstants.COUNT_TARGETS, count);
-        startActivity(intent);
+
+        LinearLayout parent = findViewById(R.id.layout_transports);
+        for (int index = 0; index < transports.size();) {
+            LinearLayout inner = new LinearLayout(this);
+            inner.setOrientation(LinearLayout.HORIZONTAL);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.gravity = Gravity.CENTER_VERTICAL;
+            layoutParams.setMargins(0, 10, 0 ,0);
+            inner.setLayoutParams(layoutParams);
+            for (int item = 0; item < 2 && index < transports.size(); item++, index++) {
+                ToggleButton button = (ToggleButton) getLayoutInflater().inflate(R.layout.toggle_button_style_layout, null);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMarginEnd((int) (getResources().getDimension(R.dimen.toggle_button_margin_end) / getResources().getDisplayMetrics().density));
+                button.setPadding(5, 5, 5, 5);
+                button.setLayoutParams(params);
+                String name = capitalize(transports.get(index).getName());
+                button.setText(name);
+                button.setTextOn(name);
+                button.setTextOff(name);
+                button.setHint(transports.get(index).getNameEn());
+                inner.addView(button);
+            }
+            parent.addView(inner);
+        }
+    }
+
+    private Drawable getTransportIcon(String transportName) {
+        int id = 0;
+        switch (transportName) {
+            case "airplane": id = R.drawable.ic_airplane; break;
+            case "bus": id = R.drawable.ic_bus; break;
+            case "ship": id = R.drawable.ic_ship; break;
+            case "cycle": id = R.drawable.ic_cycle; break;
+            case "train": id = R.drawable.ic_train; break;
+            case "auto": id = R.drawable.ic_auto; break;
+        }
+        return ContextCompat.getDrawable(this, id);
+    }
+
+    private String capitalize(String title) {
+        return title.substring(0,1).toUpperCase() + title.substring(1);
     }
 }

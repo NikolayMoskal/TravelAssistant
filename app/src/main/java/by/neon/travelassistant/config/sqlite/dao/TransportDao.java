@@ -13,6 +13,9 @@ public abstract class TransportDao extends BaseDao<TransportDb> {
     @Query("SELECT * FROM " + DbConstants.TABLE_TRANSPORTS)
     public abstract List<TransportDb> getAll();
 
-    @Query("SELECT * FROM " + DbConstants.TABLE_TRANSPORTS + " WHERE " + DbConstants.TRANSPORTS_COLUMN_TRANSPORT_NAME + " = :name")
-    public abstract List<TransportDb> getByName(String name);
+    @Query("SELECT * FROM " + DbConstants.TABLE_TRANSPORTS + " WHERE " + DbConstants.TRANSPORTS_COLUMN_TRANSPORT_NAME_EN_US + " = :name LIMIT 1")
+    public abstract TransportDb getByName(String name);
+
+    @Query("SELECT * FROM " + DbConstants.TABLE_TRANSPORTS + " WHERE " + DbConstants.TRANSPORTS_COLUMN_TRANSPORT_NAME_EN_US + " IN (:names)")
+    public abstract List<TransportDb> getByNames(List<String> names);
 }

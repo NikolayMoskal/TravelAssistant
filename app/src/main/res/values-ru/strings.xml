@@ -9,18 +9,18 @@
 
     <!-- Main activity -->
     <string name="travel_data_label" translatable="true">Ввод данных</string>
-    <string name="dep_label" translatable="true">Откуда вы отправляетесь?</string>
-    <string name="dep_city_hint" translatable="true">Название города</string>
-    <string name="dep_airport" translatable="true">Аэропорт вылета</string>
-    <string name="dep_airport_hint" translatable="true">Код аэропорта</string>
     <string name="arv_label" translatable="true">Куда Вы направляетесь?</string>
     <string name="arv_city_title" translatable="true">Код города</string>
     <string name="arv_city_hint" translatable="true">Название города</string>
     <string name="send_button" translatable="true">Отправить</string>
 
-    <string name="sex_type_label" translatable="true">Для кого подбираем список?</string>
-    <string name="sex_male" translatable="true">Мужчина</string>
-    <string name="sex_female" translatable="true">Женщина</string>
+    <string name="gender_type_label" translatable="true">Для кого подбираем список?</string>
+    <string name="gender_male" translatable="true">Мужчина</string>
+    <string name="gender_female" translatable="true">Женщина</string>
+
+    <string name="travel_dates_label" translatable="true">Даты поездки</string>
+    <string name="start_date_title" translatable="true">От</string>
+    <string name="end_date_title" translatable="true">До</string>
 
     <string name="type_label" translatable="true">На чем Вы поедете?</string>
     <string name="type_airplane" translatable="true">Самолет</string>

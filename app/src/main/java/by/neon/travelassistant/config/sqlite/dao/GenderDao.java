@@ -13,7 +13,7 @@ public abstract class GenderDao extends BaseDao<GenderDb> {
     @Query("SELECT * FROM " + DbConstants.TABLE_GENDERS)
     public abstract List<GenderDb> getAll();
 
-    @Query("SELECT * FROM " + DbConstants.TABLE_GENDERS + " WHERE " + DbConstants.GENDERS_COLUMN_GENDER_TYPE + " = :type LIMIT 1")
+    @Query("SELECT * FROM " + DbConstants.TABLE_GENDERS + " WHERE " + DbConstants.GENDERS_COLUMN_GENDER_TYPE_EN_US + " = :type LIMIT 1")
     public abstract GenderDb getByType(String type);
 
     @Query("SELECT * FROM " + DbConstants.TABLE_GENDERS + " WHERE " + DbConstants.ID + " = :id")

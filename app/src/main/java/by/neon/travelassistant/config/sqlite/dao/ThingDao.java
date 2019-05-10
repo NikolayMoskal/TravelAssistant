@@ -18,7 +18,7 @@ public abstract class ThingDao extends BaseDao<ThingDb> {
 
     @Query("SELECT " + DbConstants.TABLE_THINGS + ".* FROM " + DbConstants.TABLE_THINGS + "," + DbConstants.TABLE_TYPES +
             " WHERE " + DbConstants.TABLE_THINGS + "." + DbConstants.THINGS_TYPES_FK_COLUMN + " = " + DbConstants.TABLE_TYPES + "." + DbConstants.ID +
-            " AND " + DbConstants.TABLE_TYPES + "." + DbConstants.TYPES_COLUMN_TYPE_NAME + " = :type")
+            " AND " + DbConstants.TABLE_TYPES + "." + DbConstants.TYPES_COLUMN_TYPE_NAME_EN_US + " = :type")
     public abstract List<ThingDb> getByType(String type);
 
     @Query("SELECT * FROM " + DbConstants.TABLE_THINGS + " WHERE " + DbConstants.ID + " = :id")

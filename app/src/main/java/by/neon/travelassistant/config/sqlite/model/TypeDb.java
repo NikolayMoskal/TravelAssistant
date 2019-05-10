@@ -7,14 +7,24 @@ import by.neon.travelassistant.constant.DbConstants;
 
 @Entity(tableName = DbConstants.TABLE_TYPES)
 public class TypeDb extends BaseDbEntity {
-    @ColumnInfo(name = DbConstants.TYPES_COLUMN_TYPE_NAME)
-    private String typeName;
+    @ColumnInfo(name = DbConstants.TYPES_COLUMN_TYPE_NAME_EN_US)
+    private String typeNameEn;
+    @ColumnInfo(name = DbConstants.TYPES_COLUMN_TYPE_NAME_RU_RU)
+    private String typeNameRu;
 
-    public String getTypeName() {
-        return typeName;
+    public String getTypeNameEn() {
+        return typeNameEn;
     }
 
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
+    public void setTypeNameEn(String typeName) {
+        this.typeNameEn = typeName;
+    }
+
+    public String getTypeNameRu() {
+        return typeNameRu;
+    }
+
+    public void setTypeNameRu(String typeNameRu) {
+        this.typeNameRu = typeNameRu;
     }
 }

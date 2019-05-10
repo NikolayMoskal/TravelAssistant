@@ -14,19 +14,23 @@ public final class DbConstants {
     public static final String THINGS_GENDERS_FK_NAME = "THINGS_GENDERS_FK";
 
     public static final String TABLE_TYPES = "TYPES";
-    public static final String TYPES_COLUMN_TYPE_NAME = "TYPE_NAME";
+    public static final String TYPES_COLUMN_TYPE_NAME_EN_US = "TYPE_NAME_EN_US";
+    public static final String TYPES_COLUMN_TYPE_NAME_RU_RU = "TYPE_NAME_RU_RU";
 
     public static final String TABLE_CATEGORIES = "CATEGORIES";
-    public static final String CATEGORIES_COLUMN_CATEGORY_NAME = "CATEGORY_NAME";
+    public static final String CATEGORIES_COLUMN_CATEGORY_NAME_EN_US = "CATEGORY_NAME_EN_US";
+    public static final String CATEGORIES_COLUMN_CATEGORY_NAME_RU_RU = "CATEGORY_NAME_RU_RU";
 
     public static final String TABLE_GENDERS = "GENDERS";
-    public static final String GENDERS_COLUMN_GENDER_TYPE = "GENDER_TYPE";
+    public static final String GENDERS_COLUMN_GENDER_TYPE_EN_US = "GENDER_TYPE_EN_US";
+    public static final String GENDERS_COLUMN_GENDER_TYPE_RU_RU = "GENDER_TYPE_RU_RU";
 
     public static final String TABLE_WEATHER_TYPES = "WEATHER_TYPES";
     public static final String WEATHER_TYPES_COLUMN_TYPE_NAME = "TYPE_NAME";
 
     public static final String TABLE_TRANSPORTS = "TRANSPORTS";
-    public static final String TRANSPORTS_COLUMN_TRANSPORT_NAME = "TRANSPORT_NAME";
+    public static final String TRANSPORTS_COLUMN_TRANSPORT_NAME_EN_US = "TRANSPORT_NAME_EN_US";
+    public static final String TRANSPORTS_COLUMN_TRANSPORT_NAME_RU_RU = "TRANSPORT_NAME_RU_RU";
     public static final String TRANSPORTS_COLUMN_PACK_WEIGHT = "PACK_WEIGHT";
 
     public static final String TABLE_THINGS_CATEGORIES = "THINGS_CATEGORIES";

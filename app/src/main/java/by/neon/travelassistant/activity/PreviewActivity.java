@@ -10,18 +10,26 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import by.neon.travelassistant.R;
+import by.neon.travelassistant.activity.query.CategorySelectAsyncTask;
 import by.neon.travelassistant.activity.query.ThingSelectAsyncTask;
-import by.neon.travelassistant.config.SqliteConfig;
+import by.neon.travelassistant.activity.query.TransportSelectAsyncTask;
+import by.neon.travelassistant.config.sqlite.mapper.CategoryMapper;
 import by.neon.travelassistant.config.sqlite.mapper.ThingMapper;
+import by.neon.travelassistant.config.sqlite.mapper.TransportMapper;
 import by.neon.travelassistant.constant.CommonConstants;
+import by.neon.travelassistant.model.Category;
+import by.neon.travelassistant.model.Gender;
 import by.neon.travelassistant.model.Thing;
+import by.neon.travelassistant.model.Transport;
+import by.neon.travelassistant.model.Type;
+import by.neon.travelassistant.model.WeatherType;
 
 public class PreviewActivity extends AppCompatActivity {
     private static final String TAG = "PreviewActivity";
@@ -35,7 +43,6 @@ public class PreviewActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         input = parseExtras(getIntent().getExtras());
-        new SqliteConfig(this);
         try {
             fillPreview();
         } catch (ExecutionException | InterruptedException e) {
@@ -52,37 +59,53 @@ public class PreviewActivity extends AppCompatActivity {
         map.put(CommonConstants.ARRIVAL_CITY_ID, extras.getLong(CommonConstants.ARRIVAL_CITY_ID, 0));
         map.put(CommonConstants.TYPE_MALE, extras.getBoolean(CommonConstants.TYPE_MALE, false));
         map.put(CommonConstants.TYPE_FEMALE, extras.getBoolean(CommonConstants.TYPE_FEMALE, false));
-        map.put(CommonConstants.TRANSPORT_TYPE_AIRPLANE, extras.getBoolean(CommonConstants.TRANSPORT_TYPE_AIRPLANE, false));
-        map.put(CommonConstants.TRANSPORT_TYPE_AUTO, extras.getBoolean(CommonConstants.TRANSPORT_TYPE_AUTO, false));
-        map.put(CommonConstants.TRANSPORT_TYPE_BUS, extras.getBoolean(CommonConstants.TRANSPORT_TYPE_BUS, false));
-        map.put(CommonConstants.TRANSPORT_TYPE_CYCLE, extras.getBoolean(CommonConstants.TRANSPORT_TYPE_CYCLE, false));
-        map.put(CommonConstants.TRANSPORT_TYPE_SHIP, extras.getBoolean(CommonConstants.TRANSPORT_TYPE_SHIP, false));
-        map.put(CommonConstants.TRANSPORT_TYPE_TRAIN, extras.getBoolean(CommonConstants.TRANSPORT_TYPE_TRAIN, false));
         int count = extras.getInt(CommonConstants.COUNT_TARGETS, 0);
         for (int index = 0; index < count; index++) {
             map.put("type" + index, extras.getString("type" + index, ""));
         }
+        count = extras.getInt(CommonConstants.COUNT_TRANSPORT_TYPES, 0);
+        for (int index = 0; index < count; index++) {
+            map.put("transport" + index, extras.getString("transport" + index, ""));
+        }
         return map;
     }
 
-    private Map<String, String> extractTargets() {
-        Map<String, String> targets = new HashMap<>(0);
+    private List<Category> extractTargets() {
+        List<String> names = new ArrayList<>();
         for (Map.Entry<String, Object> item : input.entrySet()) {
             if (item.getKey().startsWith("type")) {
                 String target = (String)item.getValue();
-                targets.put(target, Objects.requireNonNull(getLocalizedTarget(target)));
+                names.add(target);
             }
         }
-        return targets;
+        CategorySelectAsyncTask task = new CategorySelectAsyncTask();
+        CategoryMapper mapper = new CategoryMapper();
+        task.setNames(names);
+        List<Category> list = new ArrayList<>();
+        try {
+            list.addAll(mapper.to(task.execute().get()));
+        } catch (ExecutionException | InterruptedException e) {
+            Log.e(TAG, "extractTargets: " + e.getMessage(), e);
+        }
+        return list;
     }
 
-    private String getLocalizedTarget(String defaultTarget) {
-        String[] localizedTargets = getResources().getStringArray(R.array.targets);
-        String[] defaultTargets = getResources().getStringArray(R.array.targetsDefault);
-        for (int index = 0; index < defaultTargets.length; index++) {
-            if (defaultTargets[index].equals(defaultTarget)) {
-                return localizedTargets[index];
+    private Transport extractTransport() {
+        List<String> names = new ArrayList<>();
+        for (Map.Entry<String, Object> item : input.entrySet()) {
+            if (item.getKey().startsWith("transport")) {
+                String target = (String)item.getValue();
+                names.add(target);
+                break;
             }
+        }
+        TransportSelectAsyncTask task = new TransportSelectAsyncTask();
+        TransportMapper mapper = new TransportMapper();
+        task.setNames(names);
+        try {
+            return mapper.to(task.execute().get().get(0));
+        } catch (InterruptedException | ExecutionException e) {
+            Log.e(TAG, "extractTransports: " + e.getMessage(), e);
         }
         return null;
     }
@@ -92,9 +115,9 @@ public class PreviewActivity extends AppCompatActivity {
         parent.addView(createViewByTitle(getResources().getString(R.string.need)));
         addThingsToParent(parent, "need");
 
-        for (Map.Entry<String, String> entry : extractTargets().entrySet()) {
-            parent.addView(createViewByTitle(entry.getValue()));
-            addThingsToParent(parent, entry.getKey());
+        for (Category entry : extractTargets()) {
+            parent.addView(createViewByTitle(entry.getCategoryName()));
+            addThingsToParent(parent, entry.getCategoryNameEn());
         }
     }
 
@@ -129,5 +152,38 @@ public class PreviewActivity extends AppCompatActivity {
 
     private String capitalize(String title) {
         return title.substring(0,1).toUpperCase() + title.substring(1);
+    }
+
+    private List<Thing> filter(List<Thing> source, List<WeatherType> weatherTypes, Gender gender) {
+        List<Thing> filtered = new ArrayList<>();
+        for (Thing thing : source) {
+            if (hasAnyWeatherType(thing, weatherTypes) && belongsTo(thing, gender)) {
+                filtered.add(thing);
+            }
+        }
+        return filtered;
+    }
+
+    private boolean hasAnyWeatherType(Thing thing, List<WeatherType> weatherTypes) {
+        if (weatherTypes == null || weatherTypes.size() == 0) {
+            return true;
+        }
+
+        for (String type : thing.getWeatherType()) {
+            for (WeatherType weatherType : weatherTypes) {
+                if (weatherType.getType().equals(type)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean belongsTo(Thing thing, Gender gender) {
+        if (gender == null) {
+            return true;
+        }
+
+        return thing.getGender().equals(gender.getGenderEn());
     }
 }

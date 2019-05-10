@@ -1,15 +1,9 @@
-package by.neon.travelassistant.config.sqlite.model;
+package by.neon.travelassistant.model;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
+import java.util.Locale;
 
-import by.neon.travelassistant.constant.DbConstants;
-
-@Entity(tableName = DbConstants.TABLE_CATEGORIES)
-public class CategoryDb extends BaseDbEntity {
-    @ColumnInfo(name = DbConstants.CATEGORIES_COLUMN_CATEGORY_NAME_EN_US)
+public class Category extends Entity {
     private String categoryNameEn;
-    @ColumnInfo(name = DbConstants.CATEGORIES_COLUMN_CATEGORY_NAME_RU_RU)
     private String categoryNameRu;
 
     public String getCategoryNameEn() {
@@ -26,5 +20,11 @@ public class CategoryDb extends BaseDbEntity {
 
     public void setCategoryNameRu(String categoryNameRu) {
         this.categoryNameRu = categoryNameRu;
+    }
+
+    public String getCategoryName() {
+        return Locale.getDefault().getLanguage().equals("ru")
+                ? categoryNameRu
+                : categoryNameEn;
     }
 }

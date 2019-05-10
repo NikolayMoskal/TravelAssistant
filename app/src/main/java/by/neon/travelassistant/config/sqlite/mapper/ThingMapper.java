@@ -14,6 +14,7 @@ public final class ThingMapper extends BaseMapper<Thing, ThingDb> {
     @Override
     public ThingDb from(Thing source) {
         ThingDb thingDb = new ThingDb();
+        thingDb.setId(source.getId());
         thingDb.setThingNameEn(source.getThingNameEn());
         thingDb.setThingNameRu(source.getThingNameRu());
         thingDb.setTypeId(source.getTypeId());
@@ -30,7 +31,8 @@ public final class ThingMapper extends BaseMapper<Thing, ThingDb> {
         List<CategoryDb> list = new ArrayList<>(0);
         for (String name : names) {
             CategoryDb categoryDb = new CategoryDb();
-            categoryDb.setCategoryName(name);
+            categoryDb.setCategoryNameEn(name);
+            categoryDb.setCategoryNameRu(new CategoryMapper().toRu(name));
             list.add(categoryDb);
         }
         return list;
@@ -46,30 +48,33 @@ public final class ThingMapper extends BaseMapper<Thing, ThingDb> {
         return list;
     }
 
-    private TypeDb createTypeInstance(long id, String name) {
+    private TypeDb createTypeInstance(long id, String nameEn) {
         TypeDb typeDb = new TypeDb();
         typeDb.setId(id);
-        typeDb.setTypeName(name);
+        typeDb.setTypeNameEn(nameEn);
+        typeDb.setTypeNameRu(new TypeMapper().toRu(nameEn));
         return typeDb;
     }
 
     private GenderDb createGenderInstance(long id, String type) {
         GenderDb genderDb = new GenderDb();
         genderDb.setId(id);
-        genderDb.setType(type);
+        genderDb.setTypeEn(type);
+        genderDb.setTypeRu(new GenderMapper().toRu(type));
         return genderDb;
     }
 
     @Override
     public Thing to(ThingDb source) {
         Thing thing = new Thing();
+        thing.setId(source.getId());
         thing.setThingNameEn(source.getThingNameEn());
         thing.setThingNameRu(source.getThingNameRu());
-        thing.setType(source.getTypeDb().getTypeName());
+        thing.setType(source.getTypeDb().getTypeNameEn());
         thing.setTypeId(source.getTypeId());
         thing.setCategory(createCategoryNames(source.getCategoryDbs()));
         thing.setWeight(source.getWeight());
-        thing.setGender(source.getGenderDb().getType());
+        thing.setGender(source.getGenderDb().getTypeEn());
         thing.setGenderId(source.getGenderId());
         thing.setWeatherType(createWeatherTypeNames(source.getWeatherTypeDbs()));
         return thing;
@@ -78,7 +83,7 @@ public final class ThingMapper extends BaseMapper<Thing, ThingDb> {
     private List<String> createCategoryNames(List<CategoryDb> instances) {
         List<String> list = new ArrayList<>(0);
         for (CategoryDb categoryDb : instances) {
-            list.add(categoryDb.getCategoryName());
+            list.add(categoryDb.getCategoryNameEn());
         }
         return list;
     }

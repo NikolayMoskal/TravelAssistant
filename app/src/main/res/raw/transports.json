@@ -1,0 +1,32 @@
+[
+  {
+    "name_en-us": "airplane",
+    "name_ru-ru": "самолет",
+    "weight": 30
+  },
+  {
+    "name_en-us": "bus",
+    "name_ru-ru": "автобус",
+    "weight": 30
+  },
+  {
+    "name_en-us": "train",
+    "name_ru-ru": "поезд",
+    "weight": 40
+  },
+  {
+    "name_en-us": "auto",
+    "name_ru-ru": "автомобиль",
+    "weight": 20
+  },
+  {
+    "name_en-us": "cycle",
+    "name_ru-ru": "велосипед",
+    "weight": 15
+  },
+  {
+    "name_en-us": "ship",
+    "name_ru-ru": "корабль",
+    "weight": 30
+  }
+]

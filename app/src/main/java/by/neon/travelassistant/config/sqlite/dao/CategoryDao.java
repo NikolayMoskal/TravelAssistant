@@ -13,10 +13,10 @@ public abstract class CategoryDao extends BaseDao<CategoryDb> {
     @Query("SELECT * FROM " + DbConstants.TABLE_CATEGORIES)
     public abstract List<CategoryDb> getAll();
 
-    @Query("SELECT * FROM " + DbConstants.TABLE_CATEGORIES + " WHERE " + DbConstants.CATEGORIES_COLUMN_CATEGORY_NAME + " = :name LIMIT 1")
+    @Query("SELECT * FROM " + DbConstants.TABLE_CATEGORIES + " WHERE " + DbConstants.CATEGORIES_COLUMN_CATEGORY_NAME_EN_US + " = :name LIMIT 1")
     public abstract CategoryDb getByName(String name);
 
-    @Query("SELECT * FROM " + DbConstants.TABLE_CATEGORIES + " WHERE " + DbConstants.CATEGORIES_COLUMN_CATEGORY_NAME + " IN (:names)")
+    @Query("SELECT * FROM " + DbConstants.TABLE_CATEGORIES + " WHERE " + DbConstants.CATEGORIES_COLUMN_CATEGORY_NAME_EN_US + " IN (:names)")
     public abstract List<CategoryDb> getByNames(List<String> names);
 
     @Query("SELECT * FROM " + DbConstants.TABLE_CATEGORIES + " WHERE " + DbConstants.ID + " = :id")

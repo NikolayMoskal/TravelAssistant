@@ -9,26 +9,26 @@
 
     <!-- Main activity -->
     <string name="travel_data_label" translatable="true">Input</string>
-    <string name="dep_label" translatable="true">Where are you going from?</string>
-    <string name="dep_city_hint" translatable="true">City name</string>
-    <string name="dep_airport" translatable="true">Departure airport</string>
-    <string name="dep_airport_hint" translatable="true">Airport code</string>
     <string name="arv_label" translatable="true">Where are you going?</string>
     <string name="arv_city_title" translatable="true">City code</string>
     <string name="arv_city_hint" translatable="true">City name</string>
     <string name="send_button" translatable="true">Send</string>
 
-    <string name="sex_type_label" translatable="true">For whom we select a list of things?</string>
-    <string name="sex_male" translatable="true">Man</string>
-    <string name="sex_female" translatable="true">Woman</string>
+    <string name="gender_type_label" translatable="true">For whom we select a list of things?</string>
+    <string name="gender_male" translatable="true">Man</string>
+    <string name="gender_female" translatable="true">Woman</string>
+
+    <string name="travel_dates_label" translatable="true">Travel dates</string>
+    <string name="start_date_title" translatable="true">From</string>
+    <string name="end_date_title" translatable="true">To</string>
 
     <string name="type_label" translatable="true">Which transport you\'ll select?</string>
-    <string name="type_airplane" translatable="true">An airplane</string>
-    <string name="type_auto" translatable="true">A car</string>
-    <string name="type_train" translatable="true">A train</string>
-    <string name="type_cycle" translatable="true">A cycle</string>
-    <string name="type_bus" translatable="true">A bus</string>
-    <string name="type_ship" translatable="true">A ship</string>
+    <string name="type_airplane" translatable="true">Airplane</string>
+    <string name="type_auto" translatable="true">Auto</string>
+    <string name="type_train" translatable="true">Train</string>
+    <string name="type_cycle" translatable="true">Cycle</string>
+    <string name="type_bus" translatable="true">Bus</string>
+    <string name="type_ship" translatable="true">Ship</string>
 
     <string name="target_label" translatable="true">What is the purpose of your trip?</string>
 

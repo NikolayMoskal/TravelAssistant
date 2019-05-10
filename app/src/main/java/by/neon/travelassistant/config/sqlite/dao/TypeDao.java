@@ -16,6 +16,6 @@ public abstract class TypeDao extends BaseDao<TypeDb> {
     @Query("SELECT * FROM " + DbConstants.TABLE_TYPES + " WHERE " + DbConstants.ID + " = :id")
     public abstract TypeDb getById(long id);
 
-    @Query("SELECT * FROM " + DbConstants.TABLE_TYPES + " WHERE " + DbConstants.TYPES_COLUMN_TYPE_NAME + " = :name LIMIT 1")
+    @Query("SELECT * FROM " + DbConstants.TABLE_TYPES + " WHERE " + DbConstants.TYPES_COLUMN_TYPE_NAME_EN_US + " = :name LIMIT 1")
     public abstract TypeDb getByName(String name);
 }

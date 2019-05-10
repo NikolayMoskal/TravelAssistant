@@ -19,31 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:padding="15dp"
             android:gravity="top|center">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/dep_city_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dep_label"
-                    android:layout_margin="12sp"
-                    android:textSize="@dimen/main_activity_text_size"
-                    android:textColor="@color/colorPrimary"/>
-
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/dep_city_help"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@android:drawable/ic_menu_help"
-                    app:fabSize="mini"/>
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -101,8 +78,68 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:onClick="onFindCity"
-                    android:src="@android:drawable/ic_menu_search"
-                    app:fabSize="mini" />
+                    android:src="@android:drawable/ic_menu_search" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15sp"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/main_activity_text_size"
+                    android:text="@string/travel_dates_label"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <EditText
+                    android:id="@+id/start_date"
+                    android:enabled="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/main_activity_text_size"
+                    android:hint="@string/start_date_title"
+                    android:layout_marginEnd="10sp"
+                    android:inputType="date"
+                    tools:ignore="Autofill" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/select_start_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/ic_menu_edit"
+                    app:fabSize="auto"
+                    android:onClick="onSelectStartDate"/>
+
+                <EditText
+                    android:id="@+id/end_date"
+                    android:enabled="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/main_activity_text_size"
+                    android:hint="@string/end_date_title"
+                    android:layout_marginStart="10sp"
+                    android:layout_marginEnd="10sp"
+                    android:inputType="date"
+                    tools:ignore="Autofill" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/select_end_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/ic_menu_edit"
+                    app:fabSize="auto"
+                    android:onClick="onSelectEndDate"/>
             </LinearLayout>
 
             <LinearLayout
@@ -116,7 +153,7 @@
                     android:id="@+id/sex_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/sex_type_label"
+                    android:text="@string/gender_type_label"
                     android:layout_margin="12sp"
                     android:textSize="@dimen/main_activity_text_size"
                     android:textColor="@color/colorPrimary"/>
@@ -132,8 +169,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="15sp"
                     android:drawableTop="@drawable/ic_male"
-                    android:textOn="@string/sex_male"
-                    android:textOff="@string/sex_male"
+                    android:textOn="@string/gender_male"
+                    android:textOff="@string/gender_male"
                     style="@style/Widget.Button.Toggle"/>
 
                 <ToggleButton
@@ -142,8 +179,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="15sp"
                     android:drawableTop="@drawable/ic_female"
-                    android:textOn="@string/sex_female"
-                    android:textOff="@string/sex_female"
+                    android:textOn="@string/gender_female"
+                    android:textOff="@string/gender_female"
                     style="@style/Widget.Button.Toggle"/>
             </LinearLayout>
 
@@ -165,83 +202,11 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_transports"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="10sp">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <ToggleButton
-                        android:id="@+id/type_airplane"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="15sp"
-                        android:drawableTop="@drawable/ic_airplane"
-                        android:textOn="@string/type_airplane"
-                        android:textOff="@string/type_airplane"
-                        style="@style/Widget.Button.Toggle"/>
-
-                    <ToggleButton
-                        android:id="@+id/type_auto"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="15sp"
-                        android:drawableTop="@drawable/ic_auto"
-                        android:textOn="@string/type_auto"
-                        android:textOff="@string/type_auto"
-                        style="@style/Widget.Button.Toggle"/>
-
-                    <ToggleButton
-                        android:id="@+id/type_ship"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="15sp"
-                        android:drawableTop="@drawable/ic_ship"
-                        android:textOn="@string/type_ship"
-                        android:textOff="@string/type_ship"
-                        style="@style/Widget.Button.Toggle"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10sp">
-
-                    <ToggleButton
-                        android:id="@+id/type_bus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="15sp"
-                        android:drawableTop="@drawable/ic_bus"
-                        android:textOn="@string/type_bus"
-                        android:textOff="@string/type_bus"
-                        style="@style/Widget.Button.Toggle"/>
-
-                    <ToggleButton
-                        android:id="@+id/type_cycle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="15sp"
-                        android:drawableTop="@drawable/ic_cycle"
-                        android:textOn="@string/type_cycle"
-                        android:textOff="@string/type_cycle"
-                        style="@style/Widget.Button.Toggle"/>
-
-                    <ToggleButton
-                        android:id="@+id/type_train"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="15sp"
-                        android:drawableTop="@drawable/ic_train"
-                        android:textOn="@string/type_train"
-                        android:textOff="@string/type_train"
-                        style="@style/Widget.Button.Toggle"/>
-                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -274,8 +239,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimaryDark"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
                 android:text="@string/send_button"
                 android:textColor="@color/colorText"
                 android:onClick="onSendClick"/>

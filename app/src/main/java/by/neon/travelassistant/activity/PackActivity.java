@@ -13,7 +13,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+
 import by.neon.travelassistant.R;
+import by.neon.travelassistant.config.SqliteConfig;
 
 public class PackActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -32,6 +36,12 @@ public class PackActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+
+        try {
+            new SqliteConfig(this).getThings();
+        } catch (IOException | ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

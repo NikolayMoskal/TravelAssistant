@@ -49,6 +49,12 @@ public final class ThingSelectAsyncTask extends AsyncTask<Void, Void, List<Thing
             CategoryDb categoryDb = dbContext.getCategoryDao().getByName(category);
             result.addAll(dbContext.getThingCategoryDao().getThingsByCategory(categoryDb.getId()));
         }
+        for (ThingDb thingDb : result) {
+            thingDb.setTypeDb(dbContext.getTypeDao().getById(thingDb.getTypeId()));
+            thingDb.setGenderDb(dbContext.getGenderDao().getById(thingDb.getGenderId()));
+            thingDb.setCategoryDbs(dbContext.getThingCategoryDao().getCategoriesByThing(thingDb.getId()));
+            thingDb.setWeatherTypeDbs(dbContext.getThingWeatherTypeDao().getWeatherTypesByThing(thingDb.getId()));
+        }
         Log.i(TAG, "doInBackground: " + result.size() + " rows returned.");
         return result;
     }
