@@ -7,39 +7,23 @@
     <string name="nav_header_subtitle" translatable="false">Created by Nikolay Moskal © 2018–2019</string>
     <string name="nav_header_desc" translatable="true">Navigation header</string>
 
-    <!-- Main activity -->
-    <string name="travel_data_label" translatable="true">Ввод данных</string>
+    <!-- Input activity -->
     <string name="arv_label" translatable="true">Куда Вы направляетесь?</string>
     <string name="arv_city_title" translatable="true">Код города</string>
     <string name="arv_city_hint" translatable="true">Название города</string>
     <string name="send_button" translatable="true">Отправить</string>
 
     <string name="gender_type_label" translatable="true">Для кого подбираем список?</string>
-    <string name="gender_male" translatable="true">Мужчина</string>
-    <string name="gender_female" translatable="true">Женщина</string>
 
     <string name="travel_dates_label" translatable="true">Даты поездки</string>
     <string name="start_date_title" translatable="true">От</string>
     <string name="end_date_title" translatable="true">До</string>
 
     <string name="type_label" translatable="true">На чем Вы поедете?</string>
-    <string name="type_airplane" translatable="true">Самолет</string>
-    <string name="type_auto" translatable="true">Автомобиль</string>
-    <string name="type_train" translatable="true">Поезд</string>
-    <string name="type_cycle" translatable="true">Велосипед</string>
-    <string name="type_bus" translatable="true">Автобус</string>
-    <string name="type_ship" translatable="true">Корабль</string>
 
     <string name="target_label" translatable="true">Какова цель Вашей поездки?</string>
 
-    <string name="last_used_airports_dialog_msg" translatable="true">Использовать последние выбранные аэропорты?</string>
-    <string name="ok_button" translatable="true">Да</string>
-    <string name="no_button" translatable="true">Нет</string>
-
     <string name="list_item_icon_description" translatable="false">Icon</string>
-
-    <string name="info_toast_title" translatable="true">Коды аэропортов указываются в международном коде IATA. Пример: MSQ - Национальный аэропорт Минск</string>
-    <string name="airport_help_toast_title" translatable="true">Введите первые буквы названия аэропорта, а затем выберите его из списка найденных</string>
 
     <!-- Navigation drawer menu -->
     <string name="nav_main" translatable="true">Главная</string>

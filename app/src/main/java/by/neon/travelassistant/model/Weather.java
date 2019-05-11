@@ -109,6 +109,7 @@ public class Weather {
 
     public List<String> getWeatherType() {
         List<String> types = new ArrayList<>(0);
+        types.add("any");
         if (rainVolume > 0) {
             types.add("rain");
         }

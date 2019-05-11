@@ -103,6 +103,7 @@ public class PreviewActivity extends AppCompatActivity {
 
     private List<Gender> extractGenders() {
         List<String> names = getNames("gender");
+        names.add("neutral");
         GenderSelectAsyncTask task = new GenderSelectAsyncTask();
         GenderMapper mapper = new GenderMapper();
         task.setTypes(names);

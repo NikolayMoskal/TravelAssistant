@@ -210,6 +210,13 @@ public class InputActivity extends AppCompatActivity
             Log.e(TAG, "setGenders: " + e.getMessage(), e);
         }
 
+        int index = 0;
+        for (; index < genders.size(); index++) {
+            if (genders.get(index).getGenderEn().equals("neutral")) {
+                break;
+            }
+        }
+        genders.remove(index);
         final List<Gender> immutableGenders = genders;
         fillParentLayout(findViewById(R.id.layout_genders), genders.size(),
                 x -> immutableGenders.get(x).getGender(),
