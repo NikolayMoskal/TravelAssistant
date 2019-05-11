@@ -18,9 +18,11 @@ import java.util.concurrent.ExecutionException;
 
 import by.neon.travelassistant.R;
 import by.neon.travelassistant.activity.query.CategorySelectAsyncTask;
+import by.neon.travelassistant.activity.query.GenderSelectAsyncTask;
 import by.neon.travelassistant.activity.query.ThingSelectAsyncTask;
 import by.neon.travelassistant.activity.query.TransportSelectAsyncTask;
 import by.neon.travelassistant.config.sqlite.mapper.CategoryMapper;
+import by.neon.travelassistant.config.sqlite.mapper.GenderMapper;
 import by.neon.travelassistant.config.sqlite.mapper.ThingMapper;
 import by.neon.travelassistant.config.sqlite.mapper.TransportMapper;
 import by.neon.travelassistant.constant.CommonConstants;
@@ -28,7 +30,6 @@ import by.neon.travelassistant.model.Category;
 import by.neon.travelassistant.model.Gender;
 import by.neon.travelassistant.model.Thing;
 import by.neon.travelassistant.model.Transport;
-import by.neon.travelassistant.model.Type;
 import by.neon.travelassistant.model.WeatherType;
 
 public class PreviewActivity extends AppCompatActivity {
@@ -57,27 +58,21 @@ public class PreviewActivity extends AppCompatActivity {
         }
 
         map.put(CommonConstants.ARRIVAL_CITY_ID, extras.getLong(CommonConstants.ARRIVAL_CITY_ID, 0));
-        map.put(CommonConstants.TYPE_MALE, extras.getBoolean(CommonConstants.TYPE_MALE, false));
-        map.put(CommonConstants.TYPE_FEMALE, extras.getBoolean(CommonConstants.TYPE_FEMALE, false));
-        int count = extras.getInt(CommonConstants.COUNT_TARGETS, 0);
-        for (int index = 0; index < count; index++) {
-            map.put("type" + index, extras.getString("type" + index, ""));
-        }
-        count = extras.getInt(CommonConstants.COUNT_TRANSPORT_TYPES, 0);
-        for (int index = 0; index < count; index++) {
-            map.put("transport" + index, extras.getString("transport" + index, ""));
-        }
+        extractData(extras, "category", CommonConstants.COUNT_CATEGORIES, map);
+        extractData(extras, "transport", CommonConstants.COUNT_TRANSPORT_TYPES, map);
+        extractData(extras, "gender", CommonConstants.COUNT_GENDERS, map);
         return map;
     }
 
-    private List<Category> extractTargets() {
-        List<String> names = new ArrayList<>();
-        for (Map.Entry<String, Object> item : input.entrySet()) {
-            if (item.getKey().startsWith("type")) {
-                String target = (String)item.getValue();
-                names.add(target);
-            }
+    private void extractData(Bundle extras, String tagItem, String tagCount, Map<String, Object> map) {
+        int count = extras.getInt(tagCount, 0);
+        for (int index = 0; index < count; index++) {
+            map.put(tagItem + index, extras.getString(tagItem + index, ""));
         }
+    }
+
+    private List<Category> extractTargets() {
+        List<String> names = getNames("category");
         CategorySelectAsyncTask task = new CategorySelectAsyncTask();
         CategoryMapper mapper = new CategoryMapper();
         task.setNames(names);
@@ -91,14 +86,7 @@ public class PreviewActivity extends AppCompatActivity {
     }
 
     private Transport extractTransport() {
-        List<String> names = new ArrayList<>();
-        for (Map.Entry<String, Object> item : input.entrySet()) {
-            if (item.getKey().startsWith("transport")) {
-                String target = (String)item.getValue();
-                names.add(target);
-                break;
-            }
-        }
+        List<String> names = getNames("transport");
         TransportSelectAsyncTask task = new TransportSelectAsyncTask();
         TransportMapper mapper = new TransportMapper();
         task.setNames(names);
@@ -108,6 +96,30 @@ public class PreviewActivity extends AppCompatActivity {
             Log.e(TAG, "extractTransports: " + e.getMessage(), e);
         }
         return null;
+    }
+
+    private List<Gender> extractGender() {
+        List<String> names = getNames("gender");
+        GenderSelectAsyncTask task = new GenderSelectAsyncTask();
+        GenderMapper mapper = new GenderMapper();
+        task.setTypes(names);
+        List<Gender> genders = new ArrayList<>(0);
+        try {
+            genders.addAll(mapper.to(task.execute().get()));
+        } catch (ExecutionException | InterruptedException e) {
+            Log.e(TAG, "extractGender: " + e.getMessage(), e);
+        }
+        return genders;
+    }
+
+    private List<String> getNames(String tag) {
+        List<String> names = new ArrayList<>();
+        for (Map.Entry<String, Object> item : input.entrySet()) {
+            if (item.getKey().startsWith(tag)) {
+                names.add((String)item.getValue());
+            }
+        }
+        return names;
     }
 
     private void fillPreview() throws ExecutionException, InterruptedException {

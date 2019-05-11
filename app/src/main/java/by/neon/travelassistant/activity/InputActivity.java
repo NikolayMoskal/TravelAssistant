@@ -46,13 +46,16 @@ import java.util.concurrent.ExecutionException;
 
 import by.neon.travelassistant.R;
 import by.neon.travelassistant.activity.query.CategorySelectAsyncTask;
+import by.neon.travelassistant.activity.query.GenderSelectAsyncTask;
 import by.neon.travelassistant.activity.query.TransportSelectAsyncTask;
 import by.neon.travelassistant.adapter.SelectCityAdapter;
 import by.neon.travelassistant.config.sqlite.mapper.CategoryMapper;
+import by.neon.travelassistant.config.sqlite.mapper.GenderMapper;
 import by.neon.travelassistant.config.sqlite.mapper.TransportMapper;
 import by.neon.travelassistant.constant.CommonConstants;
 import by.neon.travelassistant.listener.DateSetListener;
 import by.neon.travelassistant.model.Category;
+import by.neon.travelassistant.model.Gender;
 import by.neon.travelassistant.model.Transport;
 import by.neon.travelassistant.model.Weather;
 
@@ -75,8 +78,9 @@ public class InputActivity extends AppCompatActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
+        setGenders();
         setTransport();
-        setTravelTargets();
+        setCategories();
     }
 
     @Override
@@ -136,33 +140,24 @@ public class InputActivity extends AppCompatActivity
     public void onSendClick(View view) {
         Intent intent = new Intent(InputActivity.this, PreviewActivity.class);
         intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, (long) findViewById(R.id.arv_city).getTag());
-        intent.putExtra(CommonConstants.TYPE_MALE, ((ToggleButton) findViewById(R.id.sex_male)).isChecked());
-        intent.putExtra(CommonConstants.TYPE_FEMALE, ((ToggleButton) findViewById(R.id.sex_female)).isChecked());
-        LinearLayout transports = findViewById(R.id.layout_transports);
-        int countTransports = 0;
-        for (int index = 0; index < transports.getChildCount(); index++) {
-            LinearLayout layout = (LinearLayout) transports.getChildAt(index);
-            for (int viewIndex = 0; viewIndex < layout.getChildCount(); viewIndex++) {
-                ToggleButton button = (ToggleButton) layout.getChildAt(viewIndex);
-                if (button.isChecked()) {
-                    intent.putExtra("transport" + countTransports++, button.getText().toString());
-                }
-            }
-        }
-        intent.putExtra(CommonConstants.COUNT_TRANSPORT_TYPES, countTransports);
-        LinearLayout layout = findViewById(R.id.layout_targets);
-        int countTargets = 0;
-        for (int layoutIndex = 0; layoutIndex < layout.getChildCount(); layoutIndex++) {
-            LinearLayout inner = (LinearLayout) layout.getChildAt(layoutIndex);
-            for (int viewIndex = 0; viewIndex < inner.getChildCount(); viewIndex++) {
-                ToggleButton button = (ToggleButton) inner.getChildAt(viewIndex);
-                if (button.isChecked()) {
-                    intent.putExtra("type" + countTargets++, button.getHint().toString());
-                }
-            }
-        }
-        intent.putExtra(CommonConstants.COUNT_TARGETS, countTargets);
+        putData(intent, findViewById(R.id.layout_genders), "gender", CommonConstants.COUNT_GENDERS);
+        putData(intent, findViewById(R.id.layout_transports), "transport", CommonConstants.COUNT_TRANSPORT_TYPES);
+        putData(intent, findViewById(R.id.layout_categories), "category", CommonConstants.COUNT_CATEGORIES);
         startActivity(intent);
+    }
+
+    private void putData(Intent intent, LinearLayout parent, String itemTag, String countTag) {
+        int count = 0;
+        for (int layoutIndex = 0; layoutIndex < parent.getChildCount(); layoutIndex++) {
+            LinearLayout inner = (LinearLayout) parent.getChildAt(layoutIndex);
+            for (int viewIndex = 0; viewIndex < inner.getChildCount(); viewIndex++) {
+                final ToggleButton button = (ToggleButton) inner.getChildAt(viewIndex);
+                if (button.isChecked()) {
+                    intent.putExtra(itemTag + count++, button.getHint().toString());
+                }
+            }
+        }
+        intent.putExtra(countTag, count);
     }
 
     private SimpleAdapter configureCitySelectAdapter(List<Weather> weatherList) {
@@ -250,7 +245,7 @@ public class InputActivity extends AppCompatActivity
                 .setAdapter(adapter, (dialog, which) -> {
                     EditText text = findViewById(R.id.arv_city);
                     Weather weather = weatherList.get(which);
-                    text.setText(String.format(Locale.getDefault(),"%s, %s (%d)",
+                    text.setText(String.format(Locale.getDefault(), "%s, %s (%d)",
                             weather.getCityName(),
                             weather.getCountryCode(),
                             weather.getCityId()));
@@ -260,45 +255,29 @@ public class InputActivity extends AppCompatActivity
         builder.create().show();
     }
 
-    private void setTravelTargets() {
+    private void setCategories() {
         CategorySelectAsyncTask categorySelect = new CategorySelectAsyncTask();
         categorySelect.setSelectAll(true);
         CategoryMapper categoryMapper = new CategoryMapper();
-        List<Category> targets = new ArrayList<>(0);
+        List<Category> categories = new ArrayList<>(0);
         try {
-            targets = categoryMapper.to(categorySelect.execute().get());
+            categories = categoryMapper.to(categorySelect.execute().get());
         } catch (ExecutionException | InterruptedException e) {
-            Log.e(TAG, "setTravelTargets: " + e.getMessage(), e);
+            Log.e(TAG, "setCategories: " + e.getMessage(), e);
         }
 
         int index = 0;
-        LinearLayout parent = findViewById(R.id.layout_targets);
-        while (index < targets.size()) {
-            LinearLayout innerLayout = new LinearLayout(this);
-            innerLayout.setOrientation(LinearLayout.HORIZONTAL);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.gravity = Gravity.CENTER_VERTICAL;
-            layoutParams.setMargins(0, 10, 0 ,0);
-            innerLayout.setLayoutParams(layoutParams);
-            for (int item = 0; item < 2 && index < targets.size(); item++, index++) {
-                if (targets.get(index).getCategoryNameEn().equals("need")) {
-                    continue;
-                }
-
-                ToggleButton button = (ToggleButton) getLayoutInflater().inflate(R.layout.toggle_button_style_layout, null);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMarginEnd((int) (getResources().getDimension(R.dimen.toggle_button_margin_end) / getResources().getDisplayMetrics().density));
-                button.setPadding(5, 5, 5, 5);
-                button.setLayoutParams(params);
-                String localizedName = capitalize(targets.get(index).getCategoryName());
-                button.setText(localizedName);
-                button.setTextOn(localizedName);
-                button.setTextOff(localizedName);
-                button.setHint(targets.get(index).getCategoryNameEn());
-                innerLayout.addView(button);
+        for (; index < categories.size(); index++) {
+            if (categories.get(index).getCategoryNameEn().equals("need")) {
+                break;
             }
-            parent.addView(innerLayout);
         }
+        categories.remove(index);
+        final List<Category> immutableCategories = categories;
+        fillParentLayout(findViewById(R.id.layout_categories), categories.size(),
+                x -> immutableCategories.get(x).getCategoryName(),
+                x -> immutableCategories.get(x).getCategoryNameEn(),
+                x -> null);
     }
 
     private void setTransport() {
@@ -312,45 +291,115 @@ public class InputActivity extends AppCompatActivity
             Log.e(TAG, "setTransport: " + e.getMessage(), e);
         }
 
-        LinearLayout parent = findViewById(R.id.layout_transports);
-        for (int index = 0; index < transports.size();) {
-            LinearLayout inner = new LinearLayout(this);
-            inner.setOrientation(LinearLayout.HORIZONTAL);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.gravity = Gravity.CENTER_VERTICAL;
-            layoutParams.setMargins(0, 10, 0 ,0);
-            inner.setLayoutParams(layoutParams);
-            for (int item = 0; item < 2 && index < transports.size(); item++, index++) {
-                ToggleButton button = (ToggleButton) getLayoutInflater().inflate(R.layout.toggle_button_style_layout, null);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMarginEnd((int) (getResources().getDimension(R.dimen.toggle_button_margin_end) / getResources().getDisplayMetrics().density));
-                button.setPadding(5, 5, 5, 5);
-                button.setLayoutParams(params);
-                String name = capitalize(transports.get(index).getName());
-                button.setText(name);
-                button.setTextOn(name);
-                button.setTextOff(name);
-                button.setHint(transports.get(index).getNameEn());
+        final List<Transport> immutableTransports = transports;
+        fillParentLayout(findViewById(R.id.layout_transports), transports.size(),
+                x -> immutableTransports.get(x).getName(),
+                x -> immutableTransports.get(x).getNameEn(),
+                x -> getTransportIcon(immutableTransports.get(x).getNameEn()));
+    }
+
+    private void setGenders() {
+        GenderSelectAsyncTask task = new GenderSelectAsyncTask();
+        task.setSelectAll(true);
+        GenderMapper mapper = new GenderMapper();
+        List<Gender> genders = new ArrayList<>(0);
+        try {
+            genders = mapper.to(task.execute().get());
+        } catch (ExecutionException | InterruptedException e) {
+            Log.e(TAG, "setGenders: " + e.getMessage(), e);
+        }
+
+        final List<Gender> immutableGenders = genders;
+        fillParentLayout(findViewById(R.id.layout_genders), genders.size(),
+                x -> immutableGenders.get(x).getGender(),
+                x -> immutableGenders.get(x).getGenderEn(),
+                x -> getGenderIcon(immutableGenders.get(x).getGenderEn()));
+    }
+
+    private void fillParentLayout(LinearLayout parent, int countEntities, IFunc<Integer, String> titleFunc, IFunc<Integer, String> nameFunc, IFunc<Integer, Drawable> iconFunc) {
+        for (int index = 0; index < countEntities; ) {
+            LinearLayout inner = createInnerLayout();
+            for (int item = 0; item < 2 && index < countEntities; item++, index++) {
+                final int currentIndex = index;
+                ToggleButton button = createSwitch(titleFunc.run(index), nameFunc.run(index), x -> iconFunc.run(currentIndex));
                 inner.addView(button);
             }
             parent.addView(inner);
         }
     }
 
+    private LinearLayout createInnerLayout() {
+        LinearLayout inner = new LinearLayout(this);
+        inner.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.gravity = Gravity.CENTER_VERTICAL;
+        layoutParams.setMargins(0, 10, 0, 0);
+        inner.setLayoutParams(layoutParams);
+        return inner;
+    }
+
+    private ToggleButton createSwitch(String name, String title) {
+        ToggleButton button = (ToggleButton) getLayoutInflater().inflate(R.layout.toggle_button_style_layout, null);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMarginEnd((int) (getResources().getDimension(R.dimen.toggle_button_margin_end) / getResources().getDisplayMetrics().density));
+        button.setPadding(5, 5, 5, 5);
+        button.setLayoutParams(params);
+        button.setText(capitalize(title));
+        button.setTextOn(capitalize(title));
+        button.setTextOff(capitalize(title));
+        button.setHint(name);
+        return button;
+    }
+
+    private ToggleButton createSwitch(String name, String title, IFunc<ToggleButton, Drawable> func) {
+        ToggleButton button = createSwitch(name, title);
+        button.setCompoundDrawablesWithIntrinsicBounds(null, func.run(button), null, null);
+        return button;
+    }
+
     private Drawable getTransportIcon(String transportName) {
-        int id = 0;
+        int id;
         switch (transportName) {
-            case "airplane": id = R.drawable.ic_airplane; break;
-            case "bus": id = R.drawable.ic_bus; break;
-            case "ship": id = R.drawable.ic_ship; break;
-            case "cycle": id = R.drawable.ic_cycle; break;
-            case "train": id = R.drawable.ic_train; break;
-            case "auto": id = R.drawable.ic_auto; break;
+            case "airplane":
+                id = R.drawable.ic_airplane;
+                break;
+            case "bus":
+                id = R.drawable.ic_bus;
+                break;
+            case "ship":
+                id = R.drawable.ic_ship;
+                break;
+            case "cycle":
+                id = R.drawable.ic_cycle;
+                break;
+            case "train":
+                id = R.drawable.ic_train;
+                break;
+            case "auto":
+                id = R.drawable.ic_auto;
+                break;
+            default:
+                return null;
+        }
+        return ContextCompat.getDrawable(this, id);
+    }
+
+    private Drawable getGenderIcon(String genderType) {
+        int id;
+        switch (genderType) {
+            case "man":
+                id = R.drawable.ic_male;
+                break;
+            case "woman":
+                id = R.drawable.ic_female;
+                break;
+            default:
+                return null;
         }
         return ContextCompat.getDrawable(this, id);
     }
 
     private String capitalize(String title) {
-        return title.substring(0,1).toUpperCase() + title.substring(1);
+        return title.substring(0, 1).toUpperCase() + title.substring(1);
     }
 }

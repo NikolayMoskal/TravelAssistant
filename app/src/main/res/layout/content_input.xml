@@ -160,28 +160,11 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_genders"
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <ToggleButton
-                    android:id="@+id/sex_male"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="15sp"
-                    android:drawableTop="@drawable/ic_male"
-                    android:textOn="@string/gender_male"
-                    android:textOff="@string/gender_male"
-                    style="@style/Widget.Button.Toggle"/>
-
-                <ToggleButton
-                    android:id="@+id/sex_female"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="15sp"
-                    android:drawableTop="@drawable/ic_female"
-                    android:textOn="@string/gender_female"
-                    android:textOff="@string/gender_female"
-                    style="@style/Widget.Button.Toggle"/>
+                android:layout_height="wrap_content"
+                android:padding="10sp">
             </LinearLayout>
 
             <LinearLayout
@@ -227,7 +210,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/layout_targets"
+                android:id="@+id/layout_categories"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"

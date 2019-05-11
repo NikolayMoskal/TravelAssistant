@@ -14,7 +14,7 @@ public final class GenderSelectAsyncTask extends AsyncTask<Void, Void, List<Gend
     private static final String TAG = "GenderSelectAsyncTask";
     private boolean isSelectAll;
     private long id;
-    private String type;
+    private List<String> types;
 
     /**
      * Override this method to perform a computation on a background thread. The
@@ -38,8 +38,12 @@ public final class GenderSelectAsyncTask extends AsyncTask<Void, Void, List<Gend
             result.addAll(dbContext.getGenderDao().getAll());
         } else if (id > 0) {
             result.add(dbContext.getGenderDao().getById(id));
-        } else if (type != null) {
-            result.add(dbContext.getGenderDao().getByType(type));
+        } else if (types != null && types.size() > 0) {
+            if (types.size() > 1) {
+                result.addAll(dbContext.getGenderDao().getByTypes(types));
+            } else {
+                result.add(dbContext.getGenderDao().getByType(types.get(0)));
+            }
         }
         Log.i(TAG, "doInBackground: " + result.size() + " rows returned.");
         return result;
@@ -53,7 +57,7 @@ public final class GenderSelectAsyncTask extends AsyncTask<Void, Void, List<Gend
         this.id = id;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTypes(List<String> types) {
+        this.types = types;
     }
 }
