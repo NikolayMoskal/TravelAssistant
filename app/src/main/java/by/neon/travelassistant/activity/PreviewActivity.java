@@ -10,9 +10,13 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -21,11 +25,14 @@ import by.neon.travelassistant.activity.query.CategorySelectAsyncTask;
 import by.neon.travelassistant.activity.query.GenderSelectAsyncTask;
 import by.neon.travelassistant.activity.query.ThingSelectAsyncTask;
 import by.neon.travelassistant.activity.query.TransportSelectAsyncTask;
+import by.neon.travelassistant.config.TravelRequestQueue;
 import by.neon.travelassistant.config.sqlite.mapper.CategoryMapper;
 import by.neon.travelassistant.config.sqlite.mapper.GenderMapper;
 import by.neon.travelassistant.config.sqlite.mapper.ThingMapper;
 import by.neon.travelassistant.config.sqlite.mapper.TransportMapper;
+import by.neon.travelassistant.config.sqlite.mapper.WeatherTypeMapper;
 import by.neon.travelassistant.constant.CommonConstants;
+import by.neon.travelassistant.listener.ForecastListener;
 import by.neon.travelassistant.model.Category;
 import by.neon.travelassistant.model.Gender;
 import by.neon.travelassistant.model.Thing;
@@ -44,11 +51,7 @@ public class PreviewActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         input = parseExtras(getIntent().getExtras());
-        try {
-            fillPreview();
-        } catch (ExecutionException | InterruptedException e) {
-            Log.e(TAG, "onCreate: " + e.getMessage(), e);
-        }
+        requestWeatherTypes();
     }
 
     private Map<String, Object> parseExtras(Bundle extras) {
@@ -98,7 +101,7 @@ public class PreviewActivity extends AppCompatActivity {
         return null;
     }
 
-    private List<Gender> extractGender() {
+    private List<Gender> extractGenders() {
         List<String> names = getNames("gender");
         GenderSelectAsyncTask task = new GenderSelectAsyncTask();
         GenderMapper mapper = new GenderMapper();
@@ -107,29 +110,48 @@ public class PreviewActivity extends AppCompatActivity {
         try {
             genders.addAll(mapper.to(task.execute().get()));
         } catch (ExecutionException | InterruptedException e) {
-            Log.e(TAG, "extractGender: " + e.getMessage(), e);
+            Log.e(TAG, "extractGenders: " + e.getMessage(), e);
         }
         return genders;
+    }
+
+    private void requestWeatherTypes() {
+        String url = "https://api.openweathermap.org/data/2.5/forecast?" +
+                "id=" + input.get(CommonConstants.ARRIVAL_CITY_ID) +
+                "&appid=" + CommonConstants.OWM_APP_ID +
+                "&lang=" + Locale.getDefault().getLanguage() +
+                "&units=metric";
+        ForecastListener listener = new ForecastListener(weatherList -> {
+            try {
+                WeatherTypeMapper mapper = new WeatherTypeMapper();
+                fillPreview(mapper.from(weatherList));
+            } catch (ExecutionException | InterruptedException e) {
+                Log.e(TAG, "onSuccess: " + e.getMessage(), e);
+            }
+        });
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, listener, null);
+        TravelRequestQueue.getInstance(this).addRequest(request);
     }
 
     private List<String> getNames(String tag) {
         List<String> names = new ArrayList<>();
         for (Map.Entry<String, Object> item : input.entrySet()) {
             if (item.getKey().startsWith(tag)) {
-                names.add((String)item.getValue());
+                names.add((String) item.getValue());
             }
         }
         return names;
     }
 
-    private void fillPreview() throws ExecutionException, InterruptedException {
+    private void fillPreview(List<WeatherType> weatherTypes) throws ExecutionException, InterruptedException {
+        List<Gender> genders = extractGenders();
         LinearLayout parent = findViewById(R.id.layout_preview);
         parent.addView(createViewByTitle(getResources().getString(R.string.need)));
-        addThingsToParent(parent, "need");
+        addThingsToParent(parent, "need", genders, weatherTypes);
 
         for (Category entry : extractTargets()) {
             parent.addView(createViewByTitle(entry.getCategoryName()));
-            addThingsToParent(parent, entry.getCategoryNameEn());
+            addThingsToParent(parent, entry.getCategoryNameEn(), genders, weatherTypes);
         }
     }
 
@@ -143,11 +165,11 @@ public class PreviewActivity extends AppCompatActivity {
         return targetTitleView;
     }
 
-    private void addThingsToParent(LinearLayout parent, String target) throws ExecutionException, InterruptedException {
+    private void addThingsToParent(LinearLayout parent, String target, List<Gender> genders, List<WeatherType> weatherTypes) throws ExecutionException, InterruptedException {
         ThingSelectAsyncTask task = new ThingSelectAsyncTask();
         task.setCategory(target);
         ThingMapper mapper = new ThingMapper();
-        List<Thing> things = mapper.to(task.execute().get());
+        List<Thing> things = filter(mapper.to(task.execute().get()), weatherTypes, genders);
         for (Thing thing : things) {
             parent.addView(createThingView(thing.getThingName()));
         }
@@ -163,13 +185,13 @@ public class PreviewActivity extends AppCompatActivity {
     }
 
     private String capitalize(String title) {
-        return title.substring(0,1).toUpperCase() + title.substring(1);
+        return title.substring(0, 1).toUpperCase() + title.substring(1);
     }
 
-    private List<Thing> filter(List<Thing> source, List<WeatherType> weatherTypes, Gender gender) {
+    private List<Thing> filter(List<Thing> source, List<WeatherType> weatherTypes, List<Gender> genders) {
         List<Thing> filtered = new ArrayList<>();
         for (Thing thing : source) {
-            if (hasAnyWeatherType(thing, weatherTypes) && belongsTo(thing, gender)) {
+            if (hasAnyWeatherType(thing, weatherTypes) && belongsTo(thing, genders)) {
                 filtered.add(thing);
             }
         }
@@ -191,11 +213,16 @@ public class PreviewActivity extends AppCompatActivity {
         return false;
     }
 
-    private boolean belongsTo(Thing thing, Gender gender) {
-        if (gender == null) {
+    private boolean belongsTo(Thing thing, List<Gender> genders) {
+        if (genders == null || genders.size() == 0) {
             return true;
         }
 
-        return thing.getGender().equals(gender.getGenderEn());
+        for (Gender gender : genders) {
+            if (thing.getGender().equals(gender.getGenderEn())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
