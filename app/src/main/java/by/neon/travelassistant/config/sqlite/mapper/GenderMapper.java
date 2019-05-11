@@ -9,10 +9,14 @@ import by.neon.travelassistant.model.Gender;
 public final class GenderMapper extends BaseMapper<Gender, GenderDb> {
     public String toRu(String en) {
         switch (en) {
-            case "man": return "мужской";
-            case "woman": return "женский";
-            case "neutral": return "неизвестно";
-            default: return null;
+            case "man":
+                return "мужской";
+            case "woman":
+                return "женский";
+            case "neutral":
+                return "нейтральный";
+            default:
+                return null;
         }
     }
 

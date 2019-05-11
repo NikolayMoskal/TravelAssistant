@@ -33,9 +33,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
+            android:onClick="onAddPackClick"
             app:maxImageSize="40sp"
-            app:srcCompat="@android:drawable/ic_input_add"
-            android:onClick="onAddPackClick"/>
+            app:srcCompat="@android:drawable/ic_input_add" />
+
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/report"
             android:layout_width="wrap_content"

@@ -27,7 +27,7 @@ public abstract class ThingWeatherTypeDao {
     public abstract List<ThingDb> getThingsByWeatherType(long weatherTypeId);
 
     @Query("SELECT " + DbConstants.TABLE_WEATHER_TYPES + ".* FROM " + DbConstants.TABLE_WEATHER_TYPES + "," + DbConstants.TABLE_THINGS_WEATHER_TYPES +
-    " WHERE " + DbConstants.TABLE_WEATHER_TYPES + "." + DbConstants.ID + " = " + DbConstants.TABLE_THINGS_WEATHER_TYPES + "." + DbConstants.THINGS_WEATHER_TYPES_COLUMN_WEATHER_TYPE_ID +
-    " AND " + DbConstants.THINGS_WEATHER_TYPES_COLUMN_THING_ID + " = :thingId")
+            " WHERE " + DbConstants.TABLE_WEATHER_TYPES + "." + DbConstants.ID + " = " + DbConstants.TABLE_THINGS_WEATHER_TYPES + "." + DbConstants.THINGS_WEATHER_TYPES_COLUMN_WEATHER_TYPE_ID +
+            " AND " + DbConstants.THINGS_WEATHER_TYPES_COLUMN_THING_ID + " = :thingId")
     public abstract List<WeatherTypeDb> getWeatherTypesByThing(long thingId);
 }

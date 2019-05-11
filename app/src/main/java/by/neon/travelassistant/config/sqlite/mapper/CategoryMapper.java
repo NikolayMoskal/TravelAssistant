@@ -9,21 +9,36 @@ import by.neon.travelassistant.model.Category;
 public final class CategoryMapper extends BaseMapper<Category, CategoryDb> {
     public String toRu(String en) {
         switch (en) {
-            case "need": return "самое необходимое";
-            case "tourism": return "туризм";
-            case "cycle": return "велотуризм";
-            case "winter": return "зима";
-            case "beach": return "пляж";
-            case "business": return "командировка";
-            case "swim": return "дайвинг";
-            case "photo": return "фотография";
-            case "fishing": return "рыбалка";
-            case "hike": return "поход";
-            case "wc": return "туалет";
-            case "kids": return "дети";
-            case "restaurant": return "ресторан";
-            case "travel": return "путешествие";
-            default: return null;
+            case "need":
+                return "самое необходимое";
+            case "tourism":
+                return "туризм";
+            case "cycle":
+                return "велотуризм";
+            case "winter":
+                return "зима";
+            case "beach":
+                return "пляж";
+            case "business":
+                return "командировка";
+            case "swim":
+                return "дайвинг";
+            case "photo":
+                return "фотография";
+            case "fishing":
+                return "рыбалка";
+            case "hike":
+                return "поход";
+            case "wc":
+                return "туалет";
+            case "kids":
+                return "дети";
+            case "restaurant":
+                return "ресторан";
+            case "travel":
+                return "путешествие";
+            default:
+                return null;
         }
     }
 

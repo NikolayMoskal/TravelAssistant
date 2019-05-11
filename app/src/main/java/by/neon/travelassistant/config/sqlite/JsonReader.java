@@ -26,7 +26,7 @@ public class JsonReader {
 
     public List<Thing> read(String json) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        List<Thing> things = mapper.readValue(json, new TypeReference<List<Thing>>(){});
+        List<Thing> things = mapper.readValue(json, new TypeReference<List<Thing>>() {});
         List<String> types = new ArrayList<>();
         List<String> categories = new ArrayList<>();
         List<String> weatherTypes = new ArrayList<>();
@@ -49,7 +49,7 @@ public class JsonReader {
 
     public List<Transport> readTransports(String json) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(json, new TypeReference<List<Transport>>(){});
+        return mapper.readValue(json, new TypeReference<List<Transport>>() {});
     }
 
     public List<TypeDb> getTypes() {

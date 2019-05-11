@@ -9,13 +9,20 @@ import by.neon.travelassistant.model.Transport;
 public final class TransportMapper extends BaseMapper<Transport, TransportDb> {
     public String toRu(String en) {
         switch (en) {
-            case "bus": return "автобус";
-            case "auto": return "автомобиль";
-            case "ship": return "корабль";
-            case "train": return "поезд";
-            case "airplane": return "самолет";
-            case "cycle": return "велосипед";
-            default: return null;
+            case "bus":
+                return "автобус";
+            case "auto":
+                return "автомобиль";
+            case "ship":
+                return "корабль";
+            case "train":
+                return "поезд";
+            case "airplane":
+                return "самолет";
+            case "cycle":
+                return "велосипед";
+            default:
+                return null;
         }
     }
 

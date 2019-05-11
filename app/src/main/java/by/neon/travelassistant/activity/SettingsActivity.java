@@ -45,8 +45,7 @@ public class SettingsActivity extends AppCompatActivity
             config = new SqliteConfig(getApplicationContext());
             createSwitchForEachThing();
             loadSettingsFromPreferences();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Log.e(TAG, "onCreate: " + e.getMessage(), e);
         }
     }

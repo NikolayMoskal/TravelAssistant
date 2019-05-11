@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="top|center"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activity.InputActivity"
     tools:showIn="@layout/app_bar_input">
@@ -14,13 +14,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:ignore="UselessParent">
+
         <LinearLayout
             android:id="@+id/input_content_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="top|center"
             android:orientation="vertical"
-            android:padding="15dp"
-            android:gravity="top|center">
+            android:padding="15dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -32,38 +33,38 @@
                     android:id="@+id/dep_city"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="@string/arv_city_hint"/>
+                    android:hint="@string/arv_city_hint" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:visibility="visible">
 
                 <TextView
                     android:id="@+id/arv_city_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/arv_label"
                     android:layout_margin="12sp"
-                    android:textSize="@dimen/main_activity_text_size"
-                    android:textColor="@color/colorPrimary"/>
+                    android:text="@string/arv_label"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/main_activity_text_size" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/arv_city_title"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/main_activity_text_size"
-                    android:text="@string/arv_city_title"/>
+                    android:textSize="@dimen/main_activity_text_size" />
 
                 <EditText
                     android:id="@+id/arv_city"
@@ -84,104 +85,104 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="15sp"
+                    android:text="@string/travel_dates_label"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/main_activity_text_size"
-                    android:text="@string/travel_dates_label"/>
+                    android:textSize="@dimen/main_activity_text_size" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/start_date"
-                    android:enabled="false"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/main_activity_text_size"
-                    android:hint="@string/start_date_title"
                     android:layout_marginEnd="10sp"
+                    android:enabled="false"
+                    android:hint="@string/start_date_title"
                     android:inputType="date"
+                    android:textSize="@dimen/main_activity_text_size"
                     tools:ignore="Autofill" />
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/select_start_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="onSelectStartDate"
                     android:src="@android:drawable/ic_menu_edit"
-                    app:fabSize="auto"
-                    android:onClick="onSelectStartDate"/>
+                    app:fabSize="auto" />
 
                 <EditText
                     android:id="@+id/end_date"
-                    android:enabled="false"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/main_activity_text_size"
-                    android:hint="@string/end_date_title"
                     android:layout_marginStart="10sp"
                     android:layout_marginEnd="10sp"
+                    android:enabled="false"
+                    android:hint="@string/end_date_title"
                     android:inputType="date"
+                    android:textSize="@dimen/main_activity_text_size"
                     tools:ignore="Autofill" />
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/select_end_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="onSelectEndDate"
                     android:src="@android:drawable/ic_menu_edit"
-                    app:fabSize="auto"
-                    android:onClick="onSelectEndDate"/>
+                    app:fabSize="auto" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:visibility="visible">
 
                 <TextView
                     android:id="@+id/sex_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/gender_type_label"
                     android:layout_margin="12sp"
-                    android:textSize="@dimen/main_activity_text_size"
-                    android:textColor="@color/colorPrimary"/>
+                    android:text="@string/gender_type_label"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/main_activity_text_size" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/layout_genders"
-                android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:padding="10sp">
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:visibility="visible">
 
                 <TextView
                     android:id="@+id/type_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/type_label"
                     android:layout_margin="12sp"
-                    android:textSize="@dimen/main_activity_text_size"
-                    android:textColor="@color/colorPrimary"/>
+                    android:text="@string/type_label"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/main_activity_text_size" />
             </LinearLayout>
 
             <LinearLayout
@@ -195,18 +196,18 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:visibility="visible">
 
                 <TextView
                     android:id="@+id/travel_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/target_label"
                     android:layout_margin="12sp"
-                    android:textSize="@dimen/main_activity_text_size"
-                    android:textColor="@color/colorPrimary"/>
+                    android:text="@string/target_label"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/main_activity_text_size" />
             </LinearLayout>
 
             <LinearLayout
@@ -222,9 +223,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimaryDark"
+                android:onClick="onSendClick"
                 android:text="@string/send_button"
-                android:textColor="@color/colorText"
-                android:onClick="onSendClick"/>
+                android:textColor="@color/colorText" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

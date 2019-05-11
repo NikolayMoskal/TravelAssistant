@@ -43,9 +43,9 @@ public final class SelectCityAdapter extends SimpleAdapter {
     }
 
     /**
-     * @param position current position in parent view
+     * @param position    current position in parent view
      * @param convertView a target view
-     * @param parent a parent view
+     * @param parent      a parent view
      * @see Adapter#getView(int, View, ViewGroup)
      */
     @SuppressLint("InflateParams")

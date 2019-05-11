@@ -41,8 +41,7 @@ public final class CategorySelectAsyncTask extends AsyncTask<Void, Void, List<Ca
         } else if (names != null && names.size() > 0) {
             if (names.size() > 1) {
                 result.addAll(dbContext.getCategoryDao().getByNames(names));
-            }
-            else {
+            } else {
                 result.add(dbContext.getCategoryDao().getByName(names.get(0)));
             }
         }

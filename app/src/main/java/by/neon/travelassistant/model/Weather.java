@@ -107,6 +107,26 @@ public class Weather {
         this.cityId = cityId;
     }
 
+    public List<String> getWeatherType() {
+        List<String> types = new ArrayList<>(0);
+        if (rainVolume > 0) {
+            types.add("rain");
+        }
+        if (maxTemp < 0) {
+            types.add("cold");
+        }
+        if (minTemp >= 0 && maxTemp <= 15) {
+            types.add("normal");
+        }
+        if (minTemp > 15 && maxTemp <= 25) {
+            types.add("warm");
+        }
+        if (minTemp > 25) {
+            types.add("hot");
+        }
+        return types;
+    }
+
     public static class State {
         private String title;
         private String iconUrl;
@@ -126,25 +146,5 @@ public class Weather {
         public void setIconUrl(String iconUrl) {
             this.iconUrl = iconUrl;
         }
-    }
-
-    public List<String> getWeatherType() {
-        List<String> types = new ArrayList<>(0);
-        if (rainVolume > 0) {
-            types.add("rain");
-        }
-        if (maxTemp < 0) {
-            types.add("cold");
-        }
-        if (minTemp >= 0 && maxTemp <= 15) {
-            types.add("normal");
-        }
-        if (minTemp > 15 && maxTemp <= 25) {
-            types.add("warm");
-        }
-        if (minTemp > 25) {
-            types.add("hot");
-        }
-        return types;
     }
 }

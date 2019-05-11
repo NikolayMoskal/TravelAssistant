@@ -13,38 +13,42 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="visible"
-        android:padding="20sp">
+        android:padding="20sp"
+        android:visibility="visible">
+
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryEnd"
-            android:layout_marginEnd="20sp"
-            android:text="@string/type_female"
-            style="?android:borderlessButtonStyle"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryEnd"
-            android:layout_marginEnd="20sp"
             style="?android:borderlessButtonStyle"
-            android:text="@string/type_male"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20sp"
+            android:background="@color/colorPrimaryEnd"
+            android:text="@string/type_female" />
+
         <Button
+            style="?android:borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20sp"
+            android:background="@color/colorPrimaryEnd"
+            android:text="@string/type_male" />
+
+        <Button
+            style="?android:borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimaryEnd"
-            style="?android:borderlessButtonStyle"
-            android:text="@string/type_child"/>
+            android:text="@string/type_child" />
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <LinearLayout
             android:id="@+id/layout_switch"
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:padding="20sp">
         </LinearLayout>
     </ScrollView>

@@ -5,8 +5,8 @@ import android.arch.persistence.room.Room;
 import android.content.ContentProvider;
 import android.os.Build;
 
-import by.neon.travelassistant.constant.DbConstants;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
+import by.neon.travelassistant.constant.DbConstants;
 
 /**
  * Main entry point of this application. Every class of this application runs after Startup.
@@ -20,6 +20,15 @@ public class Startup extends Application {
      * Database context singleton
      */
     private TravelDbContext dbContext;
+
+    /**
+     * Gets the startup class of this application
+     *
+     * @return {@link Startup}
+     */
+    public static Startup getStartup() {
+        return startup;
+    }
 
     /**
      * Called when the application is starting, before any activity, service,
@@ -45,15 +54,6 @@ public class Startup extends Application {
         super.onCreate();
         startup = this;
         dbContext = Room.databaseBuilder(this, TravelDbContext.class, DbConstants.DATABASE).build();
-    }
-
-    /**
-     * Gets the startup class of this application
-     *
-     * @return {@link Startup}
-     */
-    public static Startup getStartup() {
-        return startup;
     }
 
     /**

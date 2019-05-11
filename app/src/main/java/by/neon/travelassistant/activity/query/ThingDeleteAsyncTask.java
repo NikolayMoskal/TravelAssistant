@@ -37,11 +37,9 @@ public final class ThingDeleteAsyncTask extends AsyncTask<ThingDb, Void, Integer
         int result = 0;
         if (isDeleteAll) {
             result = dbContext.getThingDao().deleteAll();
-        }
-        else if (id > 0) {
+        } else if (id > 0) {
             result = dbContext.getThingDao().deleteById(id);
-        }
-        else if (name != null) {
+        } else if (name != null) {
             result = dbContext.getThingDao().deleteByName(name);
         }
         Log.i(TAG, "doInBackground: " + result + " rows deleted.");

@@ -63,9 +63,12 @@ public class Thing extends Entity {
 
     public String getThingName() {
         switch (Locale.getDefault().getLanguage()) {
-            case "ru": return thingNameRu;
-            case "en": return thingNameEn;
-            default: return thingNameEn;
+            case "ru":
+                return thingNameRu;
+            case "en":
+                return thingNameEn;
+            default:
+                return thingNameEn;
         }
     }
 

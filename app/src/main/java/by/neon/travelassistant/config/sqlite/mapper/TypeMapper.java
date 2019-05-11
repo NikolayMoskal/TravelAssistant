@@ -9,21 +9,36 @@ import by.neon.travelassistant.model.Type;
 public final class TypeMapper extends BaseMapper<Type, TypeDb> {
     public String toRu(String en) {
         switch (en) {
-            case "documents": return "документы";
-            case "equipment": return "техника";
-            case "comfort": return "комфорт";
-            case "cosmetics": return "косметика";
-            case "outerwear": return "верхняя одежда";
-            case "casual": return "повседневная одежда";
-            case "underwear": return "нижнее белье";
-            case "accessoires": return "аксессуары";
-            case "decorations": return "украшения";
-            case "dresscode": return "выходная одежда";
-            case "shoes": return "обувь";
-            case "headgear": return "головные уборы";
-            case "kids": return "детские вещи";
-            case "medicine": return "медицина";
-            default: return null;
+            case "documents":
+                return "документы";
+            case "equipment":
+                return "техника";
+            case "comfort":
+                return "комфорт";
+            case "cosmetics":
+                return "косметика";
+            case "outerwear":
+                return "верхняя одежда";
+            case "casual":
+                return "повседневная одежда";
+            case "underwear":
+                return "нижнее белье";
+            case "accessoires":
+                return "аксессуары";
+            case "decorations":
+                return "украшения";
+            case "dresscode":
+                return "выходная одежда";
+            case "shoes":
+                return "обувь";
+            case "headgear":
+                return "головные уборы";
+            case "kids":
+                return "детские вещи";
+            case "medicine":
+                return "медицина";
+            default:
+                return null;
         }
     }
 
