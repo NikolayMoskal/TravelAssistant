@@ -67,6 +67,44 @@ public class InputActivity extends AppCompatActivity
         setGenders();
         setTransport();
         setCategories();
+
+        readSettings(getIntent().getExtras());
+    }
+
+    private void readSettings(Bundle extras) {
+        if (extras == null) {
+            return;
+        }
+
+        restoreData(extras, findViewById(R.id.layout_categories), CommonConstants.COUNT_CATEGORIES, "category");
+        restoreData(extras, findViewById(R.id.layout_genders), CommonConstants.COUNT_GENDERS, "gender");
+        restoreData(extras, findViewById(R.id.layout_transports), CommonConstants.COUNT_TRANSPORT_TYPES, "transport");
+        ((EditText) findViewById(R.id.start_date)).setText(extras.getString(CommonConstants.TRAVEL_START_DATE));
+        ((EditText) findViewById(R.id.end_date)).setText(extras.getString(CommonConstants.TRAVEL_END_DATE));
+        EditText city = findViewById(R.id.arv_city);
+        city.setEnabled(false);
+        city.setText(extras.getString(CommonConstants.ARRIVAL_CITY_INFO));
+        city.setTag(extras.getLong(CommonConstants.ARRIVAL_CITY_ID));
+    }
+
+    private void restoreData(Bundle extras, LinearLayout parent, String tagCount, String tagItem) {
+        int count = extras.getInt(tagCount, 0);
+        List<String> items = new ArrayList<>(0);
+        for (int index = 0; index < count; index++) {
+            items.add(extras.getString(tagItem + index, ""));
+        }
+
+        for (int layoutIndex = 0; layoutIndex < parent.getChildCount(); layoutIndex++) {
+            LinearLayout inner = (LinearLayout) parent.getChildAt(layoutIndex);
+            for (int viewIndex = 0; viewIndex < inner.getChildCount(); viewIndex++) {
+                final ToggleButton button = (ToggleButton) inner.getChildAt(viewIndex);
+                for (String item : items) {
+                    if (button.getHint().toString().equals(item)) {
+                        button.setChecked(true);
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -126,9 +164,12 @@ public class InputActivity extends AppCompatActivity
     public void onSendClick(View view) {
         Intent intent = new Intent(InputActivity.this, PreviewActivity.class);
         intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, (long) findViewById(R.id.arv_city).getTag());
+        intent.putExtra(CommonConstants.ARRIVAL_CITY_INFO, ((EditText) findViewById(R.id.arv_city)).getText().toString());
         putData(intent, findViewById(R.id.layout_genders), "gender", CommonConstants.COUNT_GENDERS);
         putData(intent, findViewById(R.id.layout_transports), "transport", CommonConstants.COUNT_TRANSPORT_TYPES);
         putData(intent, findViewById(R.id.layout_categories), "category", CommonConstants.COUNT_CATEGORIES);
+        intent.putExtra(CommonConstants.TRAVEL_START_DATE, ((EditText) findViewById(R.id.start_date)).getText().toString());
+        intent.putExtra(CommonConstants.TRAVEL_END_DATE, ((EditText) findViewById(R.id.end_date)).getText().toString());
         startActivity(intent);
     }
 
@@ -229,7 +270,7 @@ public class InputActivity extends AppCompatActivity
             LinearLayout inner = createInnerLayout();
             for (int item = 0; item < 2 && index < countEntities; item++, index++) {
                 final int currentIndex = index;
-                ToggleButton button = createSwitch(titleFunc.run(index), nameFunc.run(index), x -> iconFunc.run(currentIndex));
+                ToggleButton button = createSwitch(nameFunc.run(index), titleFunc.run(index), x -> iconFunc.run(currentIndex));
                 inner.addView(button);
             }
             parent.addView(inner);
@@ -241,7 +282,8 @@ public class InputActivity extends AppCompatActivity
         inner.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.gravity = Gravity.CENTER_VERTICAL;
-        layoutParams.setMargins(0, 10, 0, 0);
+        int margin = (int) (10 / getResources().getDisplayMetrics().density + 0.5f);
+        layoutParams.setMargins(0, margin, 0, 0);
         inner.setLayoutParams(layoutParams);
         return inner;
     }
@@ -249,8 +291,9 @@ public class InputActivity extends AppCompatActivity
     private ToggleButton createSwitch(String name, String title) {
         ToggleButton button = (ToggleButton) getLayoutInflater().inflate(R.layout.toggle_button_style_layout, null);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.setMarginEnd((int) (getResources().getDimension(R.dimen.toggle_button_margin_end) / getResources().getDisplayMetrics().density));
-        button.setPadding(5, 5, 5, 5);
+        params.setMarginEnd((int) (getResources().getDimension(R.dimen.toggle_button_margin_end) / getResources().getDisplayMetrics().density + 0.5f));
+        int padding = (int) (5 / getResources().getDisplayMetrics().density + 0.5f);
+        button.setPadding(padding, padding, padding, padding);
         button.setLayoutParams(params);
         button.setText(capitalize(title));
         button.setTextOn(capitalize(title));

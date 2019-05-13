@@ -43,4 +43,10 @@
     <string name="title_activity_input" translatable="true">Ввод данных</string>
     <string name="title_activity_preview" translatable="true">Просмотр списка</string>
     <string name="need" translatable="true">Самое необходимое</string>
+
+    <!-- Pack activity -->
+    <string-array name="context_menu">
+        <item>Редактировать список</item>
+        <item>Удалить список</item>
+    </string-array>
 </resources>

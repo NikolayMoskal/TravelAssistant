@@ -6,7 +6,10 @@
     <dimen name="fab_margin">16dp</dimen>
     <!-- Main activity -->
     <dimen name="main_activity_text_size">16sp</dimen>
-    <dimen name="toggle_button_margin_end">15sp</dimen>
+    <dimen name="toggle_button_margin_end">15dp</dimen>
+
+    <!-- Pack activity -->
+    <dimen name="pack_title_text_size">16sp</dimen>
 
     <!-- Settings activity -->
     <dimen name="settings_activity_text_size">20sp</dimen>

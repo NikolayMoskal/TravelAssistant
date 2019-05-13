@@ -1,31 +1,55 @@
 package by.neon.travelassistant.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import by.neon.travelassistant.R;
+import by.neon.travelassistant.config.SettingsManager;
 import by.neon.travelassistant.config.SqliteConfig;
+import by.neon.travelassistant.constant.CommonConstants;
+import by.neon.travelassistant.model.Settings;
 
 public class PackActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String TAG = "PackActivity";
+    private List<Settings> settingsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pack);
+        setTitle(R.string.title_activity_pack);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -40,8 +64,50 @@ public class PackActivity extends AppCompatActivity
         try {
             new SqliteConfig(this).getThings();
         } catch (IOException | ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+            Log.e(TAG, "onCreate: " + e.getMessage(), e);
         }
+
+        setLists(findViewById(R.id.layout_lists));
+    }
+
+    private void addNewList(Bundle extras) {
+        if (extras == null || !extras.containsKey(CommonConstants.NEW_LIST_TAG)) {
+            return;
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            Settings newSettings = mapper.readValue(extras.getString(CommonConstants.NEW_LIST_TAG), Settings.class);
+            boolean exists = false;
+            for (int index = 0; index < settingsList.size(); index++) {
+                if (settingsList.get(index).getCityCode() == newSettings.getCityCode()) {
+                    settingsList.set(index, newSettings);
+                    CardView cardView = findByCityCode(newSettings.getCityCode());
+                    Objects.requireNonNull(cardView)
+                            .setCardBackgroundColor(setBackgroundColor(getSelectedCount(newSettings), getAllCount(newSettings)));
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                settingsList.add(newSettings);
+                LinearLayout layout = findViewById(R.id.layout_lists);
+                layout.addView(createCardForList(newSettings));
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "onActivityResult: " + e.getMessage(), e);
+        }
+    }
+
+    private CardView findByCityCode(long cityCode) {
+        LinearLayout layout = findViewById(R.id.layout_lists);
+        for (int index = 0; index < layout.getChildCount(); index++) {
+            CardView cardView = (CardView) layout.getChildAt(index);
+            if (cityCode == (long) cardView.getTag()) {
+                return cardView;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -62,9 +128,7 @@ public class PackActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
+        if (item.getItemId() == R.id.action_settings) {
             return true;
         }
 
@@ -91,8 +155,196 @@ public class PackActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (data == null) {
+            return;
+        }
+
+        if (resultCode == RESULT_OK && requestCode == CommonConstants.REQUEST_PREVIEW) {
+            addNewList(data.getExtras());
+        }
+    }
+
     public void onAddPackClick(View view) {
         Intent intent = new Intent(PackActivity.this, InputActivity.class);
         startActivity(intent);
+    }
+
+    /**
+     * Call this when your activity is done and should be closed.  The
+     * ActivityResult is propagated back to whoever launched you via
+     * onActivityResult().
+     */
+    @Override
+    public void finish() {
+        try {
+            SettingsManager.writeSettings(this, settingsList);
+        } catch (JsonProcessingException e) {
+            Log.e(TAG, "finish: " + e.getMessage(), e);
+        }
+        super.finish();
+    }
+
+    private boolean showContextMenuDialog(long cityCode) {
+        final String[] menuItems = getResources().getStringArray(R.array.context_menu);
+        final Settings settings = find(cityCode);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder
+                .setItems(menuItems, (dialog, which) -> {
+                    switch (which) {
+                        case 0:
+                            Intent intent = new Intent(PackActivity.this, InputActivity.class);
+                            intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, settings.getCityCode());
+                            intent.putExtra(CommonConstants.ARRIVAL_CITY_INFO, settings.getCityName());
+                            putData(intent, settings.getCategories(), "category", CommonConstants.COUNT_CATEGORIES);
+                            putData(intent, settings.getGenders(), "gender", CommonConstants.COUNT_GENDERS);
+                            putData(intent, settings.getTransportTypes(), "transport", CommonConstants.COUNT_TRANSPORT_TYPES);
+                            DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+                            intent.putExtra(CommonConstants.TRAVEL_START_DATE, format.format(settings.getTravelStartDate()));
+                            intent.putExtra(CommonConstants.TRAVEL_END_DATE, format.format(settings.getTravelEndDate()));
+                            startActivity(intent);
+                            break;
+                        case 1:
+                            break;
+                    }
+                }).show();
+        return false;
+    }
+
+    private Settings find(long cityCode) {
+        Settings settings = new Settings();
+        for (Settings set : settingsList) {
+            if (set.getCityCode() == cityCode) {
+                settings = set;
+                break;
+            }
+        }
+        return settings;
+    }
+
+    private void putData(Intent intent, List<String> items, String tagItem, String tagCount) {
+        int index = 0;
+        for (; index < items.size(); index++) {
+            intent.putExtra(tagItem + index, items.get(index));
+        }
+        intent.putExtra(tagCount, index);
+    }
+
+    private void setLists(LinearLayout parent) {
+        try {
+            settingsList = SettingsManager.readSettings(this);
+        } catch (IOException e) {
+            Log.e(TAG, "setLists: " + e.getMessage(), e);
+        }
+
+        for (Settings settings : settingsList) {
+            parent.addView(createCardForList(settings));
+        }
+    }
+
+    private CardView createCardForList(Settings settings) {
+        CardView cardView = new CardView(this);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.topMargin = (int) (10 / getResources().getDisplayMetrics().density + 0.5f);
+        params.bottomMargin = (int) (10 / getResources().getDisplayMetrics().density + 0.5f);
+        cardView.setLayoutParams(params);
+        cardView.setTag(settings.getCityCode());
+        cardView.setCardBackgroundColor(setBackgroundColor(getSelectedCount(settings), getAllCount(settings)));
+        int padding = (int) (5 * getResources().getDisplayMetrics().density);
+        cardView.setContentPadding(padding, padding, padding, padding);
+        cardView.setOnLongClickListener(v -> showContextMenuDialog(settings.getCityCode()));
+        cardView.setOnClickListener(v -> openPreview(settings.getCityCode()));
+
+        LinearLayout contentWithCheckBox = new LinearLayout(this);
+        params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.CENTER_VERTICAL;
+        contentWithCheckBox.setLayoutParams(params);
+
+        LinearLayout content = new LinearLayout(this);
+        params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.weight = 1;
+        content.setLayoutParams(params);
+        content.setOrientation(LinearLayout.VERTICAL);
+        content.addView(setPackTitle(settings.getCityName()));
+        content.addView(setDatesTitle(settings.getTravelStartDate(), settings.getTravelEndDate()));
+
+        contentWithCheckBox.addView(content);
+        contentWithCheckBox.addView(setCheckBox());
+        cardView.addView(contentWithCheckBox);
+
+        return cardView;
+    }
+
+    private void openPreview(long cityCode) {
+        Intent intent = new Intent(PackActivity.this, PreviewActivity.class);
+        Settings settings = find(cityCode);
+        intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, settings.getCityCode());
+        intent.putExtra(CommonConstants.ARRIVAL_CITY_INFO, settings.getCityName());
+        putData(intent, settings.getCategories(), "category", CommonConstants.COUNT_CATEGORIES);
+        putData(intent, settings.getGenders(), "gender", CommonConstants.COUNT_GENDERS);
+        putData(intent, settings.getTransportTypes(), "transport", CommonConstants.COUNT_TRANSPORT_TYPES);
+        DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+        intent.putExtra(CommonConstants.TRAVEL_START_DATE, format.format(settings.getTravelStartDate()));
+        intent.putExtra(CommonConstants.TRAVEL_END_DATE, format.format(settings.getTravelEndDate()));
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            intent.putExtra(CommonConstants.SELECTIONS, mapper.writeValueAsString(settings.getSelections()));
+        } catch (JsonProcessingException e) {
+            Log.e(TAG, "openPreview: " + e.getMessage(), e);
+        }
+        startActivityForResult(intent, CommonConstants.REQUEST_PREVIEW);
+    }
+
+    private TextView setPackTitle(String title) {
+        TextView view = new TextView(this);
+        view.setText(title);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        view.setLayoutParams(params);
+        view.setTextSize(getResources().getDimension(R.dimen.pack_title_text_size) / getResources().getDisplayMetrics().scaledDensity);
+        return view;
+    }
+
+    private TextView setDatesTitle(Date start, Date end) {
+        TextView view = new TextView(this);
+        DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+        view.setText(String.format(Locale.getDefault(), "%s - %s", format.format(start), format.format(end)));
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        view.setLayoutParams(params);
+        view.setTextSize(getResources().getDimension(R.dimen.pack_title_text_size) / getResources().getDisplayMetrics().scaledDensity);
+        return view;
+    }
+
+    private CheckBox setCheckBox() {
+        CheckBox checkBox = new CheckBox(this);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        checkBox.setLayoutParams(params);
+        checkBox.setVisibility(View.INVISIBLE);
+        return checkBox;
+    }
+
+    private int setBackgroundColor(int checkedCount, int allCount) {
+        float percentage = checkedCount * 1.0f / allCount;
+        return Color.HSVToColor(30, new float[]{120 * percentage, 100.0f, 100.0f});
+    }
+
+    private int getSelectedCount(Settings settings) {
+        int count = 0;
+        for (Settings.Selection selection : settings.getSelections()) {
+            for (Boolean flag : selection.getFlagsAsBoolean()) {
+                if (flag) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    private int getAllCount(Settings settings) {
+        int count = 0;
+        for (Settings.Selection selection : settings.getSelections()) {
+            count += selection.getFlags().size();
+        }
+        return count;
     }
 }
