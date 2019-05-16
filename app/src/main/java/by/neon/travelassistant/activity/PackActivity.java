@@ -1,10 +1,13 @@
 package by.neon.travelassistant.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -28,10 +31,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import by.neon.travelassistant.R;
@@ -68,6 +71,7 @@ public class PackActivity extends AppCompatActivity
         }
 
         setLists(findViewById(R.id.layout_lists));
+        addNewList(getIntent().getExtras());
     }
 
     private void addNewList(Bundle extras) {
@@ -83,8 +87,8 @@ public class PackActivity extends AppCompatActivity
                 if (settingsList.get(index).getCityCode() == newSettings.getCityCode()) {
                     settingsList.set(index, newSettings);
                     CardView cardView = findByCityCode(newSettings.getCityCode());
-                    Objects.requireNonNull(cardView)
-                            .setCardBackgroundColor(setBackgroundColor(getSelectedCount(newSettings), getAllCount(newSettings)));
+                    assert cardView != null;
+                    cardView.setCardBackgroundColor(setBackgroundColor(getSelectedCount(newSettings), getAllCount(newSettings)));
                     exists = true;
                     break;
                 }
@@ -128,8 +132,13 @@ public class PackActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                onDeleteClick();
+                return true;
+            case R.id.action_delete_all:
+                onDeleteAllClick();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -194,22 +203,36 @@ public class PackActivity extends AppCompatActivity
                 .setItems(menuItems, (dialog, which) -> {
                     switch (which) {
                         case 0:
-                            Intent intent = new Intent(PackActivity.this, InputActivity.class);
-                            intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, settings.getCityCode());
-                            intent.putExtra(CommonConstants.ARRIVAL_CITY_INFO, settings.getCityName());
-                            putData(intent, settings.getCategories(), "category", CommonConstants.COUNT_CATEGORIES);
-                            putData(intent, settings.getGenders(), "gender", CommonConstants.COUNT_GENDERS);
-                            putData(intent, settings.getTransportTypes(), "transport", CommonConstants.COUNT_TRANSPORT_TYPES);
-                            DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
-                            intent.putExtra(CommonConstants.TRAVEL_START_DATE, format.format(settings.getTravelStartDate()));
-                            intent.putExtra(CommonConstants.TRAVEL_END_DATE, format.format(settings.getTravelEndDate()));
-                            startActivity(intent);
+                            onEditListSelect(settings);
                             break;
                         case 1:
+                            onDeleteListSelect(settings);
                             break;
                     }
                 }).show();
         return false;
+    }
+
+    private void onEditListSelect(Settings settings) {
+        Intent intent = new Intent(PackActivity.this, InputActivity.class);
+        intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, settings.getCityCode());
+        intent.putExtra(CommonConstants.ARRIVAL_CITY_INFO, settings.getCityName());
+        putData(intent, settings.getCategories(), "category", CommonConstants.COUNT_CATEGORIES);
+        putData(intent, settings.getGenders(), "gender", CommonConstants.COUNT_GENDERS);
+        putData(intent, settings.getTransportTypes(), "transport", CommonConstants.COUNT_TRANSPORT_TYPES);
+        DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+        intent.putExtra(CommonConstants.TRAVEL_START_DATE, format.format(settings.getTravelStartDate()));
+        intent.putExtra(CommonConstants.TRAVEL_END_DATE, format.format(settings.getTravelEndDate()));
+        startActivity(intent);
+    }
+
+    private void onDeleteListSelect(Settings settings) {
+        CardView cardView = findByCityCode(settings.getCityCode());
+        assert cardView != null;
+        LinearLayout layout = (LinearLayout) cardView.getChildAt(0);
+        CheckBox checkBox = (CheckBox) layout.getChildAt(0);
+        checkBox.setChecked(true);
+        onDeleteConfirm(null);
     }
 
     private Settings find(long cityCode) {
@@ -269,8 +292,8 @@ public class PackActivity extends AppCompatActivity
         content.addView(setPackTitle(settings.getCityName()));
         content.addView(setDatesTitle(settings.getTravelStartDate(), settings.getTravelEndDate()));
 
-        contentWithCheckBox.addView(content);
         contentWithCheckBox.addView(setCheckBox());
+        contentWithCheckBox.addView(content);
         cardView.addView(contentWithCheckBox);
 
         return cardView;
@@ -318,8 +341,10 @@ public class PackActivity extends AppCompatActivity
     private CheckBox setCheckBox() {
         CheckBox checkBox = new CheckBox(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMarginEnd((int) (10 / getResources().getDisplayMetrics().density + 0.5f));
+        params.gravity = Gravity.CENTER_VERTICAL;
         checkBox.setLayoutParams(params);
-        checkBox.setVisibility(View.INVISIBLE);
+        checkBox.setVisibility(View.GONE);
         return checkBox;
     }
 
@@ -346,5 +371,84 @@ public class PackActivity extends AppCompatActivity
             count += selection.getFlags().size();
         }
         return count;
+    }
+
+
+    public void onDeleteClick() {
+        switchDeleteMode(true);
+    }
+
+    private void switchDeleteMode(boolean isModeActivate) {
+        switchCheckBoxVisibility(isModeActivate, false);
+        switchDeleteButtonsVisibility(isModeActivate);
+        switchButtonsVisibility(!isModeActivate);
+    }
+
+    private void switchCheckBoxVisibility(boolean isVisible, boolean isChecked) {
+        LinearLayout parent = findViewById(R.id.layout_lists);
+        for (int index = 0; index < parent.getChildCount(); index++) {
+            CardView cardView = (CardView) parent.getChildAt(index);
+            LinearLayout layout = (LinearLayout) cardView.getChildAt(0);
+            CheckBox checkBox = (CheckBox) layout.getChildAt(0);
+            checkBox.setChecked(isChecked);
+            checkBox.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void switchDeleteButtonsVisibility(boolean isVisible) {
+        FloatingActionButton buttonConfirm = findViewById(R.id.delete_confirm);
+        buttonConfirm.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        FloatingActionButton buttonCancel = findViewById(R.id.delete_cancel);
+        buttonCancel.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void switchButtonsVisibility(boolean isVisible) {
+        FloatingActionButton buttonConfirm = findViewById(R.id.add_pack);
+        buttonConfirm.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        FloatingActionButton buttonCancel = findViewById(R.id.report);
+        buttonCancel.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    public void onDeleteAllClick() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder
+                .setTitle(R.string.action_delete_all)
+                .setMessage("Вы действительно хотите удалить все списки?")
+                .setCancelable(true)
+                .setPositiveButton("Да", (dialog, which) -> {
+                    switchCheckBoxVisibility(false, true);
+                    onDeleteConfirm(null);
+                })
+                .setNegativeButton("Нет", null)
+                .show();
+    }
+
+    public void onDeleteConfirm(View view) {
+        LinearLayout parent = findViewById(R.id.layout_lists);
+        List<Long> cityCodes = new ArrayList<>(0);
+        for (int index = 0; index < parent.getChildCount(); index++) {
+            CardView cardView = (CardView) parent.getChildAt(index);
+            LinearLayout layout = (LinearLayout) cardView.getChildAt(0);
+            CheckBox checkBox = (CheckBox) layout.getChildAt(0);
+            if (checkBox.isChecked()) {
+                cityCodes.add((long) cardView.getTag());
+                parent.removeViewAt(index--);
+            }
+        }
+        SharedPreferences.Editor editor = getSharedPreferences(CommonConstants.APP_LISTS, MODE_PRIVATE).edit();
+        for (int index = 0; index < settingsList.size(); index++) {
+            if (cityCodes.contains(settingsList.get(index).getCityCode())) {
+                editor.remove(String.valueOf(settingsList.get(index).getCityCode()));
+                settingsList.remove(index--);
+            }
+        }
+        editor.apply();
+        switchDeleteMode(false);
+    }
+
+    public void onDeleteCancel(View view) {
+        switchDeleteMode(false);
     }
 }

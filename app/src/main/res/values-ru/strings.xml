@@ -49,4 +49,9 @@
         <item>Редактировать список</item>
         <item>Удалить список</item>
     </string-array>
+    <string name="action_delete" translatable="true">Удалить</string>
+    <string name="action_delete_all" translatable="true">Удалить все</string>
+
+    <!-- Preview activity -->
+    <string name="action_save_list">Сохранить список</string>
 </resources>
