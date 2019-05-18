@@ -25,6 +25,10 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:name=".activity.AboutActivity"
+            android:label="@string/title_activity_about"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".activity.PreviewActivity"
             android:label="@string/title_activity_preview"
             android:theme="@style/AppTheme.NoActionBar" />

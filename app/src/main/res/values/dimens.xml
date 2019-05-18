@@ -13,4 +13,9 @@
 
     <!-- Settings activity -->
     <dimen name="settings_activity_text_size">20sp</dimen>
+
+    <!-- About activity -->
+    <dimen name="app_name_text_size">40sp</dimen>
+    <dimen name="app_version_text_size">26sp</dimen>
+    <dimen name="app_description_text_size">16sp</dimen>
 </resources>

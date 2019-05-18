@@ -152,10 +152,10 @@ public class PackActivity extends AppCompatActivity
             case R.id.nav_informer:
                 break;
             case R.id.nav_about:
+                startActivity(new Intent(this, AboutActivity.class));
                 break;
             case R.id.nav_manage:
-                Intent intent = new Intent(PackActivity.this, SettingsActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
         }
 
@@ -176,8 +176,7 @@ public class PackActivity extends AppCompatActivity
     }
 
     public void onAddPackClick(View view) {
-        Intent intent = new Intent(PackActivity.this, InputActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(this, InputActivity.class));
     }
 
     /**
@@ -214,7 +213,7 @@ public class PackActivity extends AppCompatActivity
     }
 
     private void onEditListSelect(Settings settings) {
-        Intent intent = new Intent(PackActivity.this, InputActivity.class);
+        Intent intent = new Intent(this, InputActivity.class);
         intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, settings.getCityCode());
         intent.putExtra(CommonConstants.ARRIVAL_CITY_INFO, settings.getCityName());
         putData(intent, settings.getCategories(), "category", CommonConstants.COUNT_CATEGORIES);
@@ -300,7 +299,7 @@ public class PackActivity extends AppCompatActivity
     }
 
     private void openPreview(long cityCode) {
-        Intent intent = new Intent(PackActivity.this, PreviewActivity.class);
+        Intent intent = new Intent(this, PreviewActivity.class);
         Settings settings = find(cityCode);
         intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, settings.getCityCode());
         intent.putExtra(CommonConstants.ARRIVAL_CITY_INFO, settings.getCityName());

@@ -121,14 +121,15 @@ public class InputActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_main:
+                onBackPressed();
                 break;
             case R.id.nav_informer:
                 break;
             case R.id.nav_about:
+                startActivity(new Intent(this, AboutActivity.class));
                 break;
             case R.id.nav_manage:
-                Intent intent = new Intent(InputActivity.this, SettingsActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
         }
 
@@ -162,7 +163,7 @@ public class InputActivity extends AppCompatActivity
     }
 
     public void onSendClick(View view) {
-        Intent intent = new Intent(InputActivity.this, PreviewActivity.class);
+        Intent intent = new Intent(this, PreviewActivity.class);
         intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, (long) findViewById(R.id.arv_city).getTag());
         intent.putExtra(CommonConstants.ARRIVAL_CITY_INFO, ((EditText) findViewById(R.id.arv_city)).getText().toString());
         putData(intent, findViewById(R.id.layout_genders), "gender", CommonConstants.COUNT_GENDERS);
