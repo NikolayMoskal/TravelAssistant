@@ -1,0 +1,38 @@
+[
+  {
+    "name_en-us": "airplane",
+    "name_ru-ru": "самолет",
+    "handLuggageWeight": 23,
+    "maxWeight": 32
+  },
+  {
+    "name_en-us": "bus",
+    "name_ru-ru": "автобус",
+    "handLuggageWeight": 20,
+    "maxWeight": 40
+  },
+  {
+    "name_en-us": "train",
+    "name_ru-ru": "поезд",
+    "handLuggageWeight": 36,
+    "maxWeight": 200
+  },
+  {
+    "name_en-us": "auto",
+    "name_ru-ru": "автомобиль",
+    "handLuggageWeight": 20,
+    "maxWeight": 50
+  },
+  {
+    "name_en-us": "cycle",
+    "name_ru-ru": "велосипед",
+    "handLuggageWeight": 15,
+    "maxWeight": 15
+  },
+  {
+    "name_en-us": "ship",
+    "name_ru-ru": "корабль",
+    "handLuggageWeight": 23,
+    "maxWeight": 90
+  }
+]

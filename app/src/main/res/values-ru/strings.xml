@@ -1,0 +1,75 @@
+<resources>
+    <!-- Common values -->
+    <string name="app_name" translatable="false">TravelAssistant</string>
+    <string name="navigation_drawer_open" translatable="true">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="true">Close navigation drawer</string>
+    <string name="nav_header_title" translatable="false">Travel Assistant</string>
+    <string name="nav_header_subtitle" translatable="false">Created by Nikolay Moskal © 2018–2019</string>
+    <string name="nav_header_desc" translatable="true">Navigation header</string>
+
+    <!-- Input activity -->
+    <string name="arv_label" translatable="true">Куда Вы направляетесь?</string>
+    <string name="arv_city_title" translatable="true">Код города</string>
+    <string name="arv_city_hint" translatable="true">Название города</string>
+    <string name="send_button" translatable="true">Отправить</string>
+
+    <string name="gender_type_label" translatable="true">Для кого подбираем список?</string>
+
+    <string name="travel_dates_label" translatable="true">Даты поездки</string>
+    <string name="start_date_title" translatable="true">От</string>
+    <string name="end_date_title" translatable="true">До</string>
+
+    <string name="type_label" translatable="true">На чем Вы поедете?</string>
+
+    <string name="target_label" translatable="true">Какова цель Вашей поездки?</string>
+
+    <string name="list_item_icon_description" translatable="false">Icon</string>
+    <string name="city_select_title">Выберите город</string>
+
+    <!-- Navigation drawer menu -->
+    <string name="nav_main" translatable="true">Главная</string>
+    <string name="nav_things" translatable="true">Багаж</string>
+    <string name="nav_informer" translatable="true">Информер</string>
+    <string name="nav_about" translatable="true">О приложении</string>
+    <string name="nav_manage" translatable="true">Настройки</string>
+
+    <!-- Settings activity -->
+    <string name="title_activity_settings" translatable="true">Настройки</string>
+    <string name="type_female" translatable="true">Женская</string>
+    <string name="type_male" translatable="true">Мужская</string>
+    <string name="type_child" translatable="true">Детская</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="title_activity_pack" translatable="true">Все списки</string>
+    <string name="title_activity_input" translatable="true">Ввод данных</string>
+    <string name="title_activity_preview" translatable="true">Просмотр списка</string>
+    <string name="need" translatable="true">Самое необходимое</string>
+
+    <!-- Pack activity -->
+    <string-array name="context_menu">
+        <item>Редактировать список</item>
+        <item>Удалить список</item>
+    </string-array>
+    <string name="action_delete" translatable="true">Удалить</string>
+    <string name="action_delete_all" translatable="true">Удалить все</string>
+    <string name="delete_confirm_title">Вы действительно хотите удалить все списки?</string>
+    <string name="action_yes">Да</string>
+    <string name="action_no">Нет</string>
+    <string name="action_ok">OK</string>
+    <string name="action_cancel">Отмена</string>
+
+    <!-- Preview activity -->
+    <string name="action_save_list">Сохранить список</string>
+    <string name="action_dismiss_warnings">Выключить предупреждения</string>
+    <string name="action_disable_errors">Выключить сообщения об ошибках</string>
+    <string name="weight_warning">Ваш багаж превышает вес ручной клади</string>
+    <string name="current_weight_message">Текущий вес</string>
+    <string name="mass_unit_abbr">кг</string>
+    <string name="weight_error">Ваш багаж превышает максимальный вес багажа</string>
+
+    <!-- About activity -->
+    <string name="title_activity_about">О приложении</string>
+    <string name="app_description">Маленькое, быстрое и гибкое приложение для сбора человека в любую поездку.
+        Не беспокойтесь, оно выполняет, в основном, только эту функцию, и выполняет ее отлично :)
+        Захотели собрать багаж и, при этом, ничего не забыть? Это приложение соберет Ваш багаж вместо Вас!</string>
+</resources>

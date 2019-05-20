@@ -1,0 +1,1472 @@
+[
+  {
+    "thingName_en-US": "passport",
+    "thingName_ru-RU": "паспорт",
+    "gender": "neutral",
+    "type": "documents",
+    "category": [
+      "need"
+    ],
+    "weight": 0.02,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "payment card",
+    "thingName_ru-RU": "банковская карта",
+    "gender": "neutral",
+    "type": "documents",
+    "category": [
+      "need"
+    ],
+    "weight": 0.01,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "kids documents",
+    "thingName_ru-RU": "документы для ребенка",
+    "gender": "neutral",
+    "type": "documents",
+    "category": [
+      "need"
+    ],
+    "weight": 0.02,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "cash",
+    "thingName_ru-RU": "наличные деньги",
+    "gender": "neutral",
+    "type": "documents",
+    "category": [
+      "need"
+    ],
+    "weight": 0.01,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "transport ticket",
+    "thingName_ru-RU": "билет на транспорт",
+    "gender": "neutral",
+    "type": "documents",
+    "category": [
+      "need"
+    ],
+    "weight": 0.01,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "hotel reservation",
+    "thingName_ru-RU": "бронь отеля",
+    "gender": "neutral",
+    "type": "documents",
+    "category": [
+      "business",
+      "tourism",
+      "travel"
+    ],
+    "weight": 0.01,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "driver license",
+    "thingName_ru-RU": "водительские права",
+    "gender": "neutral",
+    "type": "documents",
+    "category": [
+      "travel"
+    ],
+    "weight": 0.02,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "passport copy",
+    "thingName_ru-RU": "копия паспорта",
+    "gender": "neutral",
+    "type": "documents",
+    "category": [
+      "business",
+      "tourism",
+      "travel"
+    ],
+    "weight": 0.01,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "medical insurance",
+    "thingName_ru-RU": "медицинская страховка",
+    "gender": "neutral",
+    "type": "documents",
+    "category": [
+      "travel",
+      "tourism"
+    ],
+    "weight": 0.02,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "smartphone",
+    "thingName_ru-RU": "смартфон",
+    "gender": "neutral",
+    "type": "equipment",
+    "category": [
+      "need"
+    ],
+    "weight": 0.1,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "charger",
+    "thingName_ru-RU": "зарядное устройство",
+    "gender": "neutral",
+    "type": "equipment",
+    "category": [
+      "need"
+    ],
+    "weight": 0.05,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "headphones",
+    "thingName_ru-RU": "наушники",
+    "gender": "neutral",
+    "type": "equipment",
+    "category": [
+      "travel",
+      "tourism",
+      "business"
+    ],
+    "weight": 0.05,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "laptop",
+    "thingName_ru-RU": "ноутбук",
+    "gender": "neutral",
+    "type": "equipment",
+    "category": [
+      "business"
+    ],
+    "weight": 2.5,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "adapter for sockets",
+    "thingName_ru-RU": "переходник для розеток",
+    "gender": "neutral",
+    "type": "equipment",
+    "category": [
+      "need"
+    ],
+    "weight": 0.05,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "network filter",
+    "thingName_ru-RU": "сетевой фильтр",
+    "gender": "neutral",
+    "type": "equipment",
+    "category": [
+      "business"
+    ],
+    "weight": 0.3,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "camera",
+    "thingName_ru-RU": "фотоаппарат",
+    "gender": "neutral",
+    "type": "equipment",
+    "category": [
+      "photo",
+      "travel",
+      "tourism"
+    ],
+    "weight": 0.5,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "laptop charger",
+    "thingName_ru-RU": "зарядное для ноутбука",
+    "gender": "neutral",
+    "type": "equipment",
+    "category": [
+      "business"
+    ],
+    "weight": 0.5,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "camera charger",
+    "thingName_ru-RU": "зарядное для фотоаппарата",
+    "gender": "neutral",
+    "type": "equipment",
+    "category": [
+      "tourism",
+      "photo",
+      "travel"
+    ],
+    "weight": 0.1,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "memory card",
+    "thingName_ru-RU": "карта памяти",
+    "gender": "neutral",
+    "type": "equipment",
+    "category": [
+      "tourism"
+    ],
+    "weight": 0.01,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "monopod",
+    "thingName_ru-RU": "монопод",
+    "gender": "neutral",
+    "type": "equipment",
+    "category": [
+      "travel",
+      "tourism",
+      "photo"
+    ],
+    "weight": 0.3,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "bag for the camera",
+    "thingName_ru-RU": "сумка для фотоаппарата",
+    "gender": "neutral",
+    "type": "equipment",
+    "category": [
+      "tourism",
+      "photo",
+      "travel"
+    ],
+    "weight": 0.3,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "backpack",
+    "thingName_ru-RU": "рюкзак",
+    "gender": "neutral",
+    "type": "comfort",
+    "category": [
+      "tourism",
+      "cycle",
+      "photo",
+      "fishing",
+      "hike",
+      "kids",
+      "travel"
+    ],
+    "weight": 0.35,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "disposable tableware",
+    "thingName_ru-RU": "одноразовая посуда",
+    "gender": "neutral",
+    "type": "comfort",
+    "category": [
+      "tourism",
+      "cycle",
+      "fishing",
+      "hike",
+      "travel"
+    ],
+    "weight": 0.2,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "raincoat",
+    "thingName_ru-RU": "дождевик",
+    "gender": "neutral",
+    "type": "comfort",
+    "category": [
+      "tourism",
+      "cycle",
+      "fishing",
+      "hike",
+      "kids",
+      "travel"
+    ],
+    "weight": 0.5,
+    "weatherType": [
+      "rain"
+    ]
+  },
+  {
+    "thingName_en-US": "pocket mirror",
+    "thingName_ru-RU": "карманное зеркало",
+    "gender": "woman",
+    "type": "comfort",
+    "category": [
+      "tourism",
+      "cycle",
+      "beach",
+      "hike",
+      "travel"
+    ],
+    "weight": 0.05,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "inflatable pillow",
+    "thingName_ru-RU": "надувная подушка",
+    "gender": "neutral",
+    "type": "comfort",
+    "category": [
+      "tourism",
+      "business",
+      "hike",
+      "travel"
+    ],
+    "weight": 0.1,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "packages",
+    "thingName_ru-RU": "пакеты",
+    "gender": "neutral",
+    "type": "comfort",
+    "category": [
+      "tourism",
+      "hike",
+      "travel"
+    ],
+    "weight": 0.1,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "sunglasses",
+    "thingName_ru-RU": "солнечные очки",
+    "gender": "neutral",
+    "type": "comfort",
+    "category": [
+      "tourism",
+      "cycle",
+      "beach",
+      "business",
+      "fishing",
+      "hike",
+      "kids",
+      "travel"
+    ],
+    "weight": 0.05,
+    "weatherType": [
+      "warm",
+      "hot"
+    ]
+  },
+  {
+    "thingName_en-US": "toilet paper",
+    "thingName_ru-RU": "туалетная бумага",
+    "gender": "neutral",
+    "type": "cosmetics",
+    "category": [
+      "tourism",
+      "cycle",
+      "beach",
+      "fishing",
+      "hike",
+      "wc",
+      "kids",
+      "travel"
+    ],
+    "weight": 0.15,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "jackknife",
+    "thingName_ru-RU": "складной нож",
+    "gender": "neutral",
+    "type": "comfort",
+    "category": [
+      "tourism",
+      "cycle",
+      "business",
+      "fishing",
+      "hike",
+      "travel"
+    ],
+    "weight": 0.1,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "razor",
+    "thingName_ru-RU": "бритва",
+    "gender": "man",
+    "type": "cosmetics",
+    "category": [
+      "need"
+    ],
+    "weight": 0.05,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "deodorant",
+    "thingName_ru-RU": "дезодорант",
+    "gender": "neutral",
+    "type": "cosmetics",
+    "category": [
+      "need"
+    ],
+    "weight": 0.3,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "hairbrush",
+    "thingName_ru-RU": "расческа",
+    "gender": "neutral",
+    "type": "cosmetics",
+    "category": [
+      "tourism",
+      "beach",
+      "business",
+      "hike",
+      "kids",
+      "restaurant",
+      "travel"
+    ],
+    "weight": 0.05,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "wet wipes",
+    "thingName_ru-RU": "влажные салфетки",
+    "gender": "neutral",
+    "type": "cosmetics",
+    "category": [
+      "tourism",
+      "cycle",
+      "beach",
+      "business",
+      "hike",
+      "wc",
+      "kids",
+      "travel"
+    ],
+    "weight": 0.03,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "tampons",
+    "thingName_ru-RU": "тампоны",
+    "gender": "woman",
+    "type": "cosmetics",
+    "category": [
+      "tourism",
+      "cycle",
+      "beach",
+      "hike",
+      "travel"
+    ],
+    "weight": 0.02,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "sunblock",
+    "thingName_ru-RU": "крем от загара",
+    "gender": "woman",
+    "type": "cosmetics",
+    "category": [
+      "tourism",
+      "cycle",
+      "winter",
+      "beach",
+      "hike",
+      "kids",
+      "travel"
+    ],
+    "weight": 0.2,
+    "weatherType": [
+      "warm",
+      "hot"
+    ]
+  },
+  {
+    "thingName_en-US": "glasses",
+    "thingName_ru-RU": "очки",
+    "gender": "neutral",
+    "type": "comfort",
+    "category": [
+      "need"
+    ],
+    "weight": 0.05,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "contact lenses",
+    "thingName_ru-RU": "контактные линзы",
+    "gender": "neutral",
+    "type": "comfort",
+    "category": [
+      "need"
+    ],
+    "weight": 0.01,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "perfume",
+    "thingName_ru-RU": "парфюм",
+    "gender": "neutral",
+    "type": "cosmetics",
+    "category": [
+      "business",
+      "restaurant"
+    ],
+    "weight": 0.05,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "decorative cosmetics",
+    "thingName_ru-RU": "декоративная косметика",
+    "gender": "woman",
+    "type": "cosmetics",
+    "category": [
+      "business",
+      "wc",
+      "restaurant",
+      "travel"
+    ],
+    "weight": 0.3,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "condoms",
+    "thingName_ru-RU": "презервативы",
+    "gender": "neutral",
+    "type": "comfort",
+    "category": [
+      "tourism",
+      "business",
+      "hike",
+      "travel"
+    ],
+    "weight": 0.01,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "mosquito repellents",
+    "thingName_ru-RU": "средства от комаров",
+    "gender": "neutral",
+    "type": "cosmetics",
+    "category": [
+      "tourism",
+      "cycle",
+      "beach",
+      "fishing",
+      "hike",
+      "travel"
+    ],
+    "weight": 0.2,
+    "weatherType": [
+      "warm",
+      "hot"
+    ]
+  },
+  {
+    "thingName_en-US": "shampoo",
+    "thingName_ru-RU": "шампунь",
+    "gender": "neutral",
+    "type": "cosmetics",
+    "category": [
+      "need"
+    ],
+    "weight": 0.1,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "soap",
+    "thingName_ru-RU": "мыло",
+    "gender": "neutral",
+    "type": "cosmetics",
+    "category": [
+      "need"
+    ],
+    "weight": 0.1,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "washcloth",
+    "thingName_ru-RU": "мочалка",
+    "gender": "neutral",
+    "type": "cosmetics",
+    "category": [
+      "need"
+    ],
+    "weight": 0.5,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "shirt",
+    "thingName_ru-RU": "рубашка",
+    "gender": "neutral",
+    "type": "dresscode",
+    "category": [
+      "business",
+      "restaurant",
+      "travel",
+      "kids"
+    ],
+    "weight": 0.1,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "blouse",
+    "thingName_ru-RU": "блуза",
+    "gender": "woman",
+    "type": "dresscode",
+    "category": [
+      "business",
+      "restaurant",
+      "travel"
+    ],
+    "weight": 0.1,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "trousers",
+    "thingName_ru-RU": "брюки",
+    "gender": "neutral",
+    "type": "dresscode",
+    "category": [
+      "business",
+      "restaurant"
+    ],
+    "weight": 0.5,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "sweater",
+    "thingName_ru-RU": "свитер",
+    "gender": "neutral",
+    "type": "casual",
+    "category": [
+      "tourism",
+      "winter",
+      "business",
+      "fishing",
+      "hike",
+      "kids",
+      "travel"
+    ],
+    "weight": 0.8,
+    "weatherType": [
+      "cold",
+      "normal",
+      "rain"
+    ]
+  },
+  {
+    "thingName_en-US": "underwear",
+    "thingName_ru-RU": "нижнее белье",
+    "gender": "neutral",
+    "type": "underwear",
+    "category": [
+      "need"
+    ],
+    "weight": 0.05,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "socks",
+    "thingName_ru-RU": "носки",
+    "gender": "neutral",
+    "type": "underwear",
+    "category": [
+      "need"
+    ],
+    "weight": 0.1,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "tights",
+    "thingName_ru-RU": "колготки",
+    "gender": "woman",
+    "type": "underwear",
+    "category": [
+      "need"
+    ],
+    "weight": 0.05,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "t-shirt",
+    "thingName_ru-RU": "футболка",
+    "gender": "neutral",
+    "type": "casual",
+    "category": [
+      "tourism",
+      "cycle",
+      "photo",
+      "fishing",
+      "hike",
+      "travel"
+    ],
+    "weight": 0.1,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "clutch bag",
+    "thingName_ru-RU": "клатч",
+    "gender": "woman",
+    "type": "accessoires",
+    "category": [
+      "restaurant",
+      "travel"
+    ],
+    "weight": 0.2,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "handbag",
+    "thingName_ru-RU": "сумка",
+    "gender": "woman",
+    "type": "accessoires",
+    "category": [
+      "need"
+    ],
+    "weight": 0.8,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "gloves",
+    "thingName_ru-RU": "перчатки",
+    "gender": "neutral",
+    "type": "accessoires",
+    "category": [
+      "tourism",
+      "cycle",
+      "hike",
+      "restaurant",
+      "travel"
+    ],
+    "weight": 0.05,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "belt",
+    "thingName_ru-RU": "ремень",
+    "gender": "neutral",
+    "type": "accessoires",
+    "category": [
+      "need"
+    ],
+    "weight": 0.1,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "shawl",
+    "thingName_ru-RU": "платок",
+    "gender": "woman",
+    "type": "accessoires",
+    "category": [
+      "tourism",
+      "business",
+      "hike",
+      "restaurant",
+      "travel"
+    ],
+    "weight": 0.02,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "scarf",
+    "thingName_ru-RU": "шарф",
+    "gender": "neutral",
+    "type": "accessoires",
+    "category": [
+      "winter"
+    ],
+    "weight": 0.2,
+    "weatherType": [
+      "cold"
+    ]
+  },
+  {
+    "thingName_en-US": "bracelet",
+    "thingName_ru-RU": "браслет",
+    "gender": "neutral",
+    "type": "decorations",
+    "category": [
+      "business",
+      "restaurant"
+    ],
+    "weight": 0.02,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "ring",
+    "thingName_ru-RU": "кольцо",
+    "gender": "neutral",
+    "type": "decorations",
+    "category": [
+      "need"
+    ],
+    "weight": 0.005,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "denim",
+    "thingName_ru-RU": "denim",
+    "gender": "neutral",
+    "type": "casual",
+    "category": [
+      "tourism",
+      "winter",
+      "hike",
+      "travel"
+    ],
+    "weight": 1,
+    "weatherType": [
+      "cold",
+      "normal",
+      "warm",
+      "rain"
+    ]
+  },
+  {
+    "thingName_en-US": "dress",
+    "thingName_ru-RU": "платье",
+    "gender": "woman",
+    "type": "dresscode",
+    "category": [
+      "business",
+      "restaurant",
+      "travel"
+    ],
+    "weight": 0.5,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "sundress",
+    "thingName_ru-RU": "сарафан",
+    "gender": "woman",
+    "type": "casual",
+    "category": [
+      "beach",
+      "tourism",
+      "travel"
+    ],
+    "weight": 0.5,
+    "weatherType": [
+      "warm",
+      "hot"
+    ]
+  },
+  {
+    "thingName_en-US": "swimming suit",
+    "thingName_ru-RU": "купальник",
+    "gender": "woman",
+    "type": "underwear",
+    "category": [
+      "tourism",
+      "beach",
+      "swim",
+      "photo",
+      "hike",
+      "travel"
+    ],
+    "weight": 0.1,
+    "weatherType": [
+      "warm",
+      "hot"
+    ]
+  },
+  {
+    "thingName_en-US": "swimming trunks",
+    "thingName_ru-RU": "плавки",
+    "gender": "man",
+    "type": "underwear",
+    "category": [
+      "tourism",
+      "beach",
+      "swim",
+      "photo",
+      "hike",
+      "travel"
+    ],
+    "weight": 0.1,
+    "weatherType": [
+      "warm",
+      "hot"
+    ]
+  },
+  {
+    "thingName_en-US": "shorts",
+    "thingName_ru-RU": "шорты",
+    "gender": "neutral",
+    "type": "casual",
+    "category": [
+      "tourism",
+      "cycle",
+      "beach",
+      "photo",
+      "fishing",
+      "hike",
+      "travel"
+    ],
+    "weight": 0.4,
+    "weatherType": [
+      "normal",
+      "warm",
+      "hot"
+    ]
+  },
+  {
+    "thingName_en-US": "skirt",
+    "thingName_ru-RU": "юбка",
+    "gender": "woman",
+    "type": "casual",
+    "category": [
+      "business",
+      "travel",
+      "restaurant"
+    ],
+    "weight": 0.3,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "wind breaker",
+    "thingName_ru-RU": "ветровка",
+    "gender": "neutral",
+    "type": "outerwear",
+    "category": [
+      "tourism",
+      "cycle",
+      "business",
+      "fishing",
+      "photo",
+      "hike",
+      "travel"
+    ],
+    "weight": 0.5,
+    "weatherType": [
+      "normal",
+      "warm",
+      "rain"
+    ]
+  },
+  {
+    "thingName_en-US": "jacket",
+    "thingName_ru-RU": "куртка",
+    "gender": "neutral",
+    "type": "outerwear",
+    "category": [
+      "tourism",
+      "cycle",
+      "business",
+      "photo",
+      "fishing",
+      "hike",
+      "travel",
+      "winter"
+    ],
+    "weight": 1,
+    "weatherType": [
+      "cold",
+      "normal",
+      "rain"
+    ]
+  },
+  {
+    "thingName_en-US": "sheepskin coat",
+    "thingName_ru-RU": "дубленка",
+    "gender": "neutral",
+    "type": "outerwear",
+    "category": [
+      "winter",
+      "restaurant",
+      "travel"
+    ],
+    "weight": 3,
+    "weatherType": [
+      "cold",
+      "normal",
+      "rain"
+    ]
+  },
+  {
+    "thingName_en-US": "coat",
+    "thingName_ru-RU": "пальто",
+    "gender": "neutral",
+    "type": "outerwear",
+    "category": [
+      "winter",
+      "business",
+      "restaurant",
+      "travel"
+    ],
+    "weight": 1.5,
+    "weatherType": [
+      "cold",
+      "normal",
+      "rain"
+    ]
+  },
+  {
+    "thingName_en-US": "pea-jacket",
+    "thingName_ru-RU": "пиджак",
+    "gender": "neutral",
+    "type": "outerwear",
+    "category": [
+      "business",
+      "restaurant"
+    ],
+    "weight": 0.5,
+    "weatherType": [
+      "cold",
+      "normal"
+    ]
+  },
+  {
+    "thingName_en-US": "ballet shoes",
+    "thingName_ru-RU": "балетки",
+    "gender": "woman",
+    "type": "shoes",
+    "category": [
+      "beach",
+      "travel"
+    ],
+    "weight": 0.3,
+    "weatherType": [
+      "warm",
+      "hot"
+    ]
+  },
+  {
+    "thingName_en-US": "sneakers",
+    "thingName_ru-RU": "кроссовки",
+    "gender": "neutral",
+    "type": "shoes",
+    "category": [
+      "need"
+    ],
+    "weight": 0.5,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "sandals",
+    "thingName_ru-RU": "босоножки,сандалии",
+    "gender": "neutral",
+    "type": "shoes",
+    "category": [
+      "tourism",
+      "cycle",
+      "beach",
+      "travel",
+      "kids"
+    ],
+    "weight": 0.3,
+    "weatherType": [
+      "warm",
+      "hot"
+    ]
+  },
+  {
+    "thingName_en-US": "boots",
+    "thingName_ru-RU": "ботинки",
+    "gender": "neutral",
+    "type": "shoes",
+    "category": [
+      "winter",
+      "business",
+      "photo",
+      "hike",
+      "restaurant",
+      "travel",
+      "kids"
+    ],
+    "weight": 0.7,
+    "weatherType": [
+      "cold",
+      "normal",
+      "rain"
+    ]
+  },
+  {
+    "thingName_en-US": "high boots",
+    "thingName_ru-RU": "сапоги",
+    "gender": "neutral",
+    "type": "shoes",
+    "category": [
+      "winter",
+      "fishing",
+      "hike",
+      "kids"
+    ],
+    "weight": 1,
+    "weatherType": [
+      "cold",
+      "normal",
+      "rain"
+    ]
+  },
+  {
+    "thingName_en-US": "low shoes",
+    "thingName_ru-RU": "туфли",
+    "gender": "neutral",
+    "type": "shoes",
+    "category": [
+      "tourism",
+      "business",
+      "restaurant",
+      "travel",
+      "kids"
+    ],
+    "weight": 0.5,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "hat",
+    "thingName_ru-RU": "шапка",
+    "gender": "neutral",
+    "type": "headgear",
+    "category": [
+      "need"
+    ],
+    "weight": 0.2,
+    "weatherType": [
+      "cold",
+      "normal",
+      "rain"
+    ]
+  },
+  {
+    "thingName_en-US": "cap",
+    "thingName_ru-RU": "кепка",
+    "gender": "neutral",
+    "type": "headgear",
+    "category": [
+      "tourism",
+      "cycle",
+      "fishing",
+      "hike",
+      "photo",
+      "travel",
+      "kids"
+    ],
+    "weight": 0.15,
+    "weatherType": [
+      "normal",
+      "warm"
+    ]
+  },
+  {
+    "thingName_en-US": "baby pants",
+    "thingName_ru-RU": "детские брюки",
+    "gender": "neutral",
+    "type": "kids",
+    "category": [
+      "tourism",
+      "cycle",
+      "kids",
+      "travel"
+    ],
+    "weight": 0.3,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "diapers",
+    "thingName_ru-RU": "подгузники",
+    "gender": "neutral",
+    "type": "kids",
+    "category": [
+      "need"
+    ],
+    "weight": 0.8,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "children's potty",
+    "thingName_ru-RU": "детский горшок",
+    "gender": "neutral",
+    "type": "kids",
+    "category": [
+      "need"
+    ],
+    "weight": 0.3,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "baby carriage",
+    "thingName_ru-RU": "детская коляска",
+    "gender": "neutral",
+    "type": "kids",
+    "category": [
+      "kids"
+    ],
+    "weight": 10,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "plaything",
+    "thingName_ru-RU": "игрушки",
+    "gender": "neutral",
+    "type": "kids",
+    "category": [
+      "kids"
+    ],
+    "weight": 0.15,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "paracetamolum",
+    "thingName_ru-RU": "парацетамол",
+    "gender": "neutral",
+    "type": "medicine",
+    "category": [
+      "need"
+    ],
+    "weight": 0.01,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "drotaverine",
+    "thingName_ru-RU": "дротаверин",
+    "gender": "neutral",
+    "type": "medicine",
+    "category": [
+      "need"
+    ],
+    "weight": 0.01,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "carbo activatus",
+    "thingName_ru-RU": "активированный уголь",
+    "gender": "neutral",
+    "type": "medicine",
+    "category": [
+      "need"
+    ],
+    "weight": 0.01,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "pancreatin",
+    "thingName_ru-RU": "панкреатин",
+    "gender": "neutral",
+    "type": "medicine",
+    "category": [
+      "need"
+    ],
+    "weight": 0.01,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "loperamide",
+    "thingName_ru-RU": "лоперамид",
+    "gender": "neutral",
+    "type": "medicine",
+    "category": [
+      "need"
+    ],
+    "weight": 0.01,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "hydrogenum peroxide",
+    "thingName_ru-RU": "перекись водорода",
+    "gender": "neutral",
+    "type": "medicine",
+    "category": [
+      "need"
+    ],
+    "weight": 0.1,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "septolete",
+    "thingName_ru-RU": "септолете",
+    "gender": "neutral",
+    "type": "medicine",
+    "category": [
+      "need"
+    ],
+    "weight": 0.01,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "dexpanthenol",
+    "thingName_ru-RU": "декспантенол",
+    "gender": "neutral",
+    "type": "medicine",
+    "category": [
+      "need"
+    ],
+    "weight": 0.1,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "bandage",
+    "thingName_ru-RU": "бинт",
+    "gender": "neutral",
+    "type": "medicine",
+    "category": [
+      "need"
+    ],
+    "weight": 0.02,
+    "weatherType": [
+      "any"
+    ]
+  },
+  {
+    "thingName_en-US": "recipe",
+    "thingName_ru-RU": "рецепт",
+    "gender": "neutral",
+    "type": "medicine",
+    "category": [
+      "need"
+    ],
+    "weight": 0.002,
+    "weatherType": [
+      "any"
+    ]
+  }
+]

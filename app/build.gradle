@@ -4,11 +4,12 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "by.neon.travelassistant"
-        minSdkVersion 23
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        versionNameSuffix = '.alpha1'
     }
     buildTypes {
         release {
@@ -16,15 +17,49 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    buildToolsVersion '28.0.3'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    testOptions {
+        unitTests.includeAndroidResources true
+        unitTests.returnDefaultValues true
+        reportDir "$rootDir/test-reports"
+        resultsDir "$rootDir/test-results"
+    }
+}
+
+ext {
+    androidSupportVersion = '28.0.0'
+    androidConstraintLayoutVersion = '1.1.3'
+    volleyVersion = '1.1.1'
+    googlePlayVersion = '16.0.1'
+    jsonVersion = '20180813'
+    androidSupportTestVersion = '1.0.2'
+    mockitoVersion = '2.26.0'
+    roomVersion = '1.1.1'
+    jacksonVersion = '2.9.8'
+    junitVersion = '4.12'
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:support-v4:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "com.android.support:appcompat-v7:${androidSupportVersion}"
+    implementation "com.android.support:support-v4:${androidSupportVersion}"
+    implementation "com.android.support:design:${androidSupportVersion}"
+    implementation "com.android.support.constraint:constraint-layout:${androidConstraintLayoutVersion}"
+    implementation "com.android.volley:volley:${volleyVersion}"
+    implementation "com.google.android.gms:play-services-auth:${googlePlayVersion}"
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    testImplementation "org.json:json:${jsonVersion}"
+    testImplementation "junit:junit:${junitVersion}"
+    testImplementation "com.android.support.test:runner:${androidSupportTestVersion}"
+    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
+    implementation "com.android.support.test:rules:${androidSupportTestVersion}"
+    androidTestImplementation "com.android.support.test:runner:${androidSupportTestVersion}"
+    androidTestImplementation "org.mockito:mockito-android:${mockitoVersion}"
+    implementation "android.arch.persistence.room:runtime:${roomVersion}"
+    annotationProcessor "android.arch.persistence.room:compiler:${roomVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.9.9"
 }
