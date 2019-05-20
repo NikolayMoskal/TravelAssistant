@@ -6,4 +6,14 @@
         android:icon="@android:drawable/ic_menu_save"
         android:title="@string/action_save_list"
         app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_disable_warnings"
+        android:title="@string/action_dismiss_warnings"
+        android:checkable="true"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_disable_errors"
+        android:title="@string/action_disable_errors"
+        android:checkable="true"
+        app:showAsAction="never" />
 </menu>

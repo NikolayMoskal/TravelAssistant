@@ -18,7 +18,6 @@ import by.neon.travelassistant.model.Weather;
 
 public class ForecastListener implements Response.Listener<JSONObject> {
     private static final String TAG = "ForecastListener";
-    private List<Weather> weatherList;
     private ForecastCallback callback;
 
     public ForecastListener(ForecastCallback callback) {
@@ -33,7 +32,7 @@ public class ForecastListener implements Response.Listener<JSONObject> {
     @Override
     public void onResponse(JSONObject response) {
         try {
-            weatherList = parseJsonResponse(response);
+            List<Weather> weatherList = parseJsonResponse(response);
             callback.onSuccess(weatherList);
         } catch (JSONException e) {
             Log.e(TAG, "onResponse: " + e.getMessage(), e);
@@ -80,10 +79,6 @@ public class ForecastListener implements Response.Listener<JSONObject> {
             weatherList.add(weather);
         }
 
-        return weatherList;
-    }
-
-    public List<Weather> getWeatherList() {
         return weatherList;
     }
 }

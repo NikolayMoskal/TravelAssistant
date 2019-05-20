@@ -42,6 +42,7 @@ import by.neon.travelassistant.config.sqlite.mapper.TransportMapper;
 import by.neon.travelassistant.config.sqlite.mapper.WeatherTypeMapper;
 import by.neon.travelassistant.constant.CommonConstants;
 import by.neon.travelassistant.listener.ForecastListener;
+import by.neon.travelassistant.listener.ThingSelectListener;
 import by.neon.travelassistant.model.Category;
 import by.neon.travelassistant.model.Gender;
 import by.neon.travelassistant.model.Settings;
@@ -52,6 +53,8 @@ import by.neon.travelassistant.model.WeatherType;
 public class PreviewActivity extends AppCompatActivity {
     private static final String TAG = "PreviewActivity";
     private Map<String, Object> input;
+    private ThingSelectListener thingSelectListener;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +82,7 @@ public class PreviewActivity extends AppCompatActivity {
         settings.setCategories(getNames("category"));
         settings.setTransportTypes(getNames("transport"));
         settings.setGenders(getNames("gender"));
+        settings.setWeight(thingSelectListener.getAllWeight());
         try {
             DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
             settings.setTravelStartDate(format.parse(String.valueOf(input.get(CommonConstants.TRAVEL_START_DATE))));
@@ -126,6 +130,7 @@ public class PreviewActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.preview, menu);
+        this.menu = menu;
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -147,12 +152,17 @@ public class PreviewActivity extends AppCompatActivity {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_save_list) {
-            Intent intent = prepareIntentForResult();
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+        switch (item.getItemId()) {
+            case R.id.action_save_list:
+                Intent intent = prepareIntentForResult();
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                break;
+            case R.id.action_disable_warnings:
+            case R.id.action_disable_errors:
+                item.setChecked(!item.isChecked());
+                break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -266,6 +276,8 @@ public class PreviewActivity extends AppCompatActivity {
 
     private void fillPreview(List<WeatherType> weatherTypes) throws ExecutionException, InterruptedException {
         List<Gender> genders = extractGenders();
+        Transport transport = extractTransport();
+        thingSelectListener = new ThingSelectListener(this, transport, menu);
         LinearLayout parent = findViewById(R.id.layout_preview);
         addGroup(parent, getResources().getString(R.string.need), "need", genders, weatherTypes);
 
@@ -312,6 +324,7 @@ public class PreviewActivity extends AppCompatActivity {
         checkBox.setLayoutParams(params);
         checkBox.setText(capitalize(thing.getThingName()));
         checkBox.setTag(thing);
+        checkBox.setOnCheckedChangeListener(thingSelectListener);
         return checkBox;
     }
 
@@ -379,7 +392,6 @@ public class PreviewActivity extends AppCompatActivity {
         for (int index = 0; index < content.getChildCount(); index++) {
             Settings.Selection selection = selections.get(index);
             LinearLayout inner = (LinearLayout) content.getChildAt(index);
-            //((TextView) inner.getChildAt(0)).setHint(selection.getCategory());
             for (int viewIndex = 1; viewIndex < inner.getChildCount(); viewIndex++) {
                 ((CheckBox) inner.getChildAt(viewIndex)).setChecked(selection.getFlagsAsBoolean().get(viewIndex - 1));
             }

@@ -14,6 +14,7 @@ public class Settings {
     private Date travelStartDate;
     @JsonProperty("end")
     private Date travelEndDate;
+    private double weight;
     private List<String> genders;
     private List<String> transportTypes;
     private List<String> categories;
@@ -81,6 +82,14 @@ public class Settings {
 
     public void setSelections(List<Selection> selections) {
         this.selections = selections;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
     }
 
     public static class Selection {

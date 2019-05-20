@@ -24,6 +24,7 @@
     <string name="target_label" translatable="true">What is the purpose of your trip?</string>
 
     <string name="list_item_icon_description" translatable="false">Icon</string>
+    <string name="city_select_title">Select a city</string>
 
     <!-- Navigation drawer menu -->
     <string name="nav_main" translatable="true">Main</string>
@@ -51,9 +52,20 @@
     </string-array>
     <string name="action_delete" translatable="true">Remove</string>
     <string name="action_delete_all" translatable="true">Remove all</string>
+    <string name="delete_confirm_title">Do you really want to delete all listings?</string>
+    <string name="action_yes">Yes</string>
+    <string name="action_no">No</string>
+    <string name="action_ok">OK</string>
+    <string name="action_cancel">Cancel</string>
 
     <!-- Preview activity -->
     <string name="action_save_list">Save list</string>
+    <string name="action_dismiss_warnings">Disable warnings</string>
+    <string name="action_disable_errors">Disable error messages</string>
+    <string name="weight_warning">Your luggage exceeds the weight of hand luggage</string>
+    <string name="current_weight_message">Current weight is</string>
+    <string name="mass_unit_abbr">kg</string>
+    <string name="weight_error">Your luggage exceeds the maximum weight</string>
 
     <!-- About activity -->
     <string name="title_activity_about">About</string>

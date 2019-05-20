@@ -86,9 +86,7 @@ public class PackActivity extends AppCompatActivity
             for (int index = 0; index < settingsList.size(); index++) {
                 if (settingsList.get(index).getCityCode() == newSettings.getCityCode()) {
                     settingsList.set(index, newSettings);
-                    CardView cardView = findByCityCode(newSettings.getCityCode());
-                    assert cardView != null;
-                    cardView.setCardBackgroundColor(setBackgroundColor(getSelectedCount(newSettings), getAllCount(newSettings)));
+                    findAndReplace(newSettings.getCityCode(), createCardForList(newSettings));
                     exists = true;
                     break;
                 }
@@ -112,6 +110,17 @@ public class PackActivity extends AppCompatActivity
             }
         }
         return null;
+    }
+
+    private void findAndReplace(long cityCode, CardView newView) {
+        LinearLayout layout = findViewById(R.id.layout_lists);
+        for (int index = 0; index < layout.getChildCount(); index++) {
+            CardView cardView = (CardView) layout.getChildAt(index);
+            if (cityCode == (long) cardView.getTag()) {
+                layout.removeViewAt(index);
+                layout.addView(newView, index);
+            }
+        }
     }
 
     @Override
@@ -290,6 +299,7 @@ public class PackActivity extends AppCompatActivity
         content.setOrientation(LinearLayout.VERTICAL);
         content.addView(setPackTitle(settings.getCityName()));
         content.addView(setDatesTitle(settings.getTravelStartDate(), settings.getTravelEndDate()));
+        content.addView(setWeightTitle(settings.getWeight()));
 
         contentWithCheckBox.addView(setCheckBox());
         contentWithCheckBox.addView(content);
@@ -337,6 +347,15 @@ public class PackActivity extends AppCompatActivity
         return view;
     }
 
+    private TextView setWeightTitle(double weight) {
+        TextView view = new TextView(this);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        view.setLayoutParams(params);
+        view.setText(String.format(Locale.getDefault(), "%.2f%s", weight, getResources().getString(R.string.mass_unit_abbr)));
+        view.setTextSize(getResources().getDimension(R.dimen.pack_title_text_size) / getResources().getDisplayMetrics().scaledDensity);
+        return view;
+    }
+
     private CheckBox setCheckBox() {
         CheckBox checkBox = new CheckBox(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -349,7 +368,7 @@ public class PackActivity extends AppCompatActivity
 
     private int setBackgroundColor(int checkedCount, int allCount) {
         float percentage = checkedCount * 1.0f / allCount;
-        return Color.HSVToColor(30, new float[]{120 * percentage, 100.0f, 100.0f});
+        return Color.HSVToColor(80, new float[]{120 * percentage, 100.0f, 100.0f});
     }
 
     private int getSelectedCount(Settings settings) {
@@ -414,13 +433,13 @@ public class PackActivity extends AppCompatActivity
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder
                 .setTitle(R.string.action_delete_all)
-                .setMessage("Вы действительно хотите удалить все списки?")
+                .setMessage(R.string.delete_confirm_title)
                 .setCancelable(true)
-                .setPositiveButton("Да", (dialog, which) -> {
+                .setPositiveButton(R.string.action_yes, (dialog, which) -> {
                     switchCheckBoxVisibility(false, true);
                     onDeleteConfirm(null);
                 })
-                .setNegativeButton("Нет", null)
+                .setNegativeButton(R.string.action_no, null)
                 .show();
     }
 

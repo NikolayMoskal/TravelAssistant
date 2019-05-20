@@ -11,8 +11,10 @@ public class TransportDb extends BaseDbEntity {
     private String nameEn;
     @ColumnInfo(name = DbConstants.TRANSPORTS_COLUMN_TRANSPORT_NAME_RU_RU)
     private String nameRu;
-    @ColumnInfo(name = DbConstants.TRANSPORTS_COLUMN_PACK_WEIGHT)
+    @ColumnInfo(name = DbConstants.TRANSPORTS_COLUMN_HAND_PACK_WEIGHT)
     private double packWeight;
+    @ColumnInfo(name = DbConstants.TRANSPORTS_COLUMN_MAX_PACK_WEIGHT)
+    private double maxWeight;
 
     public String getNameEn() {
         return nameEn;
@@ -36,5 +38,13 @@ public class TransportDb extends BaseDbEntity {
 
     public void setNameRu(String nameRu) {
         this.nameRu = nameRu;
+    }
+
+    public double getMaxWeight() {
+        return maxWeight;
+    }
+
+    public void setMaxWeight(double maxWeight) {
+        this.maxWeight = maxWeight;
     }
 }

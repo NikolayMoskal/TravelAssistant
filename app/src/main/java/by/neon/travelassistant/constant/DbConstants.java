@@ -31,7 +31,8 @@ public final class DbConstants {
     public static final String TABLE_TRANSPORTS = "TRANSPORTS";
     public static final String TRANSPORTS_COLUMN_TRANSPORT_NAME_EN_US = "TRANSPORT_NAME_EN_US";
     public static final String TRANSPORTS_COLUMN_TRANSPORT_NAME_RU_RU = "TRANSPORT_NAME_RU_RU";
-    public static final String TRANSPORTS_COLUMN_PACK_WEIGHT = "PACK_WEIGHT";
+    public static final String TRANSPORTS_COLUMN_HAND_PACK_WEIGHT = "HAND_PACK_WEIGHT";
+    public static final String TRANSPORTS_COLUMN_MAX_PACK_WEIGHT = "MAX_WEIGHT";
 
     public static final String TABLE_THINGS_CATEGORIES = "THINGS_CATEGORIES";
     public static final String THINGS_CATEGORIES_COLUMN_THING_ID = "THING_ID";

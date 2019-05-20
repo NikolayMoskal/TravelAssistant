@@ -9,8 +9,10 @@ public class Transport extends Entity {
     private String nameEn;
     @JsonProperty("name_ru-ru")
     private String nameRu;
-    @JsonProperty("weight")
-    private double packWeight;
+    @JsonProperty("handLuggageWeight")
+    private double handPackWeight;
+    @JsonProperty("maxWeight")
+    private double maxWeight;
 
     public String getNameEn() {
         return nameEn;
@@ -28,16 +30,24 @@ public class Transport extends Entity {
         this.nameRu = nameRu;
     }
 
-    public double getPackWeight() {
-        return packWeight;
+    public double getHandPackWeight() {
+        return handPackWeight;
     }
 
-    public void setPackWeight(double packWeight) {
-        this.packWeight = packWeight;
+    public void setHandPackWeight(double handPackWeight) {
+        this.handPackWeight = handPackWeight;
     }
 
     public String getName() {
         return Locale.getDefault().getLanguage().equals("ru")
                 ? nameRu : nameEn;
+    }
+
+    public double getMaxWeight() {
+        return maxWeight;
+    }
+
+    public void setMaxWeight(double maxWeight) {
+        this.maxWeight = maxWeight;
     }
 }

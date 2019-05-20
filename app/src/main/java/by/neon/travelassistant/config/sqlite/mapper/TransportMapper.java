@@ -40,7 +40,8 @@ public final class TransportMapper extends BaseMapper<Transport, TransportDb> {
         transportDb.setId(source.getId());
         transportDb.setNameEn(source.getNameEn());
         transportDb.setNameRu(source.getNameRu());
-        transportDb.setPackWeight(source.getPackWeight());
+        transportDb.setPackWeight(source.getHandPackWeight());
+        transportDb.setMaxWeight(source.getMaxWeight());
         return transportDb;
     }
 
@@ -50,7 +51,8 @@ public final class TransportMapper extends BaseMapper<Transport, TransportDb> {
         transport.setId(source.getId());
         transport.setNameEn(source.getNameEn());
         transport.setNameRu(source.getNameRu());
-        transport.setPackWeight(source.getPackWeight());
+        transport.setHandPackWeight(source.getPackWeight());
+        transport.setMaxWeight(source.getMaxWeight());
         return transport;
     }
 }

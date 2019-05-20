@@ -94,7 +94,7 @@ public class CitySelectListener implements Response.Listener<JSONObject> {
     private void showCitySelectDialog(List<Weather> weatherList, ListAdapter adapter) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder
-                .setTitle("Выберите город")
+                .setTitle(R.string.city_select_title)
                 .setCancelable(true)
                 .setAdapter(adapter, (dialog, which) -> {
                     EditText text = activity.findViewById(R.id.arv_city);
@@ -105,7 +105,7 @@ public class CitySelectListener implements Response.Listener<JSONObject> {
                             weather.getCityId()));
                     text.setTag(weather.getCityId());
                 })
-                .setNegativeButton("Cancel", null);
+                .setNegativeButton(R.string.action_cancel, null);
         builder.create().show();
     }
 

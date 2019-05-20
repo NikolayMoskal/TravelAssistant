@@ -24,6 +24,7 @@
     <string name="target_label" translatable="true">Какова цель Вашей поездки?</string>
 
     <string name="list_item_icon_description" translatable="false">Icon</string>
+    <string name="city_select_title">Выберите город</string>
 
     <!-- Navigation drawer menu -->
     <string name="nav_main" translatable="true">Главная</string>
@@ -51,9 +52,20 @@
     </string-array>
     <string name="action_delete" translatable="true">Удалить</string>
     <string name="action_delete_all" translatable="true">Удалить все</string>
+    <string name="delete_confirm_title">Вы действительно хотите удалить все списки?</string>
+    <string name="action_yes">Да</string>
+    <string name="action_no">Нет</string>
+    <string name="action_ok">OK</string>
+    <string name="action_cancel">Отмена</string>
 
     <!-- Preview activity -->
     <string name="action_save_list">Сохранить список</string>
+    <string name="action_dismiss_warnings">Выключить предупреждения</string>
+    <string name="action_disable_errors">Выключить сообщения об ошибках</string>
+    <string name="weight_warning">Ваш багаж превышает вес ручной клади</string>
+    <string name="current_weight_message">Текущий вес</string>
+    <string name="mass_unit_abbr">кг</string>
+    <string name="weight_error">Ваш багаж превышает максимальный вес багажа</string>
 
     <!-- About activity -->
     <string name="title_activity_about">О приложении</string>
