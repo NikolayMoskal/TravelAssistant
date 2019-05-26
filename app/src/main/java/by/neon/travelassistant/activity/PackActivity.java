@@ -281,7 +281,8 @@ public class PackActivity extends AppCompatActivity
         params.bottomMargin = (int) (10 / getResources().getDisplayMetrics().density + 0.5f);
         cardView.setLayoutParams(params);
         cardView.setTag(settings.getCityCode());
-        cardView.setCardBackgroundColor(setBackgroundColor(getSelectedCount(settings), getAllCount(settings)));
+        double fillPercentage = getSelectedCount(settings) * 1.0f / getAllCount(settings);
+        cardView.setCardBackgroundColor(setBackgroundColor(fillPercentage));
         int padding = (int) (5 * getResources().getDisplayMetrics().density);
         cardView.setContentPadding(padding, padding, padding, padding);
         cardView.setOnLongClickListener(v -> showContextMenuDialog(settings.getCityCode()));
@@ -303,6 +304,7 @@ public class PackActivity extends AppCompatActivity
 
         contentWithCheckBox.addView(setCheckBox());
         contentWithCheckBox.addView(content);
+        contentWithCheckBox.addView(setFillProgress(fillPercentage));
         cardView.addView(contentWithCheckBox);
 
         return cardView;
@@ -366,9 +368,17 @@ public class PackActivity extends AppCompatActivity
         return checkBox;
     }
 
-    private int setBackgroundColor(int checkedCount, int allCount) {
-        float percentage = checkedCount * 1.0f / allCount;
-        return Color.HSVToColor(80, new float[]{120 * percentage, 100.0f, 100.0f});
+    private TextView setFillProgress(double fillPercentage) {
+        TextView view = new TextView(this);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.CENTER_VERTICAL;
+        view.setLayoutParams(params);
+        view.setText(String.format(Locale.getDefault(), "%.2f%%", fillPercentage * 100.0f));
+        return view;
+    }
+
+    private int setBackgroundColor(double percentage) {
+        return Color.HSVToColor(80, new float[]{(float) (120 * percentage), 100.0f, 100.0f});
     }
 
     private int getSelectedCount(Settings settings) {
