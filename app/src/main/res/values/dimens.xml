@@ -12,7 +12,7 @@
     <dimen name="pack_title_text_size">16sp</dimen>
 
     <!-- Settings activity -->
-    <dimen name="settings_activity_text_size">20sp</dimen>
+    <dimen name="setting_titles_text_size">16sp</dimen>
 
     <!-- About activity -->
     <dimen name="app_name_text_size">40sp</dimen>

@@ -1,6 +1,7 @@
 package by.neon.travelassistant.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -67,10 +68,25 @@ public class PreviewActivity extends AppCompatActivity {
         requestWeatherTypes();
     }
 
+    private void loadSettings() {
+        SharedPreferences prefs = getSharedPreferences(CommonConstants.APP_SETTINGS, MODE_PRIVATE);
+        menu.findItem(R.id.action_disable_errors).setChecked(prefs.getBoolean(CommonConstants.DISABLE_ERR, false));
+        menu.findItem(R.id.action_disable_warnings).setChecked(prefs.getBoolean(CommonConstants.DISABLE_WARN, false));
+    }
+
+    private void saveSettings() {
+        SharedPreferences prefs = getSharedPreferences(CommonConstants.APP_SETTINGS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(CommonConstants.DISABLE_WARN, menu.findItem(R.id.action_disable_warnings).isChecked());
+        editor.putBoolean(CommonConstants.DISABLE_ERR, menu.findItem(R.id.action_disable_errors).isChecked());
+        editor.apply();
+    }
+
     @Override
     public void onBackPressed() {
         Intent intent = prepareIntentForResult();
         setResult(RESULT_OK, intent);
+        saveSettings();
         super.onBackPressed();
     }
 
@@ -131,6 +147,7 @@ public class PreviewActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.preview, menu);
         this.menu = menu;
+        loadSettings();
         return super.onCreateOptionsMenu(menu);
     }
 

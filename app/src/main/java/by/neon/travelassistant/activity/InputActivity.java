@@ -2,6 +2,7 @@ package by.neon.travelassistant.activity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -189,11 +190,12 @@ public class InputActivity extends AppCompatActivity
     }
 
     public void createCitySelectDialog(String cityName) {
+        SharedPreferences preferences = getSharedPreferences(CommonConstants.APP_SETTINGS, MODE_PRIVATE);
         String url = "https://api.openweathermap.org/data/2.5/find?" +
                 "q=" + cityName +
                 "&appid=" + CommonConstants.OWM_APP_ID +
                 "&lang=" + Locale.getDefault().getLanguage() +
-                "&units=metric";
+                "&units=" + preferences.getString(CommonConstants.TEMPERATURE_UNIT, "Standard");
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new CitySelectListener(this), null);
         TravelRequestQueue.getInstance(this).addRequest(request);
     }

@@ -2,6 +2,7 @@ package by.neon.travelassistant.constant;
 
 public final class CommonConstants {
     public static final String APP_LISTS = "LISTS";
+    public static final String APP_SETTINGS = "SETTINGS";
     public static final String APP_SETTINGS_KEYS = "KEYS";
     public static final String NEW_LIST_TAG = "NEW_LIST";
     public static final String PACK_WEIGHT = "PACK_WEIGHT";
@@ -15,6 +16,11 @@ public final class CommonConstants {
     public static final String TRAVEL_START_DATE = "TRAVEL_START_DATE";
     public static final String TRAVEL_END_DATE = "TRAVEL_END_DATE";
     public static final String SELECTIONS = "SELECTIONS";
+
+    public static final String TEMPERATURE_UNIT = "TEMPERATURE_UNIT";
+    public static final String TEMPERATURE_UNIT_SIGN = "TEMPERATURE_UNIT_SIGN";
+    public static final String DISABLE_WARN = "DISABLE_WARN";
+    public static final String DISABLE_ERR = "DISABLE_ERR";
 
     public static final int REQUEST_PREVIEW = 20;
 }

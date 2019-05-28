@@ -1,6 +1,8 @@
 package by.neon.travelassistant.listener;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.v7.app.AlertDialog;
@@ -23,6 +25,7 @@ import java.util.Locale;
 
 import by.neon.travelassistant.R;
 import by.neon.travelassistant.adapter.SelectCityAdapter;
+import by.neon.travelassistant.constant.CommonConstants;
 import by.neon.travelassistant.model.Weather;
 
 public class CitySelectListener implements Response.Listener<JSONObject> {
@@ -111,13 +114,14 @@ public class CitySelectListener implements Response.Listener<JSONObject> {
 
     private SimpleAdapter configureCitySelectAdapter(List<Weather> weatherList) {
         String[] keys = new String[]{"Icon", "City", "Location", "Temp", "Selected"};
+        SharedPreferences preferences = activity.getSharedPreferences(CommonConstants.APP_SETTINGS, Context.MODE_PRIVATE);
         ArrayList<HashMap<String, String>> maps = new ArrayList<>(0);
         for (Weather weather : weatherList) {
             HashMap<String, String> map = new HashMap<>();
             map.put(keys[0], weather.getStates().get(0).getIconUrl());
             map.put(keys[1], String.format("%s, %s", weather.getCityName(), weather.getCountryCode()));
             map.put(keys[2], String.format("Geo coords: [%s,%s]", weather.getLocation().getLatitude(), weather.getLocation().getLongitude()));
-            map.put(keys[3], String.format("%s ºC", weather.getCurrentTemp()));
+            map.put(keys[3], String.format("%s %s", weather.getCurrentTemp(), preferences.getString(CommonConstants.TEMPERATURE_UNIT_SIGN, "ºK")));
             map.put(keys[4], weather.getCityName());
             maps.add(map);
         }
