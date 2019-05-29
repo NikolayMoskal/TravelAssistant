@@ -1,25 +1,17 @@
 package by.neon.travelassistant.activity;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 
 import by.neon.travelassistant.R;
 import by.neon.travelassistant.constant.CommonConstants;
 
-public class SettingsActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,60 +20,14 @@ public class SettingsActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        configureDrawerLayout(toolbar);
-        configureNavigationView();
-
         loadSettingsFromPreferences();
         findViewById(R.id.lang_select).setEnabled(false);
     }
 
-    private void configureDrawerLayout(Toolbar toolbar) {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-    }
-
-    private void configureNavigationView() {
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-    }
-
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.nav_main:
-                startActivity(new Intent(this, PackActivity.class));
-                break;
-            case R.id.nav_informer:
-                break;
-            case R.id.nav_about:
-                startActivity(new Intent(this, AboutActivity.class));
-                break;
-            case R.id.nav_manage:
-                break;
-        }
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    @Override
-    public void finish() {
         saveSettingsInPreferences();
-        super.finish();
+        super.onBackPressed();
     }
 
     private void saveSettingsInPreferences() {
