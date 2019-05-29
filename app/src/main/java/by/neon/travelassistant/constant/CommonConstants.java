@@ -5,7 +5,6 @@ public final class CommonConstants {
     public static final String APP_SETTINGS = "SETTINGS";
     public static final String APP_SETTINGS_KEYS = "KEYS";
     public static final String NEW_LIST_TAG = "NEW_LIST";
-    public static final String PACK_WEIGHT = "PACK_WEIGHT";
     public static final String OWM_APP_ID = "1a3d439f77be3c3a7fe13b4ee1d0840c";
 
     public static final String ARRIVAL_CITY_ID = "CITY_ID";

@@ -1,9 +1,10 @@
 package by.neon.travelassistant.listener;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.design.widget.Snackbar;
-import android.view.Menu;
 import android.view.View;
 import android.widget.CompoundButton;
 
@@ -13,6 +14,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import by.neon.travelassistant.R;
+import by.neon.travelassistant.constant.CommonConstants;
 import by.neon.travelassistant.model.Thing;
 import by.neon.travelassistant.model.Transport;
 
@@ -21,14 +23,14 @@ public class ThingSelectListener implements CompoundButton.OnCheckedChangeListen
     private Transport transport;
     private Snackbar snackbar;
     private boolean isFrozen;
-    private Menu menu;
+    private SharedPreferences settings;
     private Timer timer;
     private double allWeight;
 
-    public ThingSelectListener(Activity activity, Transport transport, Menu menu) {
+    public ThingSelectListener(Activity activity, Transport transport) {
         this.activity = new WeakReference<>(activity);
         this.transport = transport;
-        this.menu = menu;
+        this.settings = activity.getSharedPreferences(CommonConstants.APP_SETTINGS, Context.MODE_PRIVATE);
     }
 
     public double getAllWeight() {
@@ -58,7 +60,7 @@ public class ThingSelectListener implements CompoundButton.OnCheckedChangeListen
                     activity.get().getResources().getString(R.string.current_weight_message),
                     allWeight,
                     activity.get().getResources().getString(R.string.mass_unit_abbr)));
-            if (!snackbar.isShown() && !isFrozen && !menu.findItem(R.id.action_disable_warnings).isChecked()) {
+            if (!snackbar.isShown() && !isFrozen && !settings.getBoolean(CommonConstants.DISABLE_WARN, false)) {
                 View view = snackbar.getView();
                 view.setBackgroundColor(Color.HSVToColor(new float[]{0.0f, 100.0f, 100.0f}));
                 snackbar.show();
@@ -72,7 +74,7 @@ public class ThingSelectListener implements CompoundButton.OnCheckedChangeListen
                     activity.get().getResources().getString(R.string.current_weight_message),
                     allWeight,
                     activity.get().getResources().getString(R.string.mass_unit_abbr)));
-            if (!snackbar.isShown() && !isFrozen && !menu.findItem(R.id.action_disable_errors).isChecked()) {
+            if (!snackbar.isShown() && !isFrozen && !settings.getBoolean(CommonConstants.DISABLE_ERR, false)) {
                 View view = snackbar.getView();
                 view.setBackgroundColor(Color.HSVToColor(new float[]{30.0f, 100.0f, 100.0f}));
                 snackbar.show();
@@ -103,8 +105,8 @@ public class ThingSelectListener implements CompoundButton.OnCheckedChangeListen
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (!menu.findItem(R.id.action_disable_warnings).isChecked() ||
-                        !menu.findItem(R.id.action_disable_errors).isChecked()) {
+                if (!settings.getBoolean(CommonConstants.DISABLE_WARN, false) ||
+                        !settings.getBoolean(CommonConstants.DISABLE_ERR, false)) {
                     isFrozen = false;
                     snackbar.show();
                 }
