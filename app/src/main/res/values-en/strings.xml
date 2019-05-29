@@ -1,12 +1,4 @@
 <resources>
-    <!-- Common values -->
-    <string name="app_name" translatable="false">TravelAssistant</string>
-    <string name="navigation_drawer_open" translatable="true">Open navigation drawer</string>
-    <string name="navigation_drawer_close" translatable="true">Close navigation drawer</string>
-    <string name="nav_header_title" translatable="false">Travel Assistant</string>
-    <string name="nav_header_subtitle" translatable="false">Created by Nikolay Moskal © 2018–2019</string>
-    <string name="nav_header_desc" translatable="true">Navigation header</string>
-
     <!-- Input activity -->
     <string name="title_activity_input" translatable="true">Input the data</string>
     <string name="arv_label" translatable="true">Where are you going?</string>
