@@ -9,6 +9,7 @@ public final class CommonConstants {
 
     public static final String ARRIVAL_CITY_ID = "CITY_ID";
     public static final String ARRIVAL_CITY_INFO = "CITY_INFO";
+    public static final String ARRIVAL_CITY_LOCATION = "CITY_LOCATION";
     public static final String COUNT_CATEGORIES = "COUNT_CATEGORIES";
     public static final String COUNT_TRANSPORT_TYPES = "COUNT_TRANSPORT_TYPES";
     public static final String COUNT_GENDERS = "COUNT_GENDERS";

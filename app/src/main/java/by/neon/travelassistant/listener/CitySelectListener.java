@@ -102,11 +102,11 @@ public class CitySelectListener implements Response.Listener<JSONObject> {
                 .setAdapter(adapter, (dialog, which) -> {
                     EditText text = activity.findViewById(R.id.arv_city);
                     Weather weather = weatherList.get(which);
-                    text.setText(String.format(Locale.getDefault(), "%s, %s (%d)",
+                    text.setText(String.format(Locale.getDefault(), "%s, %s",
                             weather.getCityName(),
-                            weather.getCountryCode(),
-                            weather.getCityId()));
-                    text.setTag(weather.getCityId());
+                            weather.getCountryCode()));
+                    text.setTag(R.id.cityId, weather.getCityId());
+                    text.setTag(R.id.location, weather.getLocation());
                 })
                 .setNegativeButton(R.string.action_cancel, null);
         builder.create().show();

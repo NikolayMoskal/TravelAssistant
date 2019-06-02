@@ -45,6 +45,7 @@
     <!-- Pack activity -->
     <string name="title_activity_pack" translatable="true">Все списки</string>
     <string-array name="context_menu">
+        <item>Отправить…</item>
         <item>Редактировать список</item>
         <item>Удалить список</item>
     </string-array>
@@ -55,6 +56,7 @@
     <string name="action_no">Нет</string>
     <string name="action_ok">OK</string>
     <string name="action_cancel">Отмена</string>
+    <string name="send_subject">Я отправляюсь в %s (на карте: %s) и беру с собой эти вещи (см. прикрепленный файл). Спасибо TravelAssistant!</string>
 
     <!-- Preview activity -->
     <string name="title_activity_preview" translatable="true">Просмотр списка</string>
@@ -64,7 +66,7 @@
     <string name="action_disable_errors">Выключить сообщения об ошибках</string>
     <string name="weight_warning">Ваш багаж превышает вес ручной клади</string>
     <string name="current_weight_message">Текущий вес</string>
-    <string name="mass_unit_abbr">кг</string>
+    <string name="weight_title">%.2f кг</string>
     <string name="weight_error">Ваш багаж превышает максимальный вес багажа</string>
 
     <!-- About activity -->

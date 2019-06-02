@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -29,7 +30,6 @@ import by.neon.travelassistant.R;
 import by.neon.travelassistant.activity.query.CategorySelectAsyncTask;
 import by.neon.travelassistant.activity.query.GenderSelectAsyncTask;
 import by.neon.travelassistant.activity.query.TransportSelectAsyncTask;
-import by.neon.travelassistant.config.TravelRequestQueue;
 import by.neon.travelassistant.config.sqlite.mapper.CategoryMapper;
 import by.neon.travelassistant.config.sqlite.mapper.GenderMapper;
 import by.neon.travelassistant.config.sqlite.mapper.TransportMapper;
@@ -39,6 +39,7 @@ import by.neon.travelassistant.listener.DateSetListener;
 import by.neon.travelassistant.model.Category;
 import by.neon.travelassistant.model.Gender;
 import by.neon.travelassistant.model.Transport;
+import by.neon.travelassistant.utility.TravelRequestQueue;
 
 public class InputActivity extends AppCompatActivity {
     private static final String TAG = "InputActivity";
@@ -119,8 +120,10 @@ public class InputActivity extends AppCompatActivity {
 
     public void onSendClick(View view) {
         Intent intent = new Intent(this, PreviewActivity.class);
-        intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, (long) findViewById(R.id.arv_city).getTag());
-        intent.putExtra(CommonConstants.ARRIVAL_CITY_INFO, ((EditText) findViewById(R.id.arv_city)).getText().toString());
+        EditText editText = findViewById(R.id.arv_city);
+        intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, (long) editText.getTag(R.id.cityId));
+        intent.putExtra(CommonConstants.ARRIVAL_CITY_INFO, editText.getText().toString());
+        intent.putExtra(CommonConstants.ARRIVAL_CITY_LOCATION, (Location) editText.getTag(R.id.location));
         putData(intent, findViewById(R.id.layout_genders), "gender", CommonConstants.COUNT_GENDERS);
         putData(intent, findViewById(R.id.layout_transports), "transport", CommonConstants.COUNT_TRANSPORT_TYPES);
         putData(intent, findViewById(R.id.layout_categories), "category", CommonConstants.COUNT_CATEGORIES);

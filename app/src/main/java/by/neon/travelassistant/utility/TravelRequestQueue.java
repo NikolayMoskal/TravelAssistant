@@ -1,4 +1,4 @@
-package by.neon.travelassistant.config;
+package by.neon.travelassistant.utility;
 
 import android.content.Context;
 

@@ -1,6 +1,8 @@
 package by.neon.travelassistant.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -24,9 +26,11 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import by.neon.travelassistant.R;
@@ -34,7 +38,6 @@ import by.neon.travelassistant.activity.query.CategorySelectAsyncTask;
 import by.neon.travelassistant.activity.query.GenderSelectAsyncTask;
 import by.neon.travelassistant.activity.query.ThingSelectAsyncTask;
 import by.neon.travelassistant.activity.query.TransportSelectAsyncTask;
-import by.neon.travelassistant.config.TravelRequestQueue;
 import by.neon.travelassistant.config.sqlite.mapper.CategoryMapper;
 import by.neon.travelassistant.config.sqlite.mapper.GenderMapper;
 import by.neon.travelassistant.config.sqlite.mapper.ThingMapper;
@@ -49,6 +52,7 @@ import by.neon.travelassistant.model.Settings;
 import by.neon.travelassistant.model.Thing;
 import by.neon.travelassistant.model.Transport;
 import by.neon.travelassistant.model.WeatherType;
+import by.neon.travelassistant.utility.TravelRequestQueue;
 
 public class PreviewActivity extends AppCompatActivity {
     private static final String TAG = "PreviewActivity";
@@ -76,8 +80,11 @@ public class PreviewActivity extends AppCompatActivity {
     private Intent prepareIntentForResult() {
         Intent intent = new Intent(this, PackActivity.class);
         Settings settings = new Settings();
-        settings.setCityCode((long) input.get(CommonConstants.ARRIVAL_CITY_ID));
-        settings.setCityName(String.valueOf(input.get(CommonConstants.ARRIVAL_CITY_INFO)));
+        Settings.City city = new Settings.City();
+        city.setCityCode((long) input.get(CommonConstants.ARRIVAL_CITY_ID));
+        city.setName(String.valueOf(input.get(CommonConstants.ARRIVAL_CITY_INFO)));
+        city.setLocation((Location) input.get(CommonConstants.ARRIVAL_CITY_LOCATION));
+        settings.setCity(city);
         settings.setCategories(getNames("category"));
         settings.setTransportTypes(getNames("transport"));
         settings.setGenders(getNames("gender"));
@@ -171,6 +178,7 @@ public class PreviewActivity extends AppCompatActivity {
 
         map.put(CommonConstants.ARRIVAL_CITY_ID, extras.getLong(CommonConstants.ARRIVAL_CITY_ID, 0));
         map.put(CommonConstants.ARRIVAL_CITY_INFO, extras.getString(CommonConstants.ARRIVAL_CITY_INFO, ""));
+        map.put(CommonConstants.ARRIVAL_CITY_LOCATION, Objects.requireNonNull(extras.get(CommonConstants.ARRIVAL_CITY_LOCATION)));
         map.put(CommonConstants.TRAVEL_START_DATE, extras.getString(CommonConstants.TRAVEL_START_DATE, ""));
         map.put(CommonConstants.TRAVEL_END_DATE, extras.getString(CommonConstants.TRAVEL_END_DATE, ""));
         extractData(extras, "category", CommonConstants.COUNT_CATEGORIES, map);
@@ -240,11 +248,12 @@ public class PreviewActivity extends AppCompatActivity {
     }
 
     private void requestWeatherTypes() {
+        SharedPreferences preferences = getSharedPreferences(CommonConstants.APP_SETTINGS, MODE_PRIVATE);
         String url = "https://api.openweathermap.org/data/2.5/forecast?" +
                 "id=" + input.get(CommonConstants.ARRIVAL_CITY_ID) +
                 "&appid=" + CommonConstants.OWM_APP_ID +
                 "&lang=" + Locale.getDefault().getLanguage() +
-                "&units=metric";
+                "&units=" + preferences.getString(CommonConstants.TEMPERATURE_UNIT, "Standard");
         ForecastListener listener = new ForecastListener(weatherList -> {
             try {
                 WeatherTypeMapper mapper = new WeatherTypeMapper();
@@ -374,11 +383,12 @@ public class PreviewActivity extends AppCompatActivity {
             LinearLayout inner = (LinearLayout) content.getChildAt(index);
             Settings.Selection selection = new Settings.Selection();
             selection.setCategory(((TextView) inner.getChildAt(0)).getHint().toString());
-            List<Boolean> flags = new ArrayList<>(0);
+            Map<String, Boolean> flags = new LinkedHashMap<>(0);
             for (int viewIndex = 1; viewIndex < inner.getChildCount(); viewIndex++) {
-                flags.add(((CheckBox) inner.getChildAt(viewIndex)).isChecked());
+                CheckBox checkBox = (CheckBox) inner.getChildAt(viewIndex);
+                flags.put(checkBox.getText().toString(), checkBox.isChecked());
             }
-            selection.setFlagsAsBoolean(flags);
+            selection.setAsBoolean(flags);
             selections.add(selection);
         }
         return selections;
@@ -390,7 +400,12 @@ public class PreviewActivity extends AppCompatActivity {
             Settings.Selection selection = selections.get(index);
             LinearLayout inner = (LinearLayout) content.getChildAt(index);
             for (int viewIndex = 1; viewIndex < inner.getChildCount(); viewIndex++) {
-                ((CheckBox) inner.getChildAt(viewIndex)).setChecked(selection.getFlagsAsBoolean().get(viewIndex - 1));
+                CheckBox checkBox = (CheckBox) inner.getChildAt(viewIndex);
+                if (selection.getAsBoolean().containsKey(checkBox.getText().toString())) {
+                    Boolean flag = selection.getAsBoolean().get(checkBox.getText().toString());
+                    assert flag != null;
+                    checkBox.setChecked(flag);
+                }
             }
         }
     }

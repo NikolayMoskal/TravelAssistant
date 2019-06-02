@@ -60,6 +60,7 @@
     <!-- Pack activity -->
     <string name="title_activity_pack" translatable="true">All lists</string>
     <string-array name="context_menu">
+        <item>Send to…</item>
         <item>Edit list</item>
         <item>Remove list</item>
     </string-array>
@@ -70,6 +71,7 @@
     <string name="action_no">No</string>
     <string name="action_ok">OK</string>
     <string name="action_cancel">Cancel</string>
+    <string name="send_subject">I\'m going to %s (see map: %s) and take these things (see attachments). Thanks to TravelAssistant!</string>
 
     <!-- Preview activity -->
     <string name="title_activity_preview" translatable="true">List preview</string>
@@ -79,7 +81,7 @@
     <string name="action_disable_errors">Disable error messages</string>
     <string name="weight_warning">Your luggage exceeds the weight of hand luggage</string>
     <string name="current_weight_message">Current weight is</string>
-    <string name="mass_unit_abbr">kg</string>
+    <string name="weight_title">%.2f kg</string>
     <string name="weight_error">Your luggage exceeds the maximum weight</string>
 
     <!-- About activity -->

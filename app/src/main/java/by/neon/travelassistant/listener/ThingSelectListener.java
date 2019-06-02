@@ -53,13 +53,11 @@ public class ThingSelectListener implements CompoundButton.OnCheckedChangeListen
 
         if (allWeight > transport.getMaxWeight()) {
             snackbar = setSnackBar(String.format(Locale.getDefault(),
-                    "%s (%.2f%s) %s %.2f%s",
-                    activity.get().getResources().getString(R.string.weight_warning),
-                    transport.getHandPackWeight(),
-                    activity.get().getResources().getString(R.string.mass_unit_abbr),
+                    "%s (%s). %s %s.",
+                    activity.get().getResources().getString(R.string.weight_error),
+                    activity.get().getResources().getString(R.string.weight_title, transport.getMaxWeight()),
                     activity.get().getResources().getString(R.string.current_weight_message),
-                    allWeight,
-                    activity.get().getResources().getString(R.string.mass_unit_abbr)));
+                    activity.get().getResources().getString(R.string.weight_title, allWeight)));
             if (!snackbar.isShown() && !isFrozen && !settings.getBoolean(CommonConstants.DISABLE_WARN, false)) {
                 View view = snackbar.getView();
                 view.setBackgroundColor(Color.HSVToColor(new float[]{0.0f, 100.0f, 100.0f}));
@@ -67,13 +65,11 @@ public class ThingSelectListener implements CompoundButton.OnCheckedChangeListen
             }
         } else if (allWeight > transport.getHandPackWeight()) {
             snackbar = setSnackBar(String.format(Locale.getDefault(),
-                    "%s (%.2f%s) %s %.2f%s",
-                    activity.get().getResources().getString(R.string.weight_warning),
-                    transport.getHandPackWeight(),
-                    activity.get().getResources().getString(R.string.mass_unit_abbr),
+                    "%s (%s). %s %s.",
+                    activity.get().getResources().getString(R.string.weight_error),
+                    activity.get().getResources().getString(R.string.weight_title, transport.getHandPackWeight()),
                     activity.get().getResources().getString(R.string.current_weight_message),
-                    allWeight,
-                    activity.get().getResources().getString(R.string.mass_unit_abbr)));
+                    activity.get().getResources().getString(R.string.weight_title, allWeight)));
             if (!snackbar.isShown() && !isFrozen && !settings.getBoolean(CommonConstants.DISABLE_ERR, false)) {
                 View view = snackbar.getView();
                 view.setBackgroundColor(Color.HSVToColor(new float[]{30.0f, 100.0f, 100.0f}));
