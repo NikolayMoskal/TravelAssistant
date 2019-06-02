@@ -19,13 +19,6 @@
     <string name="list_item_icon_description" translatable="false">Icon</string>
     <string name="city_select_title">Выберите город</string>
 
-    <!-- Navigation drawer menu -->
-    <string name="nav_main" translatable="true">Главная</string>
-    <string name="nav_things" translatable="true">Багаж</string>
-    <string name="nav_informer" translatable="true">Информер</string>
-    <string name="nav_about" translatable="true">О приложении</string>
-    <string name="nav_manage" translatable="true">Настройки</string>
-
     <!-- Settings activity -->
     <string name="title_activity_settings" translatable="true">Настройки</string>
     <string name="title_language">Язык приложения</string>

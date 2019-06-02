@@ -19,13 +19,6 @@
     <string name="list_item_icon_description" translatable="false">Icon</string>
     <string name="city_select_title">Select a city</string>
 
-    <!-- Navigation drawer menu -->
-    <string name="nav_main" translatable="true">Main</string>
-    <string name="nav_things" translatable="true">Pack</string>
-    <string name="nav_informer" translatable="true">Informer</string>
-    <string name="nav_about" translatable="true">About</string>
-    <string name="nav_manage" translatable="true">Settings</string>
-
     <!-- Settings activity -->
     <string name="title_activity_settings" translatable="true">Settings</string>
     <string name="title_language">Language</string>
