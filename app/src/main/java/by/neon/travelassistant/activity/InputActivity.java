@@ -2,19 +2,15 @@ package by.neon.travelassistant.activity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -34,7 +30,6 @@ import by.neon.travelassistant.R;
 import by.neon.travelassistant.activity.query.CategorySelectAsyncTask;
 import by.neon.travelassistant.activity.query.GenderSelectAsyncTask;
 import by.neon.travelassistant.activity.query.TransportSelectAsyncTask;
-import by.neon.travelassistant.config.TravelRequestQueue;
 import by.neon.travelassistant.config.sqlite.mapper.CategoryMapper;
 import by.neon.travelassistant.config.sqlite.mapper.GenderMapper;
 import by.neon.travelassistant.config.sqlite.mapper.TransportMapper;
@@ -44,9 +39,9 @@ import by.neon.travelassistant.listener.DateSetListener;
 import by.neon.travelassistant.model.Category;
 import by.neon.travelassistant.model.Gender;
 import by.neon.travelassistant.model.Transport;
+import by.neon.travelassistant.utility.TravelRequestQueue;
 
-public class InputActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class InputActivity extends AppCompatActivity {
     private static final String TAG = "InputActivity";
 
     @Override
@@ -55,14 +50,6 @@ public class InputActivity extends AppCompatActivity
         setContentView(R.layout.activity_input);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        navigationView.setNavigationItemSelectedListener(this);
 
         setGenders();
         setTransport();
@@ -107,37 +94,6 @@ public class InputActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.nav_main:
-                onBackPressed();
-                break;
-            case R.id.nav_informer:
-                break;
-            case R.id.nav_about:
-                startActivity(new Intent(this, AboutActivity.class));
-                break;
-            case R.id.nav_manage:
-                startActivity(new Intent(this, SettingsActivity.class));
-                break;
-        }
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
     public void onSelectStartDate(View view) {
         EditText text = findViewById(R.id.start_date);
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
@@ -164,8 +120,10 @@ public class InputActivity extends AppCompatActivity
 
     public void onSendClick(View view) {
         Intent intent = new Intent(this, PreviewActivity.class);
-        intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, (long) findViewById(R.id.arv_city).getTag());
-        intent.putExtra(CommonConstants.ARRIVAL_CITY_INFO, ((EditText) findViewById(R.id.arv_city)).getText().toString());
+        EditText editText = findViewById(R.id.arv_city);
+        intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, (long) editText.getTag(R.id.cityId));
+        intent.putExtra(CommonConstants.ARRIVAL_CITY_INFO, editText.getText().toString());
+        intent.putExtra(CommonConstants.ARRIVAL_CITY_LOCATION, (Location) editText.getTag(R.id.location));
         putData(intent, findViewById(R.id.layout_genders), "gender", CommonConstants.COUNT_GENDERS);
         putData(intent, findViewById(R.id.layout_transports), "transport", CommonConstants.COUNT_TRANSPORT_TYPES);
         putData(intent, findViewById(R.id.layout_categories), "category", CommonConstants.COUNT_CATEGORIES);
@@ -189,11 +147,12 @@ public class InputActivity extends AppCompatActivity
     }
 
     public void createCitySelectDialog(String cityName) {
+        SharedPreferences preferences = getSharedPreferences(CommonConstants.APP_SETTINGS, MODE_PRIVATE);
         String url = "https://api.openweathermap.org/data/2.5/find?" +
                 "q=" + cityName +
                 "&appid=" + CommonConstants.OWM_APP_ID +
                 "&lang=" + Locale.getDefault().getLanguage() +
-                "&units=metric";
+                "&units=" + preferences.getString(CommonConstants.TEMPERATURE_UNIT, "Standard");
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new CitySelectListener(this), null);
         TravelRequestQueue.getInstance(this).addRequest(request);
     }

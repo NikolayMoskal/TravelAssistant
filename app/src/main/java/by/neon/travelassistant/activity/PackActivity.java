@@ -4,14 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -29,22 +26,25 @@ import android.widget.TextView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import by.neon.travelassistant.BuildConfig;
 import by.neon.travelassistant.R;
-import by.neon.travelassistant.config.SettingsManager;
 import by.neon.travelassistant.config.SqliteConfig;
 import by.neon.travelassistant.constant.CommonConstants;
 import by.neon.travelassistant.model.Settings;
+import by.neon.travelassistant.utility.ReportManager;
+import by.neon.travelassistant.utility.SettingsManager;
 
-public class PackActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class PackActivity extends AppCompatActivity {
     private static final String TAG = "PackActivity";
     private List<Settings> settingsList;
 
@@ -55,14 +55,6 @@ public class PackActivity extends AppCompatActivity
         setTitle(R.string.title_activity_pack);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        navigationView.setNavigationItemSelectedListener(this);
 
         try {
             new SqliteConfig(this).getThings();
@@ -84,9 +76,9 @@ public class PackActivity extends AppCompatActivity
             Settings newSettings = mapper.readValue(extras.getString(CommonConstants.NEW_LIST_TAG), Settings.class);
             boolean exists = false;
             for (int index = 0; index < settingsList.size(); index++) {
-                if (settingsList.get(index).getCityCode() == newSettings.getCityCode()) {
+                if (settingsList.get(index).getCity().getCityCode() == newSettings.getCity().getCityCode()) {
                     settingsList.set(index, newSettings);
-                    findAndReplace(newSettings.getCityCode(), createCardForList(newSettings));
+                    findAndReplace(newSettings.getCity().getCityCode(), createCardForList(newSettings));
                     exists = true;
                     break;
                 }
@@ -124,16 +116,6 @@ public class PackActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.pack, menu);
         return true;
@@ -148,29 +130,15 @@ public class PackActivity extends AppCompatActivity
             case R.id.action_delete_all:
                 onDeleteAllClick();
                 return true;
+            case R.id.action_about:
+                startActivity(new Intent(this, AboutActivity.class));
+                return true;
+            case R.id.action_show_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.nav_main:
-                break;
-            case R.id.nav_informer:
-                break;
-            case R.id.nav_about:
-                startActivity(new Intent(this, AboutActivity.class));
-                break;
-            case R.id.nav_manage:
-                startActivity(new Intent(this, SettingsActivity.class));
-                break;
-        }
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     @Override
@@ -211,9 +179,12 @@ public class PackActivity extends AppCompatActivity
                 .setItems(menuItems, (dialog, which) -> {
                     switch (which) {
                         case 0:
-                            onEditListSelect(settings);
+                            onSendSelect(settings, menuItems[which]);
                             break;
                         case 1:
+                            onEditListSelect(settings);
+                            break;
+                        case 2:
                             onDeleteListSelect(settings);
                             break;
                     }
@@ -221,10 +192,27 @@ public class PackActivity extends AppCompatActivity
         return false;
     }
 
+    private void onSendSelect(Settings settings, String title) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        File file = ReportManager.writeListAsText(getFilesDir(), settings);
+        if (file != null) {
+            intent
+                    .putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID, file))
+                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
+        intent
+                .putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.send_subject,
+                        settings.getCity().getName(),
+                        "https://maps:google.com/maps?q=" + Uri.encode(settings.getCity().getName())))
+                .setType("text/plain");
+        startActivity(Intent.createChooser(intent, title));
+    }
+
     private void onEditListSelect(Settings settings) {
         Intent intent = new Intent(this, InputActivity.class);
-        intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, settings.getCityCode());
-        intent.putExtra(CommonConstants.ARRIVAL_CITY_INFO, settings.getCityName());
+        intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, settings.getCity().getCityCode());
+        intent.putExtra(CommonConstants.ARRIVAL_CITY_INFO, settings.getCity().getName());
+        intent.putExtra(CommonConstants.ARRIVAL_CITY_LOCATION, settings.getCity().getLocation());
         putData(intent, settings.getCategories(), "category", CommonConstants.COUNT_CATEGORIES);
         putData(intent, settings.getGenders(), "gender", CommonConstants.COUNT_GENDERS);
         putData(intent, settings.getTransportTypes(), "transport", CommonConstants.COUNT_TRANSPORT_TYPES);
@@ -235,7 +223,7 @@ public class PackActivity extends AppCompatActivity
     }
 
     private void onDeleteListSelect(Settings settings) {
-        CardView cardView = findByCityCode(settings.getCityCode());
+        CardView cardView = findByCityCode(settings.getCity().getCityCode());
         assert cardView != null;
         LinearLayout layout = (LinearLayout) cardView.getChildAt(0);
         CheckBox checkBox = (CheckBox) layout.getChildAt(0);
@@ -246,7 +234,7 @@ public class PackActivity extends AppCompatActivity
     private Settings find(long cityCode) {
         Settings settings = new Settings();
         for (Settings set : settingsList) {
-            if (set.getCityCode() == cityCode) {
+            if (set.getCity().getCityCode() == cityCode) {
                 settings = set;
                 break;
             }
@@ -280,12 +268,13 @@ public class PackActivity extends AppCompatActivity
         params.topMargin = (int) (10 / getResources().getDisplayMetrics().density + 0.5f);
         params.bottomMargin = (int) (10 / getResources().getDisplayMetrics().density + 0.5f);
         cardView.setLayoutParams(params);
-        cardView.setTag(settings.getCityCode());
-        cardView.setCardBackgroundColor(setBackgroundColor(getSelectedCount(settings), getAllCount(settings)));
+        cardView.setTag(settings.getCity().getCityCode());
+        double fillPercentage = getSelectedCount(settings) * 1.0f / getAllCount(settings);
+        cardView.setCardBackgroundColor(setBackgroundColor(fillPercentage));
         int padding = (int) (5 * getResources().getDisplayMetrics().density);
         cardView.setContentPadding(padding, padding, padding, padding);
-        cardView.setOnLongClickListener(v -> showContextMenuDialog(settings.getCityCode()));
-        cardView.setOnClickListener(v -> openPreview(settings.getCityCode()));
+        cardView.setOnLongClickListener(v -> showContextMenuDialog(settings.getCity().getCityCode()));
+        cardView.setOnClickListener(v -> openPreview(settings.getCity().getCityCode()));
 
         LinearLayout contentWithCheckBox = new LinearLayout(this);
         params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -297,12 +286,13 @@ public class PackActivity extends AppCompatActivity
         params.weight = 1;
         content.setLayoutParams(params);
         content.setOrientation(LinearLayout.VERTICAL);
-        content.addView(setPackTitle(settings.getCityName()));
+        content.addView(setPackTitle(settings.getCity().getName()));
         content.addView(setDatesTitle(settings.getTravelStartDate(), settings.getTravelEndDate()));
         content.addView(setWeightTitle(settings.getWeight()));
 
         contentWithCheckBox.addView(setCheckBox());
         contentWithCheckBox.addView(content);
+        contentWithCheckBox.addView(setFillProgress(fillPercentage));
         cardView.addView(contentWithCheckBox);
 
         return cardView;
@@ -311,8 +301,8 @@ public class PackActivity extends AppCompatActivity
     private void openPreview(long cityCode) {
         Intent intent = new Intent(this, PreviewActivity.class);
         Settings settings = find(cityCode);
-        intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, settings.getCityCode());
-        intent.putExtra(CommonConstants.ARRIVAL_CITY_INFO, settings.getCityName());
+        intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, settings.getCity().getCityCode());
+        intent.putExtra(CommonConstants.ARRIVAL_CITY_INFO, settings.getCity().getName());
         putData(intent, settings.getCategories(), "category", CommonConstants.COUNT_CATEGORIES);
         putData(intent, settings.getGenders(), "gender", CommonConstants.COUNT_GENDERS);
         putData(intent, settings.getTransportTypes(), "transport", CommonConstants.COUNT_TRANSPORT_TYPES);
@@ -351,7 +341,7 @@ public class PackActivity extends AppCompatActivity
         TextView view = new TextView(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         view.setLayoutParams(params);
-        view.setText(String.format(Locale.getDefault(), "%.2f%s", weight, getResources().getString(R.string.mass_unit_abbr)));
+        view.setText(getResources().getString(R.string.weight_title, weight));
         view.setTextSize(getResources().getDimension(R.dimen.pack_title_text_size) / getResources().getDisplayMetrics().scaledDensity);
         return view;
     }
@@ -366,16 +356,24 @@ public class PackActivity extends AppCompatActivity
         return checkBox;
     }
 
-    private int setBackgroundColor(int checkedCount, int allCount) {
-        float percentage = checkedCount * 1.0f / allCount;
-        return Color.HSVToColor(80, new float[]{120 * percentage, 100.0f, 100.0f});
+    private TextView setFillProgress(double fillPercentage) {
+        TextView view = new TextView(this);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.CENTER_VERTICAL;
+        view.setLayoutParams(params);
+        view.setText(String.format(Locale.getDefault(), "%.2f%%", fillPercentage * 100.0f));
+        return view;
+    }
+
+    private int setBackgroundColor(double percentage) {
+        return Color.HSVToColor(80, new float[]{(float) (120 * percentage), 100.0f, 100.0f});
     }
 
     private int getSelectedCount(Settings settings) {
         int count = 0;
         for (Settings.Selection selection : settings.getSelections()) {
-            for (Boolean flag : selection.getFlagsAsBoolean()) {
-                if (flag) {
+            for (Map.Entry<String, Boolean> flag : selection.getAsBoolean().entrySet()) {
+                if (flag.getValue()) {
                     count++;
                 }
             }
@@ -386,7 +384,7 @@ public class PackActivity extends AppCompatActivity
     private int getAllCount(Settings settings) {
         int count = 0;
         for (Settings.Selection selection : settings.getSelections()) {
-            count += selection.getFlags().size();
+            count += selection.getThings().size();
         }
         return count;
     }
@@ -457,8 +455,8 @@ public class PackActivity extends AppCompatActivity
         }
         SharedPreferences.Editor editor = getSharedPreferences(CommonConstants.APP_LISTS, MODE_PRIVATE).edit();
         for (int index = 0; index < settingsList.size(); index++) {
-            if (cityCodes.contains(settingsList.get(index).getCityCode())) {
-                editor.remove(String.valueOf(settingsList.get(index).getCityCode()));
+            if (cityCodes.contains(settingsList.get(index).getCity().getCityCode())) {
+                editor.remove(String.valueOf(settingsList.get(index).getCity().getCityCode()));
                 settingsList.remove(index--);
             }
         }

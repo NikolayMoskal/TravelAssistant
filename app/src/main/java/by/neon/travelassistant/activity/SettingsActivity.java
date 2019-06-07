@@ -1,35 +1,17 @@
 package by.neon.travelassistant.activity;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-
-import java.util.Locale;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 
 import by.neon.travelassistant.R;
-import by.neon.travelassistant.config.Config;
-import by.neon.travelassistant.config.SqliteConfig;
-import by.neon.travelassistant.listener.SwitchCheckedListener;
-import by.neon.travelassistant.model.Thing;
+import by.neon.travelassistant.constant.CommonConstants;
 
-public class SettingsActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
-    private static final String TAG = "SettingsActivity";
-    private Config config;
+public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,111 +20,45 @@ public class SettingsActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        configureDrawerLayout(toolbar);
-        configureNavigationView();
-
-        try {
-            config = new SqliteConfig(getApplicationContext());
-            createSwitchForEachThing();
-            loadSettingsFromPreferences();
-        } catch (Exception e) {
-            Log.e(TAG, "onCreate: " + e.getMessage(), e);
-        }
-    }
-
-    private void configureDrawerLayout(Toolbar toolbar) {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-    }
-
-    private void configureNavigationView() {
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        loadSettingsFromPreferences();
+        findViewById(R.id.lang_select).setEnabled(false);
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.nav_main:
-                Intent intent = new Intent(SettingsActivity.this, PackActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.nav_informer:
-                break;
-            case R.id.nav_about:
-                break;
-            case R.id.nav_manage:
-                break;
-        }
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    @Override
-    public void finish() {
         saveSettingsInPreferences();
-        super.finish();
-    }
-
-    private void createSwitchForEachThing() throws Exception {
-        LinearLayout layout = findViewById(R.id.layout_switch);
-        Locale locale = Locale.getDefault();
-
-        for (Thing thing : config.getThings()) {
-            SwitchCompat compat = new SwitchCompat(this);
-            compat.setText(locale.getLanguage().equals("ru") ? thing.getThingNameRu() : thing.getThingNameEn());
-            compat.setChecked(false);
-            compat.setTextSize(getResources().getDimension(R.dimen.settings_activity_text_size) / getResources().getDisplayMetrics().density);
-            compat.setTextColor(Color.rgb(0x00, 0x00, 0x00));
-            compat.setOnCheckedChangeListener(new SwitchCheckedListener());
-            compat.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            layout.addView(compat);
-        }
+        super.onBackPressed();
     }
 
     private void saveSettingsInPreferences() {
-        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(CommonConstants.APP_SETTINGS, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        LinearLayout layout = findViewById(R.id.layout_switch);
-        for (int index = 0; index < layout.getChildCount(); index++) {
-            View view = layout.getChildAt(index);
-            if (!(view instanceof SwitchCompat)) {
-                continue;
-            }
-
-            SwitchCompat compat = (SwitchCompat) view;
-            editor.putBoolean(compat.getText().toString(), compat.isChecked());
-        }
-
+        String[] items = getResources().getStringArray(R.array.server_temperature_units);
+        String[] signs = getResources().getStringArray(R.array.temperature_units_sign);
+        Spinner unit = findViewById(R.id.temp_unit);
+        int position = unit.getSelectedItemPosition();
+        editor.putString(CommonConstants.TEMPERATURE_UNIT, items[position == AdapterView.INVALID_POSITION ? 0 : position]);
+        editor.putString(CommonConstants.TEMPERATURE_UNIT_SIGN, signs[position == AdapterView.INVALID_POSITION ? 0 : position]);
+        editor.putBoolean(CommonConstants.DISABLE_WARN, ((SwitchCompat) findViewById(R.id.switch_disable_warnings)).isChecked());
+        editor.putBoolean(CommonConstants.DISABLE_ERR, ((SwitchCompat) findViewById(R.id.switch_disable_errors)).isChecked());
         editor.apply();
     }
 
     private void loadSettingsFromPreferences() {
-        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-        LinearLayout layout = findViewById(R.id.layout_switch);
-        for (int index = 0; index < layout.getChildCount(); index++) {
-            View view = layout.getChildAt(index);
-            if (!(view instanceof SwitchCompat)) {
-                continue;
-            }
+        SharedPreferences preferences = getSharedPreferences(CommonConstants.APP_SETTINGS, MODE_PRIVATE);
+        ((Spinner) findViewById(R.id.temp_unit)).setSelection(getUnitIndex(preferences.getString(CommonConstants.TEMPERATURE_UNIT, "Standard")));
+        ((SwitchCompat) findViewById(R.id.switch_disable_warnings)).setChecked(preferences.getBoolean(CommonConstants.DISABLE_WARN, false));
+        ((SwitchCompat) findViewById(R.id.switch_disable_errors)).setChecked(preferences.getBoolean(CommonConstants.DISABLE_ERR, false));
+    }
 
-            SwitchCompat compat = (SwitchCompat) view;
-            compat.setChecked(preferences.getBoolean(compat.getText().toString(), false));
+    private int getUnitIndex(String unitName) {
+        String[] items = getResources().getStringArray(R.array.server_temperature_units);
+        for (int index = 0; index < items.length; index++) {
+            if (items[index].equals(unitName)) {
+                return index;
+            }
         }
+
+        return 0;
     }
 }

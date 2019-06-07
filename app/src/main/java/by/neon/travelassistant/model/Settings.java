@@ -1,15 +1,18 @@
 package by.neon.travelassistant.model;
 
+import android.location.Location;
+import android.location.LocationManager;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Settings {
-    private String cityName;
-    private long cityCode;
+    private City city;
     @JsonProperty("start")
     private Date travelStartDate;
     @JsonProperty("end")
@@ -20,20 +23,12 @@ public class Settings {
     private List<String> categories;
     private List<Selection> selections;
 
-    public String getCityName() {
-        return cityName;
+    public City getCity() {
+        return city;
     }
 
-    public void setCityName(String cityName) {
-        this.cityName = cityName;
-    }
-
-    public long getCityCode() {
-        return cityCode;
-    }
-
-    public void setCityCode(long cityCode) {
-        this.cityCode = cityCode;
+    public void setCity(City city) {
+        this.city = city;
     }
 
     public Date getTravelStartDate() {
@@ -94,7 +89,7 @@ public class Settings {
 
     public static class Selection {
         private String category;
-        private List<Integer> flags;
+        private Map<String, Integer> things;
 
         public String getCategory() {
             return category;
@@ -104,29 +99,83 @@ public class Settings {
             this.category = category;
         }
 
-        public List<Integer> getFlags() {
-            return flags;
+        public Map<String, Integer> getThings() {
+            return things;
         }
 
-        public void setFlags(List<Integer> flags) {
-            this.flags = flags;
-        }
-
-        @JsonIgnore
-        public void setFlagsAsBoolean(List<Boolean> flags) {
-            this.flags = new ArrayList<>(0);
-            for (Boolean flag : flags) {
-                this.flags.add(flag ? 1 : 0);
-            }
+        public void setThings(Map<String, Integer> things) {
+            this.things = things;
         }
 
         @JsonIgnore
-        public List<Boolean> getFlagsAsBoolean() {
-            List<Boolean> list = new ArrayList<>(0);
-            for (Integer flag : this.flags) {
-                list.add(flag == 1);
+        public Map<String, Boolean> getAsBoolean() {
+            Map<String, Boolean> list = new LinkedHashMap<>(0);
+            for (Map.Entry<String, Integer> flag : this.things.entrySet()) {
+                list.put(flag.getKey(), flag.getValue() == 1);
             }
             return list;
+        }
+
+        @JsonIgnore
+        public void setAsBoolean(Map<String, Boolean> things) {
+            this.things = new LinkedHashMap<>(0);
+            for (Map.Entry<String, Boolean> flag : things.entrySet()) {
+                this.things.put(flag.getKey(), flag.getValue() ? 1 : 0);
+            }
+        }
+    }
+
+    public static class City {
+        private long cityCode;
+        private String name;
+        private double latitude;
+        private double longitude;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public double getLatitude() {
+            return latitude;
+        }
+
+        public void setLatitude(double latitude) {
+            this.latitude = latitude;
+        }
+
+        public double getLongitude() {
+            return longitude;
+        }
+
+        public void setLongitude(double longitude) {
+            this.longitude = longitude;
+        }
+
+        public long getCityCode() {
+            return cityCode;
+        }
+
+        public void setCityCode(long cityCode) {
+            this.cityCode = cityCode;
+        }
+
+        @JsonIgnore
+        public Location getLocation() {
+            Location location = new Location(LocationManager.GPS_PROVIDER);
+            location.setLatitude(latitude);
+            location.setLongitude(longitude);
+
+            return location;
+        }
+
+        @JsonIgnore
+        public void setLocation(Location location) {
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
         }
     }
 }

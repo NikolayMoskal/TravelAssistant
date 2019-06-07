@@ -1,4 +1,4 @@
-package by.neon.travelassistant.config;
+package by.neon.travelassistant.utility;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -35,8 +35,8 @@ public class SettingsManager {
         ObjectMapper mapper = new ObjectMapper();
         Set<String> stringSet = new HashSet<>(0);
         for (Settings settings : settingsList) {
-            stringSet.add(String.valueOf(settings.getCityCode()));
-            editor.putString(String.valueOf(settings.getCityCode()), mapper.writeValueAsString(settings));
+            stringSet.add(String.valueOf(settings.getCity().getCityCode()));
+            editor.putString(String.valueOf(settings.getCity().getCityCode()), mapper.writeValueAsString(settings));
         }
         editor.putStringSet(CommonConstants.APP_SETTINGS_KEYS, stringSet);
         editor.apply();
