@@ -1,15 +1,15 @@
-package by.neon.travelassistant.activity.query;
+package by.neon.travelassistant.activity.query.impl;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.List;
 
 import by.neon.travelassistant.Startup;
+import by.neon.travelassistant.activity.query.base.InsertAsyncTask;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
 import by.neon.travelassistant.config.sqlite.model.TransportDb;
 
-public final class TransportInsertAsyncTask extends AsyncTask<TransportDb, Void, List<Long>> {
+public final class TransportInsertAsyncTask extends InsertAsyncTask<TransportDb> {
     private static final String TAG = "TransportInsert";
 
     /**

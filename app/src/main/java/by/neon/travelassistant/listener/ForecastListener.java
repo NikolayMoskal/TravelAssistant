@@ -16,10 +16,24 @@ import java.util.List;
 
 import by.neon.travelassistant.model.Weather;
 
+/**
+ * Handles the weather forecast response from OpenWeatherMap server.
+ */
 public class ForecastListener implements Response.Listener<JSONObject> {
+    /**
+     * The unique log tag constant for this class.
+     */
     private static final String TAG = "ForecastListener";
+    /**
+     * The callback to return the parsed response.
+     */
     private ForecastCallback callback;
 
+    /**
+     * Builds a new instance of {@link ForecastListener} using a callback for return the forecast response.
+     *
+     * @param callback the callback to return the parsed response.
+     */
     public ForecastListener(ForecastCallback callback) {
         this.callback = callback;
     }
@@ -39,6 +53,13 @@ public class ForecastListener implements Response.Listener<JSONObject> {
         }
     }
 
+    /**
+     * Parses the JSON response that contains the weather forecast snapshots.
+     *
+     * @param response the JSON response with forecast data.
+     * @return the list of weather forecast snapshots.
+     * @throws JSONException then the JSON is invalid.
+     */
     private List<Weather> parseJsonResponse(JSONObject response) throws JSONException {
         JSONArray list = response.getJSONArray("list");
         JSONObject city = response.getJSONObject("city");

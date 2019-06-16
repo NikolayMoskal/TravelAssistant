@@ -1,12 +1,12 @@
-package by.neon.travelassistant.activity.query;
+package by.neon.travelassistant.activity.query.impl;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import by.neon.travelassistant.Startup;
+import by.neon.travelassistant.activity.query.base.InsertAsyncTask;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
 import by.neon.travelassistant.config.sqlite.model.CategoryDb;
 import by.neon.travelassistant.config.sqlite.model.GenderDb;
@@ -16,7 +16,10 @@ import by.neon.travelassistant.config.sqlite.model.ThingWeatherTypeDb;
 import by.neon.travelassistant.config.sqlite.model.TypeDb;
 import by.neon.travelassistant.config.sqlite.model.WeatherTypeDb;
 
-public final class ThingInsertAsyncTask extends AsyncTask<ThingDb, Void, List<Long>> {
+/**
+ * Provides a functionality for insert the things into database using Room.
+ */
+public final class ThingInsertAsyncTask extends InsertAsyncTask<ThingDb> {
     private static final String TAG = "ThingInsertAsyncTask";
 
     /**

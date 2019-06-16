@@ -1,13 +1,17 @@
-package by.neon.travelassistant.activity.query;
+package by.neon.travelassistant.activity.query.impl;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import by.neon.travelassistant.Startup;
+import by.neon.travelassistant.activity.query.base.UpdateAsyncTask;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
 import by.neon.travelassistant.config.sqlite.model.ThingDb;
 
-public final class ThingUpdateAsyncTask extends AsyncTask<ThingDb, Void, Integer> {
+/**
+ * Provides a functionality for update the thing into database using Room. If more than 1 thing
+ * were sent then only first record will be updated.
+ */
+public final class ThingUpdateAsyncTask extends UpdateAsyncTask<ThingDb> {
     private static final String TAG = "ThingUpdateAsyncTask";
 
     /**
