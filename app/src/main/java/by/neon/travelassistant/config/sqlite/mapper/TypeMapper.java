@@ -73,6 +73,10 @@ public final class TypeMapper extends BaseMapper<Type, TypeDb> {
      */
     @Override
     public TypeDb from(Type source) {
+        if (source==null){
+            return null;
+        }
+
         TypeDb typeDb = new TypeDb();
         typeDb.setId(source.getId());
         typeDb.setTypeNameEn(source.getTypeEn());

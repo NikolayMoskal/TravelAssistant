@@ -20,6 +20,10 @@ public final class WeatherTypeMapper {
      */
     public List<WeatherType> from(Weather weather) {
         List<WeatherType> weatherTypes = new ArrayList<>(0);
+        if (weather == null) {
+            return weatherTypes;
+        }
+
         for (String s : weather.getWeatherType()) {
             WeatherType weatherType = new WeatherType();
             weatherType.setType(s);

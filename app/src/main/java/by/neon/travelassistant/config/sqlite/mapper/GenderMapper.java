@@ -51,6 +51,10 @@ public final class GenderMapper extends BaseMapper<Gender, GenderDb> {
      */
     @Override
     public GenderDb from(Gender source) {
+        if (source == null) {
+            return null;
+        }
+
         GenderDb genderDb = new GenderDb();
         genderDb.setId(source.getId());
         genderDb.setTypeEn(source.getGenderEn());
@@ -66,6 +70,10 @@ public final class GenderMapper extends BaseMapper<Gender, GenderDb> {
      */
     @Override
     public Gender to(GenderDb source) {
+        if (source == null) {
+            return null;
+        }
+
         Gender gender = new Gender();
         gender.setId(source.getId());
         gender.setGenderEn(source.getTypeEn());

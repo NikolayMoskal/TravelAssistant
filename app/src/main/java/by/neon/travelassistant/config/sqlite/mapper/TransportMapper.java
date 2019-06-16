@@ -57,6 +57,10 @@ public final class TransportMapper extends BaseMapper<Transport, TransportDb> {
      */
     @Override
     public TransportDb from(Transport source) {
+        if (source == null) {
+            return null;
+        }
+
         TransportDb transportDb = new TransportDb();
         transportDb.setId(source.getId());
         transportDb.setNameEn(source.getNameEn());
@@ -74,6 +78,10 @@ public final class TransportMapper extends BaseMapper<Transport, TransportDb> {
      */
     @Override
     public Transport to(TransportDb source) {
+        if (source == null) {
+            return null;
+        }
+
         Transport transport = new Transport();
         transport.setId(source.getId());
         transport.setNameEn(source.getNameEn());

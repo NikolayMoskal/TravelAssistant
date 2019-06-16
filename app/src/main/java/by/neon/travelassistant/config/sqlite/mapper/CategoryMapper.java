@@ -73,6 +73,10 @@ public final class CategoryMapper extends BaseMapper<Category, CategoryDb> {
      */
     @Override
     public CategoryDb from(Category source) {
+        if (source == null) {
+            return null;
+        }
+
         CategoryDb categoryDb = new CategoryDb();
         categoryDb.setId(source.getId());
         categoryDb.setCategoryNameEn(source.getCategoryNameEn());
@@ -88,6 +92,10 @@ public final class CategoryMapper extends BaseMapper<Category, CategoryDb> {
      */
     @Override
     public Category to(CategoryDb source) {
+        if (source == null) {
+            return null;
+        }
+
         Category category = new Category();
         category.setId(source.getId());
         category.setCategoryNameEn(source.getCategoryNameEn());

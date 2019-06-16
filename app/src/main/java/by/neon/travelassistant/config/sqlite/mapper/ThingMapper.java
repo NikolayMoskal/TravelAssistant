@@ -22,6 +22,10 @@ public final class ThingMapper extends BaseMapper<Thing, ThingDb> {
      */
     @Override
     public ThingDb from(Thing source) {
+        if (source == null) {
+            return null;
+        }
+
         ThingDb thingDb = new ThingDb();
         thingDb.setId(source.getId());
         thingDb.setThingNameEn(source.getThingNameEn());
@@ -107,6 +111,10 @@ public final class ThingMapper extends BaseMapper<Thing, ThingDb> {
      */
     @Override
     public Thing to(ThingDb source) {
+        if (source == null) {
+            return null;
+        }
+
         Thing thing = new Thing();
         thing.setId(source.getId());
         thing.setThingNameEn(source.getThingNameEn());
