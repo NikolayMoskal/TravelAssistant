@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 
@@ -17,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,12 +30,26 @@ import by.neon.travelassistant.adapter.SelectCityAdapter;
 import by.neon.travelassistant.constant.CommonConstants;
 import by.neon.travelassistant.model.Weather;
 
+/**
+ * Handles a weather response from OpenWeatherMap server and shows the dialog to select the city.
+ */
 public class CitySelectListener implements Response.Listener<JSONObject> {
+    /**
+     * The unique log tag constant for this class.
+     */
     private static final String TAG = "CityWeatherListener";
-    private Activity activity;
+    /**
+     * The reference to the activity that uses this listener.
+     */
+    private WeakReference<Activity> activity;
 
+    /**
+     * Builds a new instance of {@link CitySelectListener} with activity that uses this instance.
+     *
+     * @param activity the activity that uses this listener.
+     */
     public CitySelectListener(Activity activity) {
-        this.activity = activity;
+        this.activity = new WeakReference<>(activity);
     }
 
     /**
@@ -51,6 +67,14 @@ public class CitySelectListener implements Response.Listener<JSONObject> {
         }
     }
 
+    /**
+     * Parses the JSON weather response to lise of {@link Weather} objects each of which contains
+     * the weather snapshot at some moment.
+     *
+     * @param response the JSON that contains the weather objects requested from OpenWeatherMap server.
+     * @return the list of {@link Weather} objects.
+     * @throws JSONException when the JSON is invalid.
+     */
     private List<Weather> parseJsonResponse(JSONObject response) throws JSONException {
         JSONArray responses = response.getJSONArray("list");
         List<Weather> weatherList = new ArrayList<>();
@@ -94,27 +118,43 @@ public class CitySelectListener implements Response.Listener<JSONObject> {
         return weatherList;
     }
 
+    /**
+     * Shows in given activity the dialog to select the city.
+     *
+     * @param weatherList the list of weather snapshots.
+     * @param adapter     the adapter for the dialog.
+     */
     private void showCitySelectDialog(List<Weather> weatherList, ListAdapter adapter) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity.get());
         builder
                 .setTitle(R.string.city_select_title)
                 .setCancelable(true)
                 .setAdapter(adapter, (dialog, which) -> {
-                    EditText text = activity.findViewById(R.id.arv_city);
+                    EditText text = activity.get().findViewById(R.id.arv_city);
+                    TextView code = activity.get().findViewById(R.id.city_code);
+                    TextView location = activity.get().findViewById(R.id.city_location);
                     Weather weather = weatherList.get(which);
                     text.setText(String.format(Locale.getDefault(), "%s, %s",
                             weather.getCityName(),
                             weather.getCountryCode()));
-                    text.setTag(R.id.cityId, weather.getCityId());
-                    text.setTag(R.id.location, weather.getLocation());
+                    code.setText(String.valueOf(weather.getCityId()));
+                    location.setText(String.format(Locale.getDefault(), "%s,%s",
+                            weather.getLocation().getLatitude(), weather.getLocation().getLongitude()));
+                    location.setTag(R.id.location, weather.getLocation());
                 })
                 .setNegativeButton(R.string.action_cancel, null);
         builder.create().show();
     }
 
+    /**
+     * Configures the adapter for the dialog.
+     *
+     * @param weatherList the list of weather snapshots.
+     * @return the configured adapter.
+     */
     private SimpleAdapter configureCitySelectAdapter(List<Weather> weatherList) {
         String[] keys = new String[]{"Icon", "City", "Location", "Temp", "Selected"};
-        SharedPreferences preferences = activity.getSharedPreferences(CommonConstants.APP_SETTINGS, Context.MODE_PRIVATE);
+        SharedPreferences preferences = activity.get().getSharedPreferences(CommonConstants.APP_SETTINGS, Context.MODE_PRIVATE);
         ArrayList<HashMap<String, String>> maps = new ArrayList<>(0);
         for (Weather weather : weatherList) {
             HashMap<String, String> map = new HashMap<>();
@@ -126,6 +166,6 @@ public class CitySelectListener implements Response.Listener<JSONObject> {
             maps.add(map);
         }
         int[] ids = new int[]{R.id.citySelectWeatherIcon, R.id.citySelectCityNameAndCountry, R.id.citySelectCityCoordinates, R.id.citySelectCurrentTemp, R.id.selectedCityName};
-        return new SelectCityAdapter(activity, maps, R.layout.select_city_layout, keys, ids);
+        return new SelectCityAdapter(activity.get(), maps, R.layout.select_city_layout, keys, ids);
     }
 }

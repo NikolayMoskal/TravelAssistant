@@ -1,22 +1,43 @@
-package by.neon.travelassistant.activity.query;
+package by.neon.travelassistant.activity.query.impl;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import by.neon.travelassistant.Startup;
+import by.neon.travelassistant.activity.query.base.SelectAsyncTask;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
 import by.neon.travelassistant.config.sqlite.model.CategoryDb;
 import by.neon.travelassistant.config.sqlite.model.ThingDb;
 
-public final class ThingSelectAsyncTask extends AsyncTask<Void, Void, List<ThingDb>> {
+/**
+ * Provides a functionality for selection the things from database using Room. All parameters
+ * used in following order:
+ * <ol>
+ * <li>All records.</li>
+ * <li>Unique ID.</li>
+ * <li>Thing name in english.</li>
+ * <li>Thing type (clothes, shoes etc).</li>
+ * <li>Thing category (for travel, for photo etc).</li>
+ * </ol>
+ */
+public final class ThingSelectAsyncTask extends SelectAsyncTask<ThingDb> {
+    /**
+     * The unique log tag constant for this class.
+     */
     private static final String TAG = "ThingSelectAsyncTask";
-    private boolean isSelectAll;
+    /**
+     * The name of selectable thing.
+     */
     private String name;
-    private long id;
+    /**
+     * The type of selectable thing.
+     */
     private String type;
+    /**
+     * The category of selectable thing.
+     */
     private String category;
 
     /**
@@ -59,22 +80,29 @@ public final class ThingSelectAsyncTask extends AsyncTask<Void, Void, List<Thing
         return result;
     }
 
-    public void setSelectAll(boolean selectAll) {
-        isSelectAll = selectAll;
-    }
-
+    /**
+     * Sets the name of selectable thing.
+     *
+     * @param name the name to set.
+     */
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
+    /**
+     * Sets the type of selectable thing.
+     *
+     * @param type the type to set.
+     */
     public void setType(String type) {
         this.type = type;
     }
 
+    /**
+     * Sets the category of selectable thing.
+     *
+     * @param category the category to set.
+     */
     public void setCategory(String category) {
         this.category = category;
     }

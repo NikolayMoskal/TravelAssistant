@@ -19,8 +19,17 @@ import java.util.concurrent.ExecutionException;
 import by.neon.travelassistant.R;
 import by.neon.travelassistant.activity.query.DownloadWeatherIconAsyncTask;
 
+/**
+ * Prepares the adapter for dialog of city selection.
+ */
 public final class SelectCityAdapter extends SimpleAdapter {
+    /**
+     * The unique log tag constant for this class.
+     */
     private static final String TAG = "SelectCityAdapter";
+    /**
+     * The inflater for the layout. Used to fill the layout with XML markup.
+     */
     private LayoutInflater inflater;
 
     /**

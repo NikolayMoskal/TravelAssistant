@@ -46,13 +46,6 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/arv_city_title"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/main_activity_text_size" />
-
                 <EditText
                     android:id="@+id/arv_city"
                     android:layout_width="wrap_content"
@@ -67,6 +60,48 @@
                     android:layout_height="wrap_content"
                     android:onClick="onFindCity"
                     android:src="@android:drawable/ic_menu_search" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/city_code_title"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/main_activity_text_size" />
+
+                <TextView
+                    android:id="@+id/city_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15sp"
+                    android:text=""/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/city_location_title"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/main_activity_text_size" />
+
+                <TextView
+                    android:id="@+id/city_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15sp"
+                    android:text=""/>
             </LinearLayout>
 
             <LinearLayout

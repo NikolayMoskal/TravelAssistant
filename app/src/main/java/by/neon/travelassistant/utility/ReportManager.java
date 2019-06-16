@@ -7,7 +7,17 @@ import java.util.Map;
 
 import by.neon.travelassistant.model.Settings;
 
+/**
+ * Creates the reports in any file formats.
+ */
 public class ReportManager {
+    /**
+     * Creates the report for a list of recommendations in TXT format.
+     *
+     * @param outputDir the output directory for report file.
+     * @param settings  the content for creating the report.
+     * @return the report file.
+     */
     public static File writeListAsText(File outputDir, Settings settings) {
         try {
             File file = new File(outputDir, settings.getCity().getName() + ".txt");
@@ -18,6 +28,13 @@ public class ReportManager {
         }
     }
 
+    /**
+     * Writes the content in the report file.
+     *
+     * @param file     the report file.
+     * @param settings the content for a report.
+     * @throws IOException when an error occurred while creating the report.
+     */
     private static void createListAsText(File file, Settings settings) throws IOException {
         try (FileWriter writer = new FileWriter(file, false)) {
             for (Settings.Selection selection : settings.getSelections()) {

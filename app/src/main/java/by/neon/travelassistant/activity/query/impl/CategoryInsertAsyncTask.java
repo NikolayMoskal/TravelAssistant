@@ -1,15 +1,21 @@
-package by.neon.travelassistant.activity.query;
+package by.neon.travelassistant.activity.query.impl;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.List;
 
 import by.neon.travelassistant.Startup;
+import by.neon.travelassistant.activity.query.base.InsertAsyncTask;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
 import by.neon.travelassistant.config.sqlite.model.CategoryDb;
 
-public final class CategoryInsertAsyncTask extends AsyncTask<CategoryDb, Void, List<Long>> {
+/**
+ * Provides a functionality for insert the thing categories into database using Room.
+ */
+public final class CategoryInsertAsyncTask extends InsertAsyncTask<CategoryDb> {
+    /**
+     * The unique log tag constant for this class.
+     */
     private static final String TAG = "CategoryInsertAsyncTask";
 
     /**

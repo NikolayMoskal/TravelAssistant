@@ -10,9 +10,22 @@ import by.neon.travelassistant.config.sqlite.model.TypeDb;
 import by.neon.travelassistant.config.sqlite.model.WeatherTypeDb;
 import by.neon.travelassistant.model.Thing;
 
+/**
+ * Converts the thing objects from db entity to model and back.
+ */
 public final class ThingMapper extends BaseMapper<Thing, ThingDb> {
+    /**
+     * Converts the object from type {@link Thing} to type {@link ThingDb}.
+     *
+     * @param source the object to convert.
+     * @return the converted object.
+     */
     @Override
     public ThingDb from(Thing source) {
+        if (source == null) {
+            return null;
+        }
+
         ThingDb thingDb = new ThingDb();
         thingDb.setId(source.getId());
         thingDb.setThingNameEn(source.getThingNameEn());
@@ -27,6 +40,12 @@ public final class ThingMapper extends BaseMapper<Thing, ThingDb> {
         return thingDb;
     }
 
+    /**
+     * Creates the category instances by their titles.
+     *
+     * @param names the category titles list.
+     * @return the list of category objects.
+     */
     private List<CategoryDb> createCategoryInstances(List<String> names) {
         List<CategoryDb> list = new ArrayList<>(0);
         for (String name : names) {
@@ -38,6 +57,12 @@ public final class ThingMapper extends BaseMapper<Thing, ThingDb> {
         return list;
     }
 
+    /**
+     * Creates the weather type instances by their titles.
+     *
+     * @param names the list of titles.
+     * @return the list of weather type instances.
+     */
     private List<WeatherTypeDb> createWeatherTypeInstances(List<String> names) {
         List<WeatherTypeDb> list = new ArrayList<>(0);
         for (String name : names) {
@@ -48,6 +73,13 @@ public final class ThingMapper extends BaseMapper<Thing, ThingDb> {
         return list;
     }
 
+    /**
+     * Creates the thing type instance by its title and ID.
+     *
+     * @param id     the ID of the record in database.
+     * @param nameEn the title.
+     * @return the thing type instance.
+     */
     private TypeDb createTypeInstance(long id, String nameEn) {
         TypeDb typeDb = new TypeDb();
         typeDb.setId(id);
@@ -56,6 +88,13 @@ public final class ThingMapper extends BaseMapper<Thing, ThingDb> {
         return typeDb;
     }
 
+    /**
+     * Creates the gender instance by its title and ID.
+     *
+     * @param id   the ID of the record in database.
+     * @param type the title.
+     * @return the gender instance.
+     */
     private GenderDb createGenderInstance(long id, String type) {
         GenderDb genderDb = new GenderDb();
         genderDb.setId(id);
@@ -64,8 +103,18 @@ public final class ThingMapper extends BaseMapper<Thing, ThingDb> {
         return genderDb;
     }
 
+    /**
+     * Converts the object from type {@link ThingDb} to type {@link Thing}.
+     *
+     * @param source the object to convert.
+     * @return the converted object.
+     */
     @Override
     public Thing to(ThingDb source) {
+        if (source == null) {
+            return null;
+        }
+
         Thing thing = new Thing();
         thing.setId(source.getId());
         thing.setThingNameEn(source.getThingNameEn());
@@ -80,6 +129,12 @@ public final class ThingMapper extends BaseMapper<Thing, ThingDb> {
         return thing;
     }
 
+    /**
+     * Extracts the titles from the category instances.
+     *
+     * @param instances the category entities.
+     * @return the list of category titles.
+     */
     private List<String> createCategoryNames(List<CategoryDb> instances) {
         List<String> list = new ArrayList<>(0);
         for (CategoryDb categoryDb : instances) {
@@ -88,6 +143,12 @@ public final class ThingMapper extends BaseMapper<Thing, ThingDb> {
         return list;
     }
 
+    /**
+     * Extracts the titles of weather type instances.
+     *
+     * @param instances the weather type entities.
+     * @return the list of weather type titles.
+     */
     private List<String> createWeatherTypeNames(List<WeatherTypeDb> instances) {
         List<String> list = new ArrayList<>(0);
         for (WeatherTypeDb weatherTypeDb : instances) {

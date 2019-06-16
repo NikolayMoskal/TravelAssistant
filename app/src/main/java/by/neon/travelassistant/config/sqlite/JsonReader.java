@@ -18,15 +18,38 @@ import by.neon.travelassistant.config.sqlite.model.WeatherTypeDb;
 import by.neon.travelassistant.model.Thing;
 import by.neon.travelassistant.model.Transport;
 
+/**
+ * Reads the JSON database and returns the parsed lists.
+ */
 public class JsonReader {
+    /**
+     * The thing type values.
+     */
     private List<String> types;
+    /**
+     * The category values.
+     */
     private List<String> categories;
+    /**
+     * The weather type values.
+     */
     private List<String> weatherTypes;
+    /**
+     * The gender values.
+     */
     private List<String> genders;
 
+    /**
+     * Reads the list of things from JSON.
+     *
+     * @param json the JSON string.
+     * @return the list of parsed thing instances.
+     * @throws IOException when the JSON database was not read.
+     */
     public List<Thing> read(String json) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        List<Thing> things = mapper.readValue(json, new TypeReference<List<Thing>>() {});
+        List<Thing> things = mapper.readValue(json, new TypeReference<List<Thing>>() {
+        });
         List<String> types = new ArrayList<>();
         List<String> categories = new ArrayList<>();
         List<String> weatherTypes = new ArrayList<>();
@@ -39,7 +62,6 @@ public class JsonReader {
             genders.add(thing.getGender());
         }
 
-
         this.types = new ArrayList<>(new HashSet<>(types));
         this.categories = new ArrayList<>(new HashSet<>(categories));
         this.genders = new ArrayList<>(new HashSet<>(genders));
@@ -47,11 +69,23 @@ public class JsonReader {
         return things;
     }
 
+    /**
+     * Reads the transports from JSON.
+     *
+     * @param json the JSON string.
+     * @return the list of transports.
+     * @throws IOException when the JSON database was not read.
+     */
     public List<Transport> readTransports(String json) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(json, new TypeReference<List<Transport>>() {});
     }
 
+    /**
+     * Creates and returns the reference types for each thing type.
+     *
+     * @return the thing types.
+     */
     public List<TypeDb> getTypes() {
         List<TypeDb> typeDbs = new ArrayList<>();
         TypeMapper mapper = new TypeMapper();
@@ -64,6 +98,11 @@ public class JsonReader {
         return typeDbs;
     }
 
+    /**
+     * Creates and returns the reference types for each category.
+     *
+     * @return the categories.
+     */
     public List<CategoryDb> getCategories() {
         List<CategoryDb> list = new ArrayList<>();
         CategoryMapper mapper = new CategoryMapper();
@@ -76,6 +115,11 @@ public class JsonReader {
         return list;
     }
 
+    /**
+     * Creates and returns the reference types for each weather type.
+     *
+     * @return the weather types.
+     */
     public List<WeatherTypeDb> getWeatherTypes() {
         List<WeatherTypeDb> list = new ArrayList<>();
         for (String type : weatherTypes) {
@@ -86,6 +130,11 @@ public class JsonReader {
         return list;
     }
 
+    /**
+     * Creates and returns the reference types for each gender.
+     *
+     * @return the genders.
+     */
     public List<GenderDb> getGenders() {
         List<GenderDb> list = new ArrayList<>();
         GenderMapper mapper = new GenderMapper();

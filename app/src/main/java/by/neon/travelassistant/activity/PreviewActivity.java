@@ -34,15 +34,16 @@ import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import by.neon.travelassistant.R;
-import by.neon.travelassistant.activity.query.CategorySelectAsyncTask;
-import by.neon.travelassistant.activity.query.GenderSelectAsyncTask;
-import by.neon.travelassistant.activity.query.ThingSelectAsyncTask;
-import by.neon.travelassistant.activity.query.TransportSelectAsyncTask;
+import by.neon.travelassistant.activity.query.impl.CategorySelectAsyncTask;
+import by.neon.travelassistant.activity.query.impl.GenderSelectAsyncTask;
+import by.neon.travelassistant.activity.query.impl.ThingSelectAsyncTask;
+import by.neon.travelassistant.activity.query.impl.TransportSelectAsyncTask;
 import by.neon.travelassistant.config.sqlite.mapper.CategoryMapper;
 import by.neon.travelassistant.config.sqlite.mapper.GenderMapper;
 import by.neon.travelassistant.config.sqlite.mapper.ThingMapper;
 import by.neon.travelassistant.config.sqlite.mapper.TransportMapper;
 import by.neon.travelassistant.config.sqlite.mapper.WeatherTypeMapper;
+import by.neon.travelassistant.config.sqlite.model.TransportDb;
 import by.neon.travelassistant.constant.CommonConstants;
 import by.neon.travelassistant.listener.ForecastListener;
 import by.neon.travelassistant.listener.ThingSelectListener;
@@ -54,9 +55,21 @@ import by.neon.travelassistant.model.Transport;
 import by.neon.travelassistant.model.WeatherType;
 import by.neon.travelassistant.utility.TravelRequestQueue;
 
+/**
+ * The activity for show the list of recommendations.
+ */
 public class PreviewActivity extends AppCompatActivity {
+    /**
+     * The unique log tag constant for this class.
+     */
     private static final String TAG = "PreviewActivity";
+    /**
+     * The list settings.
+     */
     private Map<String, Object> input;
+    /**
+     * The listener for each thing. Calculates the weight of all selected things in the list.
+     */
     private ThingSelectListener thingSelectListener;
 
     @Override
@@ -77,6 +90,11 @@ public class PreviewActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    /**
+     * Collects the list settings data in the intent.
+     *
+     * @return the intent.
+     */
     private Intent prepareIntentForResult() {
         Intent intent = new Intent(this, PackActivity.class);
         Settings settings = new Settings();
@@ -170,6 +188,12 @@ public class PreviewActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Parses the list settings received from the {@link InputActivity}.
+     *
+     * @param extras the extra data.
+     * @return the map with parsed data.
+     */
     private Map<String, Object> parseExtras(Bundle extras) {
         Map<String, Object> map = new HashMap<>();
         if (extras == null) {
@@ -198,6 +222,15 @@ public class PreviewActivity extends AppCompatActivity {
         return map;
     }
 
+    /**
+     * Extracts the data by given {@code tagItem} and collects it in the map. The count of this data
+     * given by the {@code tagCount} tag.
+     *
+     * @param extras   the extra data.
+     * @param tagItem  the tag for target data.
+     * @param tagCount the tag for count of the target data.
+     * @param map      the map to collect the target data.
+     */
     private void extractData(Bundle extras, String tagItem, String tagCount, Map<String, Object> map) {
         int count = extras.getInt(tagCount, 0);
         for (int index = 0; index < count; index++) {
@@ -205,6 +238,11 @@ public class PreviewActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Extracts the categories from the database by given list of names.
+     *
+     * @return the list of categories.
+     */
     private List<Category> extractTargets() {
         List<String> names = getNames("category");
         CategorySelectAsyncTask task = new CategorySelectAsyncTask();
@@ -219,19 +257,32 @@ public class PreviewActivity extends AppCompatActivity {
         return list;
     }
 
+    /**
+     * Extracts the transport from the database by given name.
+     *
+     * @return the transport.
+     */
     private Transport extractTransport() {
         List<String> names = getNames("transport");
         TransportSelectAsyncTask task = new TransportSelectAsyncTask();
         TransportMapper mapper = new TransportMapper();
         task.setNames(names);
         try {
-            return mapper.to(task.execute().get().get(0));
+            List<TransportDb> list = task.execute().get();
+            if (list.size() > 0) {
+                return mapper.to(list.get(0));
+            }
         } catch (InterruptedException | ExecutionException e) {
             Log.e(TAG, "extractTransports: " + e.getMessage(), e);
         }
         return null;
     }
 
+    /**
+     * Extracts the genders from the database by given names.
+     *
+     * @return the list of genders.
+     */
     private List<Gender> extractGenders() {
         List<String> names = getNames("gender");
         names.add("neutral");
@@ -247,6 +298,10 @@ public class PreviewActivity extends AppCompatActivity {
         return genders;
     }
 
+    /**
+     * Makes the weather request to the server. When the data is received, then makes the list of recommendations
+     * using the collected filters.
+     */
     private void requestWeatherTypes() {
         SharedPreferences preferences = getSharedPreferences(CommonConstants.APP_SETTINGS, MODE_PRIVATE);
         String url = "https://api.openweathermap.org/data/2.5/forecast?" +
@@ -270,6 +325,14 @@ public class PreviewActivity extends AppCompatActivity {
         TravelRequestQueue.getInstance(this).addRequest(request);
     }
 
+    /**
+     * Extracts the names using given tag. For example, for extract the categories the application
+     * uses the tag "category". It means that all categories have the names: category0,
+     * category1 etc.
+     *
+     * @param tag the tag to extract the names collection.
+     * @return the list of extracted names.
+     */
     private List<String> getNames(String tag) {
         List<String> names = new ArrayList<>();
         for (Map.Entry<String, Object> item : input.entrySet()) {
@@ -280,6 +343,13 @@ public class PreviewActivity extends AppCompatActivity {
         return names;
     }
 
+    /**
+     * Makes the list of recommendations.
+     *
+     * @param weatherTypes the weather types list based of current weather.
+     * @throws ExecutionException   when the writing is not completed.
+     * @throws InterruptedException when the writing was interrupted.
+     */
     private void fillPreview(List<WeatherType> weatherTypes) throws ExecutionException, InterruptedException {
         List<Gender> genders = extractGenders();
         Transport transport = extractTransport();
@@ -292,6 +362,17 @@ public class PreviewActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Adds a group of views to parent layout. This group includes the name of category and the list of things
+     *
+     * @param parent       the parent layout.
+     * @param title        the name of category in current locale.
+     * @param category     the name of category in database.
+     * @param genders      the list of genders. Uses as filter to select the things.
+     * @param weatherTypes the list of weather types. Uses as filter to select the things.
+     * @throws ExecutionException   when the writing is not completed.
+     * @throws InterruptedException when the writing was interrupted.
+     */
     private void addGroup(LinearLayout parent, String title, String category, List<Gender> genders, List<WeatherType> weatherTypes) throws ExecutionException, InterruptedException {
         LinearLayout layout = new LinearLayout(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -302,6 +383,13 @@ public class PreviewActivity extends AppCompatActivity {
         parent.addView(layout);
     }
 
+    /**
+     * Creates the view for the given category.
+     *
+     * @param title the name of category in current locale.
+     * @param name  the name of category in database.
+     * @return the created view.
+     */
     private TextView createViewByTitle(String title, String name) {
         TextView targetTitleView = new TextView(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -313,6 +401,16 @@ public class PreviewActivity extends AppCompatActivity {
         return targetTitleView;
     }
 
+    /**
+     * Adds the things to parent layout using the given filters.
+     *
+     * @param parent       the parent layout.
+     * @param target       the category name in database.
+     * @param genders      the list of genders. Uses as filter to select the things.
+     * @param weatherTypes the list of weather types. Uses as filter to select the things.
+     * @throws ExecutionException   when the writing is not completed.
+     * @throws InterruptedException when the writing was interrupted.
+     */
     private void addThingsToParent(LinearLayout parent, String target, List<Gender> genders, List<WeatherType> weatherTypes) throws ExecutionException, InterruptedException {
         ThingSelectAsyncTask task = new ThingSelectAsyncTask();
         task.setCategory(target);
@@ -323,6 +421,12 @@ public class PreviewActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Creates the view for given thing.
+     *
+     * @param thing the thing.
+     * @return the created view.
+     */
     private CheckBox createThingView(Thing thing) {
         CheckBox checkBox = new CheckBox(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -334,10 +438,24 @@ public class PreviewActivity extends AppCompatActivity {
         return checkBox;
     }
 
+    /**
+     * Makes the capital letter in given title.
+     *
+     * @param title the title.
+     * @return the title with capital letter.
+     */
     private String capitalize(String title) {
         return title.substring(0, 1).toUpperCase() + title.substring(1);
     }
 
+    /**
+     * Selects the thing set using the given filters.
+     *
+     * @param source       the source list of things.
+     * @param weatherTypes the list of weather types. Uses as filter to select the things.
+     * @param genders      the list of genders. Uses as filter to select the things.
+     * @return the filtered list of things.
+     */
     private List<Thing> filter(List<Thing> source, List<WeatherType> weatherTypes, List<Gender> genders) {
         List<Thing> filtered = new ArrayList<>();
         for (Thing thing : source) {
@@ -348,6 +466,13 @@ public class PreviewActivity extends AppCompatActivity {
         return filtered;
     }
 
+    /**
+     * Verifies that the thing belong to any of given weather type.
+     *
+     * @param thing        the thing to test.
+     * @param weatherTypes the list of weather types to test.
+     * @return true - if the thing has any of given weather type.
+     */
     private boolean hasAnyWeatherType(Thing thing, List<WeatherType> weatherTypes) {
         if (weatherTypes == null || weatherTypes.size() == 0) {
             return true;
@@ -363,6 +488,13 @@ public class PreviewActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * Verifies that the thing belong to one or more gender types.
+     *
+     * @param thing   the thing to test.
+     * @param genders the list of genders to test.
+     * @return true - if the thing belong to one or more gender types.
+     */
     private boolean belongsTo(Thing thing, List<Gender> genders) {
         if (genders == null || genders.size() == 0) {
             return true;
@@ -376,6 +508,11 @@ public class PreviewActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * Collects the selected things from the list.
+     *
+     * @return the {@link by.neon.travelassistant.model.Settings.Selection}.
+     */
     private List<Settings.Selection> getSelections() {
         LinearLayout content = findViewById(R.id.layout_preview);
         List<Settings.Selection> selections = new ArrayList<>(0);
@@ -394,6 +531,11 @@ public class PreviewActivity extends AppCompatActivity {
         return selections;
     }
 
+    /**
+     * Restores the selected things to the list using given {@link by.neon.travelassistant.model.Settings.Selection}.
+     *
+     * @param selections the {@link by.neon.travelassistant.model.Settings.Selection}.
+     */
     private void setSelections(List<Settings.Selection> selections) {
         LinearLayout content = findViewById(R.id.layout_preview);
         for (int index = 0; index < content.getChildCount(); index++) {

@@ -9,9 +9,20 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * Handles the date selection in the calendar view.
+ */
 public class DateSetListener implements DatePickerDialog.OnDateSetListener {
+    /**
+     * The view that will contain the selected date.
+     */
     private final EditText view;
 
+    /**
+     * Builds a new instance of {@link DateSetListener} using the view to show the selected date.
+     *
+     * @param view the view to show the date.
+     */
     public DateSetListener(final EditText view) {
         this.view = view;
     }

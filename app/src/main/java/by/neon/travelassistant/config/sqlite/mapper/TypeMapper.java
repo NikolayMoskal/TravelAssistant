@@ -6,7 +6,16 @@ import java.util.List;
 import by.neon.travelassistant.config.sqlite.model.TypeDb;
 import by.neon.travelassistant.model.Type;
 
+/**
+ * Converts the thing type objects from db entity to model and back.
+ */
 public final class TypeMapper extends BaseMapper<Type, TypeDb> {
+    /**
+     * Translates the thing type title from english to russian.
+     *
+     * @param en the english title.
+     * @return the russian translation.
+     */
     public String toRu(String en) {
         switch (en) {
             case "documents":
@@ -42,6 +51,12 @@ public final class TypeMapper extends BaseMapper<Type, TypeDb> {
         }
     }
 
+    /**
+     * Translates the thing type title from english to russian.
+     *
+     * @param en the english title.
+     * @return the russian translation.
+     */
     public List<String> toRu(List<String> en) {
         List<String> list = new ArrayList<>();
         for (String s : en) {
@@ -50,8 +65,18 @@ public final class TypeMapper extends BaseMapper<Type, TypeDb> {
         return list;
     }
 
+    /**
+     * Converts the object from type {@link Type} to type {@link TypeDb}.
+     *
+     * @param source the object to convert.
+     * @return the converted object.
+     */
     @Override
     public TypeDb from(Type source) {
+        if (source==null){
+            return null;
+        }
+
         TypeDb typeDb = new TypeDb();
         typeDb.setId(source.getId());
         typeDb.setTypeNameEn(source.getTypeEn());
@@ -59,6 +84,12 @@ public final class TypeMapper extends BaseMapper<Type, TypeDb> {
         return typeDb;
     }
 
+    /**
+     * Converts the object from type {@link TypeDb} to type {@link Type}.
+     *
+     * @param source the object to convert.
+     * @return the converted object.
+     */
     @Override
     public Type to(TypeDb source) {
         Type type = new Type();

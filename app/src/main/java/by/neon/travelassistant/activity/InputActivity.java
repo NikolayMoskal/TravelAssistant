@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.android.volley.Request;
@@ -27,9 +29,9 @@ import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import by.neon.travelassistant.R;
-import by.neon.travelassistant.activity.query.CategorySelectAsyncTask;
-import by.neon.travelassistant.activity.query.GenderSelectAsyncTask;
-import by.neon.travelassistant.activity.query.TransportSelectAsyncTask;
+import by.neon.travelassistant.activity.query.impl.CategorySelectAsyncTask;
+import by.neon.travelassistant.activity.query.impl.GenderSelectAsyncTask;
+import by.neon.travelassistant.activity.query.impl.TransportSelectAsyncTask;
 import by.neon.travelassistant.config.sqlite.mapper.CategoryMapper;
 import by.neon.travelassistant.config.sqlite.mapper.GenderMapper;
 import by.neon.travelassistant.config.sqlite.mapper.TransportMapper;
@@ -41,7 +43,13 @@ import by.neon.travelassistant.model.Gender;
 import by.neon.travelassistant.model.Transport;
 import by.neon.travelassistant.utility.TravelRequestQueue;
 
+/**
+ * Represents the activity for input data for new list of things or edit data for existing list.
+ */
 public class InputActivity extends AppCompatActivity {
+    /**
+     * The unique log tag constant for this class.
+     */
     private static final String TAG = "InputActivity";
 
     @Override
@@ -58,6 +66,11 @@ public class InputActivity extends AppCompatActivity {
         readSettings(getIntent().getExtras());
     }
 
+    /**
+     * Reads the extras from other activities and fills the components with received data.
+     *
+     * @param extras the extra data.
+     */
     private void readSettings(Bundle extras) {
         if (extras == null) {
             return;
@@ -74,6 +87,14 @@ public class InputActivity extends AppCompatActivity {
         city.setTag(extras.getLong(CommonConstants.ARRIVAL_CITY_ID));
     }
 
+    /**
+     * Marks a some views as selected. The names of views reads by {@code tagItem}.
+     *
+     * @param extras   the extra data to read.
+     * @param parent   the parent layout and container for views.
+     * @param tagCount the tag constant to extract the count of views.
+     * @param tagItem  the tag constant to extract the titles for components.
+     */
     private void restoreData(Bundle extras, LinearLayout parent, String tagCount, String tagItem) {
         int count = extras.getInt(tagCount, 0);
         List<String> items = new ArrayList<>(0);
@@ -94,6 +115,11 @@ public class InputActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Shows the dialog for select the start travel date.
+     *
+     * @param view the parent view.
+     */
     public void onSelectStartDate(View view) {
         EditText text = findViewById(R.id.start_date);
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
@@ -103,6 +129,11 @@ public class InputActivity extends AppCompatActivity {
                 calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
+    /**
+     * Shows the dialog for select the end travel date.
+     *
+     * @param view the parent view.
+     */
     public void onSelectEndDate(View view) {
         EditText text = findViewById(R.id.end_date);
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
@@ -118,20 +149,47 @@ public class InputActivity extends AppCompatActivity {
         createCitySelectDialog(cityName);
     }
 
+    /**
+     * Shows the preview activity and sends the data from this activity.
+     *
+     * @param view the parent view.
+     */
     public void onSendClick(View view) {
         Intent intent = new Intent(this, PreviewActivity.class);
         EditText editText = findViewById(R.id.arv_city);
-        intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, (long) editText.getTag(R.id.cityId));
+        EditText startDate = findViewById(R.id.start_date);
+        EditText endDate = findViewById(R.id.end_date);
+        TextView code = findViewById(R.id.city_code);
+        TextView location = findViewById(R.id.city_location);
+        if (code.getText().length() == 0) {
+            Toast.makeText(this, R.string.arv_city_error, Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (startDate.getText().length() == 0 || endDate.getText().length() == 0) {
+            Toast.makeText(this, R.string.dates_error, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, Long.parseLong(code.getText().toString()));
         intent.putExtra(CommonConstants.ARRIVAL_CITY_INFO, editText.getText().toString());
-        intent.putExtra(CommonConstants.ARRIVAL_CITY_LOCATION, (Location) editText.getTag(R.id.location));
+        intent.putExtra(CommonConstants.ARRIVAL_CITY_LOCATION, (Location) location.getTag(R.id.location));
         putData(intent, findViewById(R.id.layout_genders), "gender", CommonConstants.COUNT_GENDERS);
         putData(intent, findViewById(R.id.layout_transports), "transport", CommonConstants.COUNT_TRANSPORT_TYPES);
         putData(intent, findViewById(R.id.layout_categories), "category", CommonConstants.COUNT_CATEGORIES);
-        intent.putExtra(CommonConstants.TRAVEL_START_DATE, ((EditText) findViewById(R.id.start_date)).getText().toString());
-        intent.putExtra(CommonConstants.TRAVEL_END_DATE, ((EditText) findViewById(R.id.end_date)).getText().toString());
+        intent.putExtra(CommonConstants.TRAVEL_START_DATE, startDate.getText().toString());
+        intent.putExtra(CommonConstants.TRAVEL_END_DATE, endDate.getText().toString());
         startActivity(intent);
     }
 
+    /**
+     * Collects the data from components by tag {@code tagItem} and writes a count of affected
+     * components by tag {@code tagCount}.
+     *
+     * @param intent   the intent to put the collected data.
+     * @param parent   the parent layout for selectable components.
+     * @param itemTag  the tag constant for each element in intent.
+     * @param countTag the tag constant for count of affected elements.
+     */
     private void putData(Intent intent, LinearLayout parent, String itemTag, String countTag) {
         int count = 0;
         for (int layoutIndex = 0; layoutIndex < parent.getChildCount(); layoutIndex++) {
@@ -146,6 +204,11 @@ public class InputActivity extends AppCompatActivity {
         intent.putExtra(countTag, count);
     }
 
+    /**
+     * Requests the city name to OpenWeatherMap server.
+     *
+     * @param cityName the city name (can be with the country code separated by comma.
+     */
     public void createCitySelectDialog(String cityName) {
         SharedPreferences preferences = getSharedPreferences(CommonConstants.APP_SETTINGS, MODE_PRIVATE);
         String url = "https://api.openweathermap.org/data/2.5/find?" +
@@ -157,6 +220,9 @@ public class InputActivity extends AppCompatActivity {
         TravelRequestQueue.getInstance(this).addRequest(request);
     }
 
+    /**
+     * Reads the categories from database and creates a view for each one.
+     */
     private void setCategories() {
         CategorySelectAsyncTask categorySelect = new CategorySelectAsyncTask();
         categorySelect.setSelectAll(true);
@@ -182,6 +248,9 @@ public class InputActivity extends AppCompatActivity {
                 x -> null);
     }
 
+    /**
+     * Reads the transport types from database and creates a view for each one.
+     */
     private void setTransport() {
         TransportSelectAsyncTask task = new TransportSelectAsyncTask();
         task.setSelectAll(true);
@@ -200,6 +269,9 @@ public class InputActivity extends AppCompatActivity {
                 x -> getTransportIcon(immutableTransports.get(x).getNameEn()));
     }
 
+    /**
+     * Reads the genders from database and creates a view for each one.
+     */
     private void setGenders() {
         GenderSelectAsyncTask task = new GenderSelectAsyncTask();
         task.setSelectAll(true);
@@ -225,6 +297,15 @@ public class InputActivity extends AppCompatActivity {
                 x -> getGenderIcon(immutableGenders.get(x).getGenderEn()));
     }
 
+    /**
+     * Creates a views into given layout and places them 2 in a row.
+     *
+     * @param parent        the parent layout.
+     * @param countEntities the count of source entities.
+     * @param titleFunc     the function for extract the title of a view.
+     * @param nameFunc      the function for extract the name of a view.
+     * @param iconFunc      the function for load the icon of entity.
+     */
     private void fillParentLayout(LinearLayout parent, int countEntities, IFunc<Integer, String> titleFunc, IFunc<Integer, String> nameFunc, IFunc<Integer, Drawable> iconFunc) {
         for (int index = 0; index < countEntities; ) {
             LinearLayout inner = createInnerLayout();
@@ -237,6 +318,11 @@ public class InputActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Creates the row inside the parent layout.
+     *
+     * @return the horizontal linear layout.
+     */
     private LinearLayout createInnerLayout() {
         LinearLayout inner = new LinearLayout(this);
         inner.setOrientation(LinearLayout.HORIZONTAL);
@@ -248,6 +334,13 @@ public class InputActivity extends AppCompatActivity {
         return inner;
     }
 
+    /**
+     * Creates a new view with given name anf title.
+     *
+     * @param name  the name of a view.
+     * @param title the title of a view.
+     * @return the created view.
+     */
     private ToggleButton createSwitch(String name, String title) {
         ToggleButton button = (ToggleButton) getLayoutInflater().inflate(R.layout.toggle_button_style_layout, null);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -262,12 +355,26 @@ public class InputActivity extends AppCompatActivity {
         return button;
     }
 
+    /**
+     * Creates a new view with given name, title and icon.
+     *
+     * @param name  the name of a view.
+     * @param title the title of a view.
+     * @param func  the function for load the icon of entity.
+     * @return the created view.
+     */
     private ToggleButton createSwitch(String name, String title, IFunc<ToggleButton, Drawable> func) {
         ToggleButton button = createSwitch(name, title);
         button.setCompoundDrawablesWithIntrinsicBounds(null, func.run(button), null, null);
         return button;
     }
 
+    /**
+     * Gets the icon by transport type.
+     *
+     * @param transportName the transport type name.
+     * @return the icon or null if not found.
+     */
     private Drawable getTransportIcon(String transportName) {
         int id;
         switch (transportName) {
@@ -295,6 +402,12 @@ public class InputActivity extends AppCompatActivity {
         return ContextCompat.getDrawable(this, id);
     }
 
+    /**
+     * Gets the icon by gender type.
+     *
+     * @param genderType the gender type.
+     * @return the icon or null if not found.
+     */
     private Drawable getGenderIcon(String genderType) {
         int id;
         switch (genderType) {
@@ -310,6 +423,12 @@ public class InputActivity extends AppCompatActivity {
         return ContextCompat.getDrawable(this, id);
     }
 
+    /**
+     * Makes the capital character inside a given title.
+     *
+     * @param title the source title.
+     * @return the title with capital character.
+     */
     private String capitalize(String title) {
         return title.substring(0, 1).toUpperCase() + title.substring(1);
     }

@@ -6,7 +6,16 @@ import java.util.List;
 import by.neon.travelassistant.config.sqlite.model.CategoryDb;
 import by.neon.travelassistant.model.Category;
 
+/**
+ * Converts the category objects from db entity to model and back.
+ */
 public final class CategoryMapper extends BaseMapper<Category, CategoryDb> {
+    /**
+     * Translates the category title from english to russian.
+     *
+     * @param en the english title.
+     * @return the russian translation.
+     */
     public String toRu(String en) {
         switch (en) {
             case "need":
@@ -42,6 +51,12 @@ public final class CategoryMapper extends BaseMapper<Category, CategoryDb> {
         }
     }
 
+    /**
+     * Translates the list of english titles to russian.
+     *
+     * @param en the list of english titles.
+     * @return the list of russian translated titles.
+     */
     public List<String> toRu(List<String> en) {
         List<String> list = new ArrayList<>();
         for (String s : en) {
@@ -50,8 +65,18 @@ public final class CategoryMapper extends BaseMapper<Category, CategoryDb> {
         return list;
     }
 
+    /**
+     * Converts the object from type {@link Category} to type {@link CategoryDb}.
+     *
+     * @param source the object to convert.
+     * @return the converted object.
+     */
     @Override
     public CategoryDb from(Category source) {
+        if (source == null) {
+            return null;
+        }
+
         CategoryDb categoryDb = new CategoryDb();
         categoryDb.setId(source.getId());
         categoryDb.setCategoryNameEn(source.getCategoryNameEn());
@@ -59,8 +84,18 @@ public final class CategoryMapper extends BaseMapper<Category, CategoryDb> {
         return categoryDb;
     }
 
+    /**
+     * Converts the object from type {@link CategoryDb} to type {@link Category}.
+     *
+     * @param source the object to convert.
+     * @return the converted object.
+     */
     @Override
     public Category to(CategoryDb source) {
+        if (source == null) {
+            return null;
+        }
+
         Category category = new Category();
         category.setId(source.getId());
         category.setCategoryNameEn(source.getCategoryNameEn());

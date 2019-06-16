@@ -1,19 +1,32 @@
-package by.neon.travelassistant.activity.query;
+package by.neon.travelassistant.activity.query.impl;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import by.neon.travelassistant.Startup;
+import by.neon.travelassistant.activity.query.base.SelectAsyncTask;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
 import by.neon.travelassistant.config.sqlite.model.WeatherTypeDb;
 
-public final class WeatherTypeSelectAsyncTask extends AsyncTask<Void, Void, List<WeatherTypeDb>> {
+/**
+ * Provides a functionality for selection the weather types from database using Room. All parameters
+ * used in following order:
+ * <ol>
+ * <li>All records.</li>
+ * <li>Unique ID.</li>
+ * <li>The name of a weather type.</li>
+ * </ol>
+ */
+public final class WeatherTypeSelectAsyncTask extends SelectAsyncTask<WeatherTypeDb> {
+    /**
+     * The unique log tag constant for this class.
+     */
     private static final String TAG = "WeatherTypeSelect";
-    private boolean isSelectAll;
-    private long id;
+    /**
+     * The name of selectable weather type.
+     */
     private String name;
 
     /**
@@ -45,14 +58,11 @@ public final class WeatherTypeSelectAsyncTask extends AsyncTask<Void, Void, List
         return result;
     }
 
-    public void setSelectAll(boolean selectAll) {
-        isSelectAll = selectAll;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
+    /**
+     * Sets the name of selectable weather type.
+     *
+     * @param name the name to set.
+     */
     public void setName(String name) {
         this.name = name;
     }

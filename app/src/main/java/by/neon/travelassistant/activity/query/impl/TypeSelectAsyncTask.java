@@ -1,19 +1,32 @@
-package by.neon.travelassistant.activity.query;
+package by.neon.travelassistant.activity.query.impl;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import by.neon.travelassistant.Startup;
+import by.neon.travelassistant.activity.query.base.SelectAsyncTask;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
 import by.neon.travelassistant.config.sqlite.model.TypeDb;
 
-public final class TypeSelectAsyncTask extends AsyncTask<Void, Void, List<TypeDb>> {
+/**
+ * Provides a functionality for selection the thing types from database. All parameters
+ * used in following order:
+ * <ol>
+ * <li>All records.</li>
+ * <li>Unique ID.</li>
+ * <li>Type name.</li>
+ * </ol>
+ */
+public final class TypeSelectAsyncTask extends SelectAsyncTask<TypeDb> {
+    /**
+     * The unique log tag constant for this class.
+     */
     private static final String TAG = "TypeSelectAsyncTask";
-    private boolean isSelectAll;
-    private long id;
+    /**
+     * Tha name of selectable type.
+     */
     private String name;
 
     /**
@@ -45,15 +58,12 @@ public final class TypeSelectAsyncTask extends AsyncTask<Void, Void, List<TypeDb
         return result;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
+    /**
+     * Sets the name of selectable type.
+     *
+     * @param name the name to set.
+     */
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setSelectAll(boolean selectAll) {
-        isSelectAll = selectAll;
     }
 }

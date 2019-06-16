@@ -8,6 +8,9 @@ import android.widget.TextView;
 import by.neon.travelassistant.BuildConfig;
 import by.neon.travelassistant.R;
 
+/**
+ * Represents the activity to show information about the app.
+ */
 public class AboutActivity extends AppCompatActivity {
 
     @Override
@@ -20,6 +23,9 @@ public class AboutActivity extends AppCompatActivity {
         setVersion();
     }
 
+    /**
+     * Shows the application version from Gradle config.
+     */
     private void setVersion() {
         TextView view = findViewById(R.id.app_version_title);
         view.setText(BuildConfig.VERSION_NAME);
