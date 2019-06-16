@@ -43,6 +43,7 @@ import by.neon.travelassistant.config.sqlite.mapper.GenderMapper;
 import by.neon.travelassistant.config.sqlite.mapper.ThingMapper;
 import by.neon.travelassistant.config.sqlite.mapper.TransportMapper;
 import by.neon.travelassistant.config.sqlite.mapper.WeatherTypeMapper;
+import by.neon.travelassistant.config.sqlite.model.TransportDb;
 import by.neon.travelassistant.constant.CommonConstants;
 import by.neon.travelassistant.listener.ForecastListener;
 import by.neon.travelassistant.listener.ThingSelectListener;
@@ -267,7 +268,10 @@ public class PreviewActivity extends AppCompatActivity {
         TransportMapper mapper = new TransportMapper();
         task.setNames(names);
         try {
-            return mapper.to(task.execute().get().get(0));
+            List<TransportDb> list = task.execute().get();
+            if (list.size() > 0) {
+                return mapper.to(list.get(0));
+            }
         } catch (InterruptedException | ExecutionException e) {
             Log.e(TAG, "extractTransports: " + e.getMessage(), e);
         }

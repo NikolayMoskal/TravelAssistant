@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.android.volley.Request;
@@ -155,14 +157,27 @@ public class InputActivity extends AppCompatActivity {
     public void onSendClick(View view) {
         Intent intent = new Intent(this, PreviewActivity.class);
         EditText editText = findViewById(R.id.arv_city);
-        intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, (long) editText.getTag(R.id.cityId));
+        EditText startDate = findViewById(R.id.start_date);
+        EditText endDate = findViewById(R.id.end_date);
+        TextView code = findViewById(R.id.city_code);
+        TextView location = findViewById(R.id.city_location);
+        if (code.getText().length() == 0) {
+            Toast.makeText(this, R.string.arv_city_error, Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (startDate.getText().length() == 0 || endDate.getText().length() == 0) {
+            Toast.makeText(this, R.string.dates_error, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        intent.putExtra(CommonConstants.ARRIVAL_CITY_ID, Long.parseLong(code.getText().toString()));
         intent.putExtra(CommonConstants.ARRIVAL_CITY_INFO, editText.getText().toString());
-        intent.putExtra(CommonConstants.ARRIVAL_CITY_LOCATION, (Location) editText.getTag(R.id.location));
+        intent.putExtra(CommonConstants.ARRIVAL_CITY_LOCATION, (Location) location.getTag(R.id.location));
         putData(intent, findViewById(R.id.layout_genders), "gender", CommonConstants.COUNT_GENDERS);
         putData(intent, findViewById(R.id.layout_transports), "transport", CommonConstants.COUNT_TRANSPORT_TYPES);
         putData(intent, findViewById(R.id.layout_categories), "category", CommonConstants.COUNT_CATEGORIES);
-        intent.putExtra(CommonConstants.TRAVEL_START_DATE, ((EditText) findViewById(R.id.start_date)).getText().toString());
-        intent.putExtra(CommonConstants.TRAVEL_END_DATE, ((EditText) findViewById(R.id.end_date)).getText().toString());
+        intent.putExtra(CommonConstants.TRAVEL_START_DATE, startDate.getText().toString());
+        intent.putExtra(CommonConstants.TRAVEL_END_DATE, endDate.getText().toString());
         startActivity(intent);
     }
 

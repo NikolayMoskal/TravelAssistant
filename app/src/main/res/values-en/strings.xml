@@ -2,8 +2,12 @@
     <!-- Input activity -->
     <string name="title_activity_input" translatable="true">Input the data</string>
     <string name="arv_label" translatable="true">Where are you going?</string>
-    <string name="arv_city_title" translatable="true">City code</string>
+    <string name="city_code_title" translatable="true">City code</string>
+    <string name="city_location_title" translatable="true">Location</string>
     <string name="arv_city_hint" translatable="true">City name</string>
+    <string name="arv_city_error" translatable="true">The city code was not found.
+        Please, set the city name and select the find button.</string>
+    <string name="dates_error" translatable="true">The travel dates was not selected</string>
     <string name="send_button" translatable="true">Send</string>
 
     <string name="gender_type_label" translatable="true">For whom we select a list of things?</string>

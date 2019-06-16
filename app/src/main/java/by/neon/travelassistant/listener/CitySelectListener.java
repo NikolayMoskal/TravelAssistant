@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 
@@ -130,12 +131,16 @@ public class CitySelectListener implements Response.Listener<JSONObject> {
                 .setCancelable(true)
                 .setAdapter(adapter, (dialog, which) -> {
                     EditText text = activity.get().findViewById(R.id.arv_city);
+                    TextView code = activity.get().findViewById(R.id.city_code);
+                    TextView location = activity.get().findViewById(R.id.city_location);
                     Weather weather = weatherList.get(which);
                     text.setText(String.format(Locale.getDefault(), "%s, %s",
                             weather.getCityName(),
                             weather.getCountryCode()));
-                    text.setTag(R.id.cityId, weather.getCityId());
-                    text.setTag(R.id.location, weather.getLocation());
+                    code.setText(String.valueOf(weather.getCityId()));
+                    location.setText(String.format(Locale.getDefault(), "%s,%s",
+                            weather.getLocation().getLatitude(), weather.getLocation().getLongitude()));
+                    location.setTag(R.id.location, weather.getLocation());
                 })
                 .setNegativeButton(R.string.action_cancel, null);
         builder.create().show();

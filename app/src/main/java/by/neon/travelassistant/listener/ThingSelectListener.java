@@ -88,6 +88,10 @@ public class ThingSelectListener implements CompoundButton.OnCheckedChangeListen
             allWeight -= ((Thing) buttonView.getTag()).getWeight();
         }
 
+        if (transport == null) {
+            return;
+        }
+
         if (allWeight > transport.getMaxWeight()) {
             snackbar = setSnackBar(String.format(Locale.getDefault(),
                     "%s (%s). %s %s.",
