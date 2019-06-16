@@ -1,19 +1,32 @@
-package by.neon.travelassistant.activity.query;
+package by.neon.travelassistant.activity.query.impl;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import by.neon.travelassistant.Startup;
+import by.neon.travelassistant.activity.query.base.SelectAsyncTask;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
 import by.neon.travelassistant.config.sqlite.model.GenderDb;
 
-public final class GenderSelectAsyncTask extends AsyncTask<Void, Void, List<GenderDb>> {
+/**
+ * Provides a functionality for selection the genders from database using Room. All parameters
+ * * used in following order:
+ * * <ol>
+ * *     <li>All records.</li>
+ * *     <li>Unique ID.</li>
+ * *     <li>List of genders.</li>
+ * * </ol>
+ */
+public final class GenderSelectAsyncTask extends SelectAsyncTask<GenderDb> {
+    /**
+     * The unique log tag constant for this class.
+     */
     private static final String TAG = "GenderSelectAsyncTask";
-    private boolean isSelectAll;
-    private long id;
+    /**
+     * The collection of selectable gender types.
+     */
     private List<String> types;
 
     /**
@@ -49,14 +62,11 @@ public final class GenderSelectAsyncTask extends AsyncTask<Void, Void, List<Gend
         return result;
     }
 
-    public void setSelectAll(boolean selectAll) {
-        isSelectAll = selectAll;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
+    /**
+     * Sets the list of selectable gender types.
+     *
+     * @param types the gender types to set.
+     */
     public void setTypes(List<String> types) {
         this.types = types;
     }

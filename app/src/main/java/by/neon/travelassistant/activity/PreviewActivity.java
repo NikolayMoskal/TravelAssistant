@@ -34,10 +34,10 @@ import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import by.neon.travelassistant.R;
-import by.neon.travelassistant.activity.query.CategorySelectAsyncTask;
-import by.neon.travelassistant.activity.query.GenderSelectAsyncTask;
-import by.neon.travelassistant.activity.query.ThingSelectAsyncTask;
-import by.neon.travelassistant.activity.query.TransportSelectAsyncTask;
+import by.neon.travelassistant.activity.query.impl.CategorySelectAsyncTask;
+import by.neon.travelassistant.activity.query.impl.GenderSelectAsyncTask;
+import by.neon.travelassistant.activity.query.impl.ThingSelectAsyncTask;
+import by.neon.travelassistant.activity.query.impl.TransportSelectAsyncTask;
 import by.neon.travelassistant.config.sqlite.mapper.CategoryMapper;
 import by.neon.travelassistant.config.sqlite.mapper.GenderMapper;
 import by.neon.travelassistant.config.sqlite.mapper.ThingMapper;

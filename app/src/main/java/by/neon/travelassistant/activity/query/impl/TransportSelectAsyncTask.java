@@ -1,20 +1,18 @@
-package by.neon.travelassistant.activity.query;
+package by.neon.travelassistant.activity.query.impl;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import by.neon.travelassistant.Startup;
+import by.neon.travelassistant.activity.query.base.SelectAsyncTask;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
-import by.neon.travelassistant.config.sqlite.model.CategoryDb;
+import by.neon.travelassistant.config.sqlite.model.TransportDb;
 
-public final class CategorySelectAsyncTask extends AsyncTask<Void, Void, List<CategoryDb>> {
-    private static final String TAG = "CategorySelectAsyncTask";
-    private boolean isSelectAll;
+public final class TransportSelectAsyncTask extends SelectAsyncTask<TransportDb> {
+    private static final String TAG = "TransportSelect";
     private List<String> names;
-    private long id;
 
     /**
      * Override this method to perform a computation on a background thread. The
@@ -31,33 +29,23 @@ public final class CategorySelectAsyncTask extends AsyncTask<Void, Void, List<Ca
      * @see #publishProgress
      */
     @Override
-    protected List<CategoryDb> doInBackground(Void... voids) {
+    protected List<TransportDb> doInBackground(Void... voids) {
         TravelDbContext dbContext = Startup.getStartup().getDbContext();
-        List<CategoryDb> result = new ArrayList<>(0);
+        List<TransportDb> result = new ArrayList<>(0);
         if (isSelectAll) {
-            result.addAll(dbContext.getCategoryDao().getAll());
-        } else if (id > 0) {
-            result.add(dbContext.getCategoryDao().getById(id));
+            result.addAll(dbContext.getTransportDao().getAll());
         } else if (names != null && names.size() > 0) {
             if (names.size() > 1) {
-                result.addAll(dbContext.getCategoryDao().getByNames(names));
+                result.addAll(dbContext.getTransportDao().getByNames(names));
             } else {
-                result.add(dbContext.getCategoryDao().getByName(names.get(0)));
+                result.add(dbContext.getTransportDao().getByName(names.get(0)));
             }
         }
         Log.i(TAG, "doInBackground: " + result.size() + " rows returned.");
         return result;
     }
 
-    public void setSelectAll(boolean selectAll) {
-        isSelectAll = selectAll;
-    }
-
     public void setNames(List<String> names) {
         this.names = names;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 }

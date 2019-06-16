@@ -1,17 +1,30 @@
-package by.neon.travelassistant.activity.query;
+package by.neon.travelassistant.activity.query.impl;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import by.neon.travelassistant.Startup;
+import by.neon.travelassistant.activity.query.base.DeleteAsyncTask;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
 import by.neon.travelassistant.config.sqlite.model.ThingDb;
 
-public final class ThingDeleteAsyncTask extends AsyncTask<ThingDb, Void, Integer> {
+/**
+ * Provides a functionality for delete the things from database using Room. All parameters
+ * used in following order:
+ * <ol>
+ * <li>All records.</li>
+ * <li>Unique ID.</li>
+ * <li>Thing name in english.</li>
+ * </ol>
+ */
+public final class ThingDeleteAsyncTask extends DeleteAsyncTask<ThingDb> {
+    /**
+     * The unique log tag constant for this class.
+     */
     private static final String TAG = "ThingDeleteAsyncTask";
-    private boolean isDeleteAll;
+    /**
+     * The name of deletable thing.
+     */
     private String name;
-    private long id;
 
     /**
      * Override this method to perform a computation on a background thread. The
@@ -46,15 +59,12 @@ public final class ThingDeleteAsyncTask extends AsyncTask<ThingDb, Void, Integer
         return result;
     }
 
-    public void setDeleteAll(boolean deleteAll) {
-        isDeleteAll = deleteAll;
-    }
-
+    /**
+     * Sets the name of deletable thing.
+     *
+     * @param name the name to set.
+     */
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 }

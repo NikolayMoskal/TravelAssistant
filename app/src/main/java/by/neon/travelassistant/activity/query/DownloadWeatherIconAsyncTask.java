@@ -7,10 +7,24 @@ import android.util.Log;
 import java.io.InputStream;
 import java.net.URL;
 
+/**
+ * Provides a functionality to download the weather icon by given URL from OpenWeatherMap server.
+ */
 public final class DownloadWeatherIconAsyncTask extends AsyncTask<Void, Void, Drawable> {
+    /**
+     * The unique log tag constant for this class.
+     */
     private static final String TAG = "DownloadWeatherIcon";
+    /**
+     * The icon URL.
+     */
     private String url;
 
+    /**
+     * Builds a new instance of async task that runs a downloading the weather icon by given URL.
+     *
+     * @param url the icon URL on OpenWeatherMap server.
+     */
     public DownloadWeatherIconAsyncTask(String url) {
         this.url = url;
     }
@@ -31,12 +45,11 @@ public final class DownloadWeatherIconAsyncTask extends AsyncTask<Void, Void, Dr
      */
     @Override
     protected Drawable doInBackground(Void... voids) {
-        Drawable bitmap = null;
         try (InputStream stream = (InputStream) new URL(url).getContent()) {
             return Drawable.createFromStream(stream, "icon");
         } catch (Exception e) {
             Log.e(TAG, "doInBackground: " + e.getMessage(), e);
         }
-        return bitmap;
+        return null;
     }
 }

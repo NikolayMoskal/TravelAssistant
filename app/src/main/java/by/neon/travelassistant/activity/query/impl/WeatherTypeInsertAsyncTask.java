@@ -1,15 +1,21 @@
-package by.neon.travelassistant.activity.query;
+package by.neon.travelassistant.activity.query.impl;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.List;
 
 import by.neon.travelassistant.Startup;
+import by.neon.travelassistant.activity.query.base.InsertAsyncTask;
 import by.neon.travelassistant.config.sqlite.TravelDbContext;
 import by.neon.travelassistant.config.sqlite.model.WeatherTypeDb;
 
-public final class WeatherTypeInsertAsyncTask extends AsyncTask<WeatherTypeDb, Void, List<Long>> {
+/**
+ * Provides a functionality for insert the weather types into database using Room.
+ */
+public final class WeatherTypeInsertAsyncTask extends InsertAsyncTask<WeatherTypeDb> {
+    /**
+     * The unique log tag constant for this class.
+     */
     private static final String TAG = "WeatherTypeInsert";
 
     /**
